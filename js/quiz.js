@@ -28,7 +28,7 @@ function applyQuiz(D,chosen){const P=allPaths();chosen=chosen.filter(k=>P[k]);if
   const anchor=core.find(n=>n.t===1)||core[0];const list=(S.extraNodes[pid]??=[]);const has=id=>list.some(n=>n.id===id);
   goalDefs.forEach(g=>{const id=`goal-${g.id}-${pid}`;if(!has(id))list.push({id,t:2,title:g.title,objective:g.objective,learn:g.learn,res:[],req:[anchor.id],mine:true,goal:g.id})});
   if(pid===chosen[0]&&S.goals.text){const id=`goal-own-${pid}`;if(!has(id))list.push({id,t:0,title:S.goals.text.length>34?S.goals.text.slice(0,33)+"…":S.goals.text,objective:S.goals.text,learn:"This is your own goal. Break it into small steps and come back to claim it when you've done it.",res:[],req:[],mine:true,goal:"own"})}});
- S.onboarded=true;S.path=chosen[0];S.sel=null;S.worldMine=true;save()}
+ S.onboarded=true;S.path=chosen[0];S.sel=null;S.worldFocus=chosen[0];S.worldTrail=[];save()}
 
 /* ---------- quiz screens ---------- */
 let QD=null;

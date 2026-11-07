@@ -18,7 +18,7 @@ export function loadGame({ hostname = "edventure.example", hash = "" } = {}) {
     document: { getElementById: () => null },
     window: {},
   });
-  for (const f of ["content", "game", "quiz", "update"]) {
+  for (const f of ["content", "game", "views", "quiz", "update", "world"]) {
     vm.runInContext(readFileSync(new URL(`js/${f}.js`, root), "utf8"), ctx, { filename: `js/${f}.js` });
   }
   vm.runInContext("applyContent(__content); initState();", Object.assign(ctx, { __content: content() }));

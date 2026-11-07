@@ -18,7 +18,7 @@ Edventure turns career planning into a video-game skill tree. Students roll stat
 | **Start over** | A button in the top bar (and on the Character tab) wipes the profile, progress, goals, treasure and purchases after a confirmation, then reopens the starting quiz. |
 | **Skill tree** (detailed) | Objectives laid out by grade stage, each with what you learn, a concrete task and free resources. Hover any node for an interactive card. Branches lead into related paths. |
 | **Mastery & crossovers** | Some objectives have three mastery stages. Mastering one unlocks a crossover into a completely different field, such as Engineering → Patent law. |
-| **World tree** | Every path on one radial map, which re-flows automatically as new paths are added. |
+| **World tree** | One path at a time, drawn as a real tree: the trunk climbs from "You" through each stage (with done counts), and branches sprout where the path can lead: built-in branches, mastery crossovers, and up to two related paths it "could branch" into. Tap a branch to follow it and see where that path goes; breadcrumbs lead back. Tap a stage to jump to its steps. |
 | **Compare** | Two or three trees side by side: stat demands, year-by-year objectives, shared ground and connections. |
 | **Switching & minors** | A "What comes with you" panel shows what carries over when changing majors. Minors get a lighter track through their tree. |
 | **Your own objectives** | Students can add their own goals to any tree. |
@@ -34,7 +34,7 @@ js/                   Plain browser scripts, loaded in order (no build step)
   content.js            Loads /data/*.json
   game.js               Saved state and game rules (unlocking, mastery, stats, rewards)
   views.js              Character, Career paths, Skill tree, Compare and Treasury screens
-  world.js              World tree layout
+  world.js              World tree: single-path trunk with branches, follow-a-branch navigation
   interactions.js       Event wiring and claiming objectives
   hovercard.js          Hover card beside skill nodes
   companions.js         Companion characters (original SVG art)

@@ -56,4 +56,4 @@ function confirmDialog({title,body,ok,danger,onOk}){let el=$("cfm");if(!el){el=d
 function startOver(){confirmDialog({title:"Start over?",body:"This clears your profile, progress, goals, treasure and purchases, then restarts the starting quiz. It can't be undone.",ok:"Start over",danger:true,onOk:()=>{
  const mode=S.ui?.mode;S=fresh();if(mode)S.ui={mode};
  if(TEST_MODE){S.testGrant=1;S.testGrant2=1;S.gems+=25000}
- S.chat=[];$("orbLog").innerHTML="";$("orbPanel").hidden=true;WV=null;window.scrollTo(0,0);save();render();openQuiz()}})}
+ S.chat=[];$("orbLog").innerHTML="";$("orbPanel").hidden=true;window.scrollTo(0,0);save();render();openQuiz()}})}

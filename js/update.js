@@ -57,7 +57,7 @@ function applyUpdate(U,text,choice){const P=allPaths();const date=new Date().toI
  S.compare=[...new Set([...add.map(x=>x.id),...S.pinned])].filter(k=>P[k]).slice(0,3);
  S.updates=[{date,text:text.slice(0,600),summary:U.summary,added:add.map(x=>x.id),paused:pause.map(x=>x.id),grown:[],step:stepId?{pid:U.firstStep.pathId,id:stepId}:null},...(S.updates||[])].slice(0,10);
  if(first){S.path=first;S.sel=stepId&&U.firstStep.pathId===first?stepId:null}
- S.worldMine=true;save();return S.updates[0]}
+ S.worldFocus=S.path;S.worldTrail=[];save();return S.updates[0]}
 
 /* ---------- screens ---------- */
 let UPD=null;

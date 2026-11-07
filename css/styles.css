@@ -467,3 +467,34 @@ body[data-skin="pixel"] :is(.upd-summary,.upd-log){border-radius:0}
 .smore summary{cursor:pointer;font-family:var(--f-display);font-weight:600;color:var(--muted)}
 @media (max-width:520px){.scard-body{padding-left:16px}.hud-reset{padding:4px 8px}}
 body[data-skin="pixel"] :is(.debrief,.scard,.smore,.modeswitch,.modeswitch button,.stage-n,.sdot,.db-ring){border-radius:0}
+
+/* ---------- world tree: one path, branching ---------- */
+.wt-layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:18px;align-items:start}
+@media (max-width:960px){.wt-layout{grid-template-columns:1fr}}
+.branchbox{background:radial-gradient(ellipse at 50% 100%,color-mix(in oklab,var(--accent) 9%,var(--panel)),var(--panel) 65%);border:1px solid var(--line);border-radius:14px;overflow-x:auto}
+.branchbox svg{display:block;width:100%;height:auto;max-width:620px;margin:0 auto}
+.wt-count{font-family:var(--f-mono);font-size:15px;font-weight:700}
+.wt-stage{font-family:var(--f-display);font-size:12px;letter-spacing:.08em;text-transform:uppercase;fill:var(--muted)}
+.wt-you{font-family:var(--f-display);font-size:10px;font-weight:700;fill:var(--ink)}
+.wt-init{font-family:var(--f-display);font-size:14px;font-weight:700}
+.wt-name{font-family:var(--f-display);font-size:17px;font-weight:700;fill:var(--ink)}
+.wt-how{font-size:13.5px;fill:var(--muted)}
+.wt-leaf,.wt-stone{cursor:pointer}
+.wt-leaf>circle:not(.ring),.wt-leaf>polygon,.wt-stone>circle:not(.ring){transition:transform .18s cubic-bezier(.3,1.6,.5,1);transform-box:fill-box;transform-origin:center}
+.wt-leaf:hover>circle:not(.ring),.wt-leaf:hover>polygon,.wt-leaf:focus-visible>circle:not(.ring),.wt-stone:hover>circle:not(.ring),.wt-stone:focus-visible>circle:not(.ring){transform:scale(1.12)}
+.wt-leaf:hover .wt-name{fill:var(--accent)}
+.wt-leaf .ring,.wt-stone .ring{fill:none;stroke:var(--accent);stroke-width:2;transform-box:fill-box;transform-origin:center;animation:pulse 2.4s ease-out infinite}
+.wt-grow{stroke-dasharray:2000;stroke-dashoffset:0;animation:wtgrow 1.1s ease-out}
+@keyframes wtgrow{from{stroke-dashoffset:2000}}
+.wt-trail{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px}
+.wt-trail b{font-family:var(--f-display)}
+.wt-list{display:grid;gap:12px;position:sticky;top:120px}
+.wt-card{display:grid;gap:6px;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2)}
+.wt-card.open{border-color:color-mix(in oklab,var(--accent) 60%,var(--line))}
+.wt-card.done{border-color:color-mix(in oklab,var(--gold) 60%,var(--line))}
+.wt-card-top{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.wt-card-top b{font-family:var(--f-display)}
+.wt-card-actions{display:flex;gap:6px;flex-wrap:wrap}
+body[data-skin="pixel"] :is(.branchbox,.wt-card){border-radius:0}
+body[data-skin="pixel"] .wt-name{font-size:11px}
+body[data-skin="pixel"] .wt-stage{font-size:8px}
