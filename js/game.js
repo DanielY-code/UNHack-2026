@@ -16,17 +16,17 @@ const $=id=>document.getElementById(id);
 function withCross(nodes){const out=[...nodes];nodes.forEach(n=>{if(n.mastery&&n.cross)out.push({id:n.id+"-x",t:Math.min(n.t+1,4),title:n.cross.title,branch:n.cross.to,crossSrc:n,learn:n.cross.learn,objective:n.cross.objective,res:n.cross.res||[],req:[n.id]})});return out}
 function allPaths(){const out={};for(const[k,p]of Object.entries(BASE_PATHS))out[k]={...p,nodes:withCross([...p.nodes,...(S.extraNodes[k]||[])])};for(const[k,p]of Object.entries(S.custom))out[k]={...p,nodes:withCross([...p.nodes,...(S.extraNodes[k]||[])]),ai:true};return out}
 function done(pid,nid){return(S.progress[pid]||[]).includes(nid)}
-function nodeState(pid,n){if(done(pid,n.id))return n.mastery&&!mastered(pid,n)?"mastering":"done";if(n.crossSrc)return mastered(pid,n.crossSrc)?"open":"locked";return n.req.every(r=>done(pid,r))?"open":"locked"}
+function nodeState(pid,n){if(done(pid,n.id))return n.mastery&&!mastered(pid,n)?"mastering":"done";if(n.crossSrc)return mastered(pid,n.crossSrc)?"open":"locked";if(S.early?.[pid+":"+n.id])return"open";return n.req.every(r=>done(pid,r))?"open":"locked"}
 const STAGE_NAMES=["Practitioner","Expert","Master"];
 const stageCount=n=>n.mastery?1+n.mastery.length:1;
 function mlevel(pid,n){return done(pid,n.id)?(n.mastery?Math.min(stageCount(n),S.mastery[pid+":"+n.id]||1):1):0}
 function mastered(pid,n){return mlevel(pid,n)>=stageCount(n)}
 function stageGems(n,stage){return Math.round(gemsFor(n)*(1+.5*(stage-1)))}
 function nextGems(pid,n){return stageGems(n,Math.min(stageCount(n),mlevel(pid,n)+1))}
-function statusLabel(pid,n,st){return st==="done"?(n.mastery?"Mastered":"Complete"):st==="mastering"?`Stage ${mlevel(pid,n)} of ${stageCount(n)}`:st==="open"?(n.crossSrc?"Crossover open":"Available"):"Locked"}
+function statusLabel(pid,n,st){return st==="done"?(n.mastery?"Mastered":"Complete"):st==="mastering"?`Stage ${mlevel(pid,n)} of ${stageCount(n)}`:st==="open"?(n.crossSrc?"Crossover open":"Available"):"Later"}
 function curObjective(pid,n){if(!n.mastery)return n.objective;const i=Math.min(mlevel(pid,n),stageCount(n)-1);return i===0?n.objective:n.mastery[i-1]}
 function ladder(pid,n){const lv=mlevel(pid,n);return`<ol class="ladder">${[n.objective,...n.mastery].map((o,i)=>`<li class="${i<lv?"got":i===lv?"now":""}"><b>${STAGE_NAMES[i]||"Stage "+(i+1)}</b><span>${esc(o)}</span></li>`).join("")}</ol>`}
-function lockText(pid,n,reqNames){return n.crossSrc?`Unlocks when you master ${esc(n.crossSrc.title)} (${mlevel(pid,n.crossSrc)} of ${stageCount(n.crossSrc)} stages done)`:`Unlocks after: ${reqNames.map(esc).join(", ")}`}
+function lockText(pid,n,reqNames){return n.crossSrc?`Unlocks when you master ${esc(n.crossSrc.title)} (${mlevel(pid,n.crossSrc)} of ${stageCount(n.crossSrc)} stages done)`:`Suggested after: ${reqNames.map(esc).join(", ")}`}
 function crossBlock(P,p,pid,n){if(n.mastery&&n.cross&&P[n.cross.to]){const m=mastered(pid,n);return`<div class="crossbox"><h4 style="display:flex;align-items:center">Crossover${tip("crossover")}</h4><div>${m?`Unlocked. You can branch into <b>${esc(P[n.cross.to].name)}</b> through <i>${esc(n.cross.title)}</i>.`:`Master all ${stageCount(n)} stages to unlock a crossover into <b>${esc(P[n.cross.to].name)}</b>: <i>${esc(n.cross.title)}</i>. It's a different field built on what you've proven here.`}</div></div>`}
  if(n.crossSrc&&P[n.branch])return`<div class="crossbox"><h4 style="display:flex;align-items:center">Crossover${tip("crossover")}</h4><div>Unlocked by mastering <b>${esc(n.crossSrc.title)}</b>. Skills from ${esc(p.name)} carry straight into ${esc(P[n.branch].name)}, the way an engineer can move into patent law.</div></div>`;return""}
 function nodeGfx(x,y,r,pid,n,big){const st=nodeState(pid,n);const cross=!!n.crossSrc;const acc=cross?"var(--cross)":"var(--accent)";
@@ -42,7 +42,7 @@ function nodeGfx(x,y,r,pid,n,big){const st=nodeState(pid,n);const cross=!!n.cros
  if(st==="done"){const k=big?1:.7;glyph=`<path d="M${x-9*k} ${y} l${6*k} ${7*k} l${12*k} ${-14*k}" fill="none" stroke="var(--gold-ink)" stroke-width="${big?3.5:3}" stroke-linecap="round" stroke-linejoin="round"/>`}
  else if(st==="mastering")glyph=`<text x="${x}" y="${y+fs/3+1}" text-anchor="middle" font-family="var(--f-mono)" font-size="${fs}" font-weight="700" fill="var(--gold)">${mlevel(pid,n)}/${stageCount(n)}</text>`;
  else if(st==="open")glyph=`<text x="${x}" y="${y+fs/3+1}" text-anchor="middle" font-family="var(--f-mono)" font-size="${fs}" font-weight="700" fill="var(--gold)">${nextGems(pid,n)}</text>`;
- else if(big)glyph=`<rect x="${x-7}" y="${y-2}" width="14" height="11" rx="2" fill="var(--locked)"/><path d="M${x-4} ${y-2} v-4 a4 4 0 0 1 8 0 v4" fill="none" stroke="var(--locked)" stroke-width="2.2"/>`;
+ else if(big)glyph=[-8,0,8].map(d=>`<circle cx="${x+d}" cy="${y}" r="2.6" fill="var(--muted)"/>`).join("");
  let segs="";if(n.mastery){const k=stageCount(n),lv=mlevel(pid,n),Rs=r+7,gp=.22;for(let i=0;i<k;i++){const a0=-Math.PI/2+i*2*Math.PI/k+gp/2,a1=-Math.PI/2+(i+1)*2*Math.PI/k-gp/2;
   segs+=`<path d="M${(x+Math.cos(a0)*Rs).toFixed(1)} ${(y+Math.sin(a0)*Rs).toFixed(1)} A${Rs} ${Rs} 0 0 1 ${(x+Math.cos(a1)*Rs).toFixed(1)} ${(y+Math.sin(a1)*Rs).toFixed(1)}" fill="none" stroke="${i<lv?"var(--gold)":"var(--locked)"}" stroke-width="${big?4:3}" stroke-linecap="round"/>`}}
  return{st,html:ring+segs+shape+glyph}}

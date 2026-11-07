@@ -6,7 +6,7 @@ function render(){
  document.body.dataset.skin=S.equip.skin;document.body.dataset.orb=S.equip.orb;document.body.dataset.titlefx=S.equip.title==="Legend of the Skill Tree"?"1":"0";
  $("hudName").textContent=S.profile.name||"Adventurer";
  const lv=level();$("hudLv").textContent=lv;$("hudXp").style.width=((S.earned%120)/120*100)+"%";
- $("hudTitle").textContent=(S.equip.title||["Novice","Apprentice","Explorer","Adept","Expert"][Math.min(4,Math.floor((lv-1)/2))])+" · "+(S.profile.grade==="First year"?"First year":"Grade "+S.profile.grade);
+ $("hudTitle").textContent=(S.equip.title||["Novice","Apprentice","Explorer","Adept","Expert"][Math.min(4,Math.floor((lv-1)/2))])+" · "+(/^\d+$/.test(S.profile.grade)?"Grade "+S.profile.grade:S.profile.grade);
  countGems(S.gems);applyCompanion();
  document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.view===S.view));
  const m=$("main");
@@ -45,7 +45,7 @@ function viewProfile(){const{b,e,t}=totalStats();const p=S.profile;const P=allPa
    ${goalsPanel()}
    ${updatesPanel()}
    <div class="panel plan"><div style="display:flex;align-items:center"><h3>Degree plan</h3>${tip("major")}</div>
-    <label class="fl" for="pMajor"><span>Intended major</span><select id="pMajor"><option value="">Still exploring</option>${Object.entries(P).map(([k,x])=>`<option value="${k}" ${S.major===k?"selected":""}>${esc(x.name)}</option>`).join("")}</select></label>
+    <label class="fl" for="pMajor"><span>Major (for now)</span><select id="pMajor"><option value="">Still exploring</option>${Object.entries(P).map(([k,x])=>`<option value="${k}" ${S.major===k?"selected":""}>${esc(x.name)}</option>`).join("")}</select></label>
     <div class="fl"><span style="display:flex;align-items:center">Minors (up to 2)${tip("minor")}</span><div class="chips">${Object.entries(P).filter(([k])=>k!==S.major).map(([k,x])=>`<button class="chip" data-minor="${k}" aria-pressed="${S.minors.includes(k)}" ${!S.minors.includes(k)&&S.minors.length>=2?"disabled":""}>${esc(x.name)}</button>`).join("")}</div></div>
     ${S.minors.map(k=>{const x=P[k];if(!x)return"";const tr=minorTrack(x),d=tr.filter(id=>done(k,id)).length;return`<div style="display:grid;gap:4px"><div class="line" style="justify-content:space-between;font-size:13px"><span>${esc(x.name)} minor</span><span class="muted">${d}/${tr.length}${d===tr.length?" · Complete":""}</span></div><div class="prog"><i style="width:${d/tr.length*100}%"></i></div></div>`}).join("")}
     <p class="muted" style="margin:0;font-size:13px">Plans change, and that's normal.${tip("switch")} Try pairing your major with a minor in something completely different.${tip("breadth")}</p>
@@ -68,12 +68,17 @@ function goalsPanel(){const G=S.goals;const P=allPaths();
   ${nodes.length?`<div style="display:grid;gap:6px">${nodes.map(({k,n})=>`<button class="btn small" data-goto="${k}|${esc(n.id)}" style="justify-self:start;text-align:left">${done(k,n.id)?"✓":"★"} ${esc(n.title)} · ${esc(P[k]?.name||"")}</button>`).join("")}</div>`:""}
  </div>`}
 
-function updatesPanel(){const P=allPaths();const U=S.updates||[];
- return`<div class="panel" style="display:grid;gap:10px"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap"><h3>Path updates</h3><button class="btn small" data-update>Something changed?</button></div>
-  ${U.length?U.slice(0,3).map(u=>`<div class="upd-log"><div class="muted" style="font-size:12px;font-family:var(--f-mono)">${esc(u.date)}</div><div style="font-size:14px">“${esc(u.text.length>140?u.text.slice(0,138)+"…":u.text)}”</div>
-   <div class="chips" style="gap:6px">${u.added.map(k=>`<span class="tag" style="color:var(--gold);border-color:var(--gold)">+ ${esc(P[k]?.name||k)}</span>`).join("")}${(u.grown||[]).map(k=>`<span class="tag ai">+ ${esc(P[k]?.name||k)}</span>`).join("")}${u.paused.map(k=>`<span class="tag">Paused ${esc(P[k]?.name||k)}</span>`).join("")}</div>
-   ${u.step&&P[u.step.pid]?.nodes.some(n=>n.id===u.step.id)?`<button class="btn small" data-goto="${u.step.pid}|${esc(u.step.id)}" style="justify-self:start">${done(u.step.pid,u.step.id)?"✓":"★"} First step</button>`:""}</div>`).join(""):`<p class="muted" style="margin:0;font-size:14px">When something changes, like a tough grade, a new interest or a summer job, tell your companion and your trees will adapt. Your updates are logged here.</p>`}
+function updatesPanel(){const P=allPaths();
+ const nm=k=>esc(P[k]?.name||k);const dn=id=>esc(destById(id)?.name||id);
+ const turns=[...(S.updates||[]).map((u,i)=>({date:u.date,o:i,kind:"update",u})),...(S.destLog||[]).map((d,i)=>({date:d.date,o:i+.5,kind:"dest",d}))].sort((a,b)=>b.date.localeCompare(a.date)||a.o-b.o).slice(0,5);
+ return`<div class="panel" style="display:grid;gap:10px"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap"><h3 style="display:flex;align-items:center">Your journey so far${tip("change")}</h3><button class="btn small" data-dst="menu">⤳ Change course</button></div>
+  <p class="muted" style="margin:0;font-size:13px">Every turn counts. Changing direction is part of the path, not a step back.</p>
+  ${turns.length?turns.map(t=>t.kind==="update"?updateEntry(P,t.u):`<div class="upd-log"><div class="muted" style="font-size:12px;font-family:var(--f-mono)">${esc(t.d.date)}</div><div style="font-size:14px">${t.d.mode==="roadblock"?`Found a new route to <b>${dn(t.d.dest)}</b>`:t.d.mode==="new"?`Started a new program toward <b>${dn(t.d.dest)}</b>`:`Set a new goal: <b>${dn(t.d.dest)}</b>`}${t.d.from&&P[t.d.from]?` <span class="muted">(from ${nm(t.d.from)})</span>`:""}</div></div>`).join("")
+   :`<p class="muted" style="margin:0;font-size:14px">Your turns and changes will appear here. Whenever something changes, tap Change course.</p>`}
  </div>`}
+function updateEntry(P,u){return`<div class="upd-log"><div class="muted" style="font-size:12px;font-family:var(--f-mono)">${esc(u.date)}</div><div style="font-size:14px">“${esc(u.text.length>140?u.text.slice(0,138)+"…":u.text)}”</div>
+   <div class="chips" style="gap:6px">${u.added.map(k=>`<span class="tag" style="color:var(--gold);border-color:var(--gold)">+ ${esc(P[k]?.name||k)}</span>`).join("")}${(u.grown||[]).map(k=>`<span class="tag ai">+ ${esc(P[k]?.name||k)}</span>`).join("")}${u.paused.map(k=>`<span class="tag">Paused ${esc(P[k]?.name||k)}</span>`).join("")}</div>
+   ${u.step&&P[u.step.pid]?.nodes.some(n=>n.id===u.step.id)?`<button class="btn small" data-goto="${u.step.pid}|${esc(u.step.id)}" style="justify-self:start">${done(u.step.pid,u.step.id)?"✓":"★"} First step</button>`:""}</div>`}
 
 function viewPaths(){const{t}=totalStats();const P=allPaths();
  const entries=Object.entries(P).sort((a,b)=>fit(b[1],t)-fit(a[1],t));
@@ -144,8 +149,8 @@ function viewTree(){if(viewMode()==="simple")return viewTreeSimple();const P=all
  const n=p.nodes.find(x=>x.id===S.sel);const st=nodeState(pid,n);const tgt=n.branch&&P[n.branch];
  const reqNames=n.req.map(r=>p.nodes.find(x=>x.id===r)?.title).filter(Boolean);
  const order=[...new Set([...S.pinned,pid])];
- return`<div class="section"><div class="treehead"><div><div class="eyebrow">${roleOf(pid)==="major"?"Your intended major":roleOf(pid)==="minor"?"Your minor":S.pinned.includes(pid)?"On your journey":"Preview mode"}</div><h2>${esc(p.name)}</h2></div>
- <div class="pathpick">${order.filter(k=>P[k]).map(k=>`<button class="chip" data-open="${k}" aria-pressed="${k===pid}">${esc(P[k].name)}</button>`).join("")}<button class="chip" data-go="paths">All paths…</button></div>${modeSwitch()}</div>
+ return`<div class="section"><div class="treehead"><div><div class="eyebrow">${roleOf(pid)==="major"?"Your current focus":roleOf(pid)==="minor"?"Your minor":S.pinned.includes(pid)?"On your journey":"Exploring"}</div><h2>${esc(p.name)}</h2></div>
+ <div class="pathpick">${order.filter(k=>P[k]).map(k=>`<button class="chip" data-open="${k}" aria-pressed="${k===pid}">${esc(P[k].name)}</button>`).join("")}<button class="chip" data-go="paths">All paths…</button></div><div class="head-actions"><button type="button" class="btn small" data-dst="menu">⤳ Change course</button>${modeSwitch()}</div></div>
  ${p.ai?`<div class="notice">Your companion grew this tree with AI. Check each resource link before relying on it.</div>`:""}
  ${planBar(P,pid,p)}
  <div class="tree-layout"><div class="treebox">${treeSVG(pid,p)}</div>
@@ -158,7 +163,7 @@ function viewTree(){if(viewMode()==="simple")return viewTreeSimple();const P=all
   <div class="kv"><h4>Rewards</h4><div class="rewards"><span><span class="gem" style="width:8px;height:8px"></span> ${nextGems(pid,n)} gems${n.mastery&&!mastered(pid,n)?" this stage":""}</span>${Object.entries(statReward(p,n)).map(([k,v])=>`<span>+${v} ${STATS[k]}</span>`).join("")}</div></div>
   ${n.res?.length?`<div class="kv"><h4>Free resources</h4><ul class="res">${n.res.map(r=>`<li><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.name)}<span>${esc(new URL(r.url).hostname.replace("www.",""))} ↗</span></a></li>`).join("")}</ul></div>`:""}
   ${tgt?`<div class="kv"><h4 style="display:flex;align-items:center">Branch${tip("branch")}</h4><div>${n.crossSrc?"This crossover opens":"This node opens"} the <b>${esc(tgt.name)}</b> tree. Specializations can shift as you learn, just like switching from one program to another.</div><button class="btn small" data-open="${n.branch}" style="justify-self:start;margin-top:6px">Preview ${esc(tgt.name)} →</button></div>`:""}
-  ${st==="locked"?`<div class="muted" style="font-size:14px">${lockText(pid,n,reqNames)}${tip("prereq")}</div>`:""}
+  ${st==="locked"?`<div class="muted" style="font-size:14px">${lockText(pid,n,reqNames)}${tip(n.crossSrc?"prereq":"later")}</div>${n.crossSrc?"":`<button class="btn small" data-early="${esc(pid)}|${esc(n.id)}" style="justify-self:start">Start it now anyway</button>`}`:""}
   ${st==="open"||st==="mastering"?`<div class="kv"><label class="fl" for="reflect">${n.mastery?`${STAGE_NAMES[mlevel(pid,n)]} stage: what did you make or learn?`:"What did you make or learn? (a sentence or two)"}</label><textarea id="reflect" placeholder="e.g. My guessing game works and I learned how while-loops stop."></textarea><button class="btn gold" id="claim">${n.mastery?`Claim ${STAGE_NAMES[mlevel(pid,n)]} stage`:"Complete objective & claim treasure"}</button><div class="muted" id="claimMsg" style="font-size:13px"></div></div>`:""}
   ${(st==="done"||st==="mastering")&&S.notes[pid+":"+n.id]?`<div class="kv"><h4>Your note</h4><div class="muted" style="font-style:italic">“${esc(S.notes[pid+":"+n.id])}”</div></div>`:""}
   ${n.mine&&st!=="done"&&st!=="mastering"?`<button class="btn small" id="delIdea" style="justify-self:start">Remove my objective</button>`:""}
@@ -171,7 +176,7 @@ function viewTree(){if(viewMode()==="simple")return viewTreeSimple();const P=all
  </aside></div>
  ${compassCard()}</div>`}
 function planBar(P,pid,p){const r=roleOf(pid);const maj=S.major&&P[S.major];
- if(r==="major")return`<div class="planbar"><span class="tag major">Intended major</span><span class="muted" style="font-size:14px">Curious about something else? Add a minor or explore freely.${tip("minor")}</span></div>`;
+ if(r==="major")return`<div class="planbar"><span class="tag major">Current focus</span><span class="muted" style="font-size:14px">Curious about something else? Add a minor or explore freely.${tip("minor")}</span></div>`;
  const carry=(()=>{if(!maj)return"";const{e}=totalStats();const earned=SK.filter(k=>e[k]>0).sort((a,b)=>e[b]-e[a]).slice(0,3);
   const top=x=>Object.entries(x.weights||{}).sort((a,b)=>b[1]-a[1]).slice(0,2).map(([k])=>k);const shared=top(maj).filter(k=>top(p).includes(k));
   const doneCount=(S.progress[S.major]||[]).length;const links=maj.nodes.filter(n=>n.branch===pid).map(n=>n.title);
@@ -184,7 +189,7 @@ function planBar(P,pid,p){const r=roleOf(pid);const maj=S.major&&P[S.major];
    <label style="display:flex;gap:8px;align-items:center;font-size:14px"><input type="checkbox" id="keepMinor" checked> Keep ${esc(maj.name)} as a minor</label>
    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" id="switchYes">Make ${esc(p.name)} my major</button><button class="btn" id="switchNo">Not yet</button></div></div>`})();
  return`<div class="planbar">${r==="minor"?`<span class="tag minor">Minor</span><span class="muted" style="font-size:14px">${minorTrack(p).filter(id=>done(pid,id)).length}/${minorTrack(p).length} minor-track objectives</span>`:""}
-  ${maj?`<button class="btn small" id="switchOpen">Thinking of switching your major here?</button>${tip("switch")}`:`<button class="btn small primary" id="setMajor">Make this my intended major</button>${tip("major")}`}
+  ${maj?`<button class="btn small" id="switchOpen">Thinking of switching your major here?</button>${tip("switch")}`:`<button class="btn small primary" id="setMajor">Make this my current focus</button>${tip("major")}`}
   ${r!=="minor"?`<button class="btn small" data-addminor="${pid}" ${S.minors.length>=2?"disabled":""}>Add as minor</button>`:`<button class="btn small" data-dropminor="${pid}">Drop minor</button>`}
  </div>${carry}`}
 

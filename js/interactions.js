@@ -20,6 +20,7 @@ function bind(){const m=$("main");
  m.querySelectorAll("[data-update]").forEach(b=>b.onclick=()=>openUpdate());
  m.querySelectorAll("[data-startover]").forEach(b=>b.onclick=startOver);
  m.querySelectorAll("[data-dst]").forEach(b=>b.onclick=()=>openDest(b.dataset.dst));
+ m.querySelectorAll("[data-early]").forEach(b=>b.onclick=()=>{const[pid,id]=b.dataset.early.split("|");(S.early??={})[pid+":"+id]=true;S.path=pid;S.sel=id;save();render();toast("Go for it. There's no wrong order.");document.querySelector(".scard.open textarea,#reflect")?.focus({preventScroll:true})});
  m.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{S.ui={...(S.ui||{}),mode:b.dataset.mode};save();render();toast(b.dataset.mode==="simple"?"Simple view":"Detailed view")});
  m.querySelectorAll("[data-snode]").forEach(b=>b.onclick=()=>{const id=b.dataset.snode;S.sel=S.sel===id&&b.classList.contains("scard-head")?null:id;save();render();
   const c=document.querySelector(".scard.open");if(c){c.scrollIntoView({block:"nearest",behavior:REDUCE?"auto":"smooth"});c.querySelector("textarea")?.focus({preventScroll:true})}});

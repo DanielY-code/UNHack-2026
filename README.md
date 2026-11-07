@@ -2,6 +2,8 @@
 
 **Team Threshold · UNHack**
 
+> A student's path is never set, and it's never too late to change it.
+
 > How might we help Grade 11 to first-year university students visualize where their courses and choices lead, so that they can kickstart their career readiness with a comparable, end-to-end view of their degree pathway?
 
 Edventure turns career planning into a video-game skill tree. Students roll stats from their interests, courses and activities. They preview career paths before committing to a degree, compare them side by side, and complete real-world objectives to earn treasure. A companion character (an orb, slime, knight, wizard or dragon, powered by Claude) helps them explore, and can grow brand-new skill trees on request.
@@ -10,6 +12,7 @@ Edventure turns career planning into a video-game skill tree. Students roll stat
 
 | Area | What it does |
 |---|---|
+| **Never too late** | Stages are phases (Start, Build, Deepen, Launch, Branch out), not school years, and the quiz accepts anyone from Grade 9 to "graduated or working". Steps have a suggested order rather than locks: any step can be started early ("Start it now anyway"); only mastery crossovers need their mastery first. One **Change course** button (Skill tree, World tree, Character tab) gathers every way to change direction, and **Your journey so far** logs each turn as progress. |
 | **Onboarding quiz** | New students start with a short quest-style quiz: about you, interests, courses, activities, six scenario questions, goals with a timeframe, and how sure they are of their direction. Results rank every path with reasons, add the chosen paths to the student's journey, set a major when they're sure, and plant their goals as ★ objectives in their top trees. Retake it any time from the Character tab. |
 | **Path updates** | "Something changed?" lets students describe a recent event or change of heart in their own words, for example *"I failed my Computer Science course, I don't enjoy problem solving, I like constructing models."* Their companion suggests paths to try next, new trees to grow, paths to pause and a small first step. Applying it reshapes their journey: paused paths keep all progress and resume when pinned again. Without an API key, a built-in keyword reader gives a simpler version. Updates are logged on the Character tab. |
 | **Character** | Interests, course grades and activities become seven stats (Logic, Tech, Science, Creativity, Charisma, Empathy, Craft). Set an intended major and up to two minors. |

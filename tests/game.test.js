@@ -61,3 +61,21 @@ test("every tree renders without errors", () => {
     assert.match(svg, /class="core"/);
   }
 });
+
+test("steps have a suggested order, not locks: any step can be started early, except crossovers", () => {
+  const { run } = loadGame();
+  run(`S.progress={}`);
+  const st = (id) => run(`nodeState("cs",allPaths().cs.nodes.find(n=>n.id==="${id}"))`);
+  assert.equal(st("cs6"), "locked");
+  run(`S.early={"cs:cs6":true}`);
+  assert.equal(st("cs6"), "open");
+  run(`S.early["eng:en4-x"]=true`);
+  assert.equal(run(`nodeState("eng",allPaths().eng.nodes.find(n=>n.id==="en4-x"))`), "locked", "crossovers still need mastery");
+  assert.equal(run(`statusLabel("cs",allPaths().cs.nodes[1],"locked")`), "Later");
+});
+
+test("stages are phases, not school years", () => {
+  const { run } = loadGame();
+  const tiers = JSON.parse(run("JSON.stringify(TIERS)"));
+  assert.ok(!tiers.some((t) => /gr(ade)?\s*\d/i.test(t)), tiers.join(", "));
+});

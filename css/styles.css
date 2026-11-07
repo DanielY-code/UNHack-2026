@@ -528,3 +528,13 @@ body[data-skin="pixel"] .wt-stage{font-size:8px}
 .wt-leaf.toward .wt-name{fill:var(--gold)}
 @media (max-width:520px){.dst-card{flex-direction:column}}
 body[data-skin="pixel"] :is(.dst-card,.dst-item,.dst-keep,.dst-line,.dst-flag){border-radius:0}
+
+/* ---------- change course ---------- */
+.head-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.cc-list{display:grid;gap:10px}
+.cc-opt{display:grid;gap:4px;text-align:left;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2);cursor:pointer;transition:border-color .15s,transform .12s}
+.cc-opt:hover,.cc-opt:focus-visible{border-color:var(--accent);transform:translateY(-2px)}
+.cc-opt b{font-family:var(--f-display);font-size:16px}
+.cc-opt span{color:var(--muted);font-size:14px}
+.scard-early{display:grid;gap:8px;justify-items:start}
+body[data-skin="pixel"] .cc-opt{border-radius:0}

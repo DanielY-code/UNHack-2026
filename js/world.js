@@ -69,16 +69,16 @@ function viewWorld(){const P=allPaths();const pid=worldFocusId();S.worldFocus=pi
  const trail=(S.worldTrail||[]).filter(k=>P[k]&&k!==pid);const picks=[...new Set([S.major,...S.pinned,pid].filter(k=>P[k]))];
  const kindTag={branch:`<span class="tag">Branch</span>`,cross:`<span class="tag" style="color:var(--cross);border-color:var(--cross)">Crossover</span>`,related:`<span class="tag ai">Could branch</span>`};
  const doneN=p.nodes.filter(n=>done(pid,n.id)).length;
- return`<div class="section wt"><div class="treehead"><div><div class="eyebrow">World tree${roleOf(pid)==="major"?" · your major":""}</div><h2>Where ${esc(p.name)} can take you</h2></div>
+ return`<div class="section wt"><div class="treehead"><div><div class="eyebrow">World tree${roleOf(pid)==="major"?" · your major":""}</div><h2>Where ${esc(p.name)} can take you</h2></div><button type="button" class="btn small" data-dst="menu">⤳ Change course</button>
   <div class="pathpick">${picks.map(k=>`<button class="chip" data-wfocus="${k}" aria-pressed="${k===pid}">${esc(P[k].name)}</button>`).join("")}<button class="chip" data-go="paths">All paths…</button></div></div>
  ${trail.length?`<nav class="wt-trail" aria-label="Paths you came from">${trail.map(k=>`<button class="linkbtn" data-trail="${k}">${esc(P[k].name)}</button><span aria-hidden="true">›</span>`).join("")}<b>${esc(p.name)}</b></nav>`:""}
  ${destCard(pid)}
- <p class="muted" style="margin:0;max-width:62ch">Climb from the roots through each stage of <b>${esc(p.name)}</b>. Branches show where it can lead; tap one to follow it and see where <i>that</i> path goes.</p>
+ <p class="muted" style="margin:0;max-width:62ch">Climb from the roots through each stage of <b>${esc(p.name)}</b>. Branches show where it can lead; tap one to follow it. Nothing here is fixed: you can change course at any point, and it's never too late.</p>
  <div class="wt-layout"><div class="branchbox">${worldTreeSVG(pid)}</div>
   <aside class="panel wt-list"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><h3>Branches from here</h3><span class="muted" style="font-family:var(--f-mono);font-size:12px">${doneN}/${p.nodes.length} done</span></div>
    ${br.length?br.map(b=>`<div class="wt-card ${b.state}"><div class="wt-card-top"><b>${esc(P[b.to].name)}</b>${currentDest()?.pid===pid&&currentDest()?.route.via===b.to?`<span class="tag" style="color:var(--gold);border-color:var(--gold)">◎ Your goal</span>`:kindTag[b.kind]}</div><div class="muted" style="font-size:13px">${esc(b.how)}</div><div class="wt-card-actions"><button class="btn small primary" data-focus="${b.to}">Follow branch</button><button class="btn small" data-open="${b.to}">See steps</button></div></div>`).join(""):`<p class="muted" style="margin:0;font-size:14px">No branches yet. Ask your companion to grow one.</p>`}
    <button class="btn small" data-open="${pid}" style="justify-self:start">Open ${esc(p.name)} steps</button>
-   <div class="wlegend" style="margin:0"><span><i style="background:var(--gold);border-color:var(--gold)"></i>Done</span><span><i style="border-color:var(--accent)"></i>Ready</span><span><i></i>Locked</span><span><i style="border-color:var(--cross);border-radius:3px"></i>Crossover</span><span><i style="border-color:var(--orb);border-style:dashed"></i>Could branch</span></div>
+   <div class="wlegend" style="margin:0"><span><i style="background:var(--gold);border-color:var(--gold)"></i>Done</span><span><i style="border-color:var(--accent)"></i>Ready</span><span><i></i>Later</span><span><i style="border-color:var(--cross);border-radius:3px"></i>Crossover</span><span><i style="border-color:var(--orb);border-style:dashed"></i>Could branch</span></div>
   </aside></div></div>`}
 
 function bindWorld(){const root=document.querySelector(".wt");if(!root)return;

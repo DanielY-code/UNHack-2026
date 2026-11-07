@@ -61,8 +61,8 @@
    "body": "Built from your interests, courses and activities, then grown by completing objectives. Everything you earn stays with you if you change paths."
   },
   "tiers": {
-   "title": "Stages",
-   "body": "Rough timing from Grade 9 through first year. Move faster or slower: there's no wrong pace."
+   "title": "Stages, not deadlines",
+   "body": "Stages are phases of learning, not school years. Start any of them in high school, first year, or years later, and move at your own pace."
   },
   "idea": {
    "title": "Your own objectives",
@@ -75,9 +75,20 @@
   "goal": {
    "title": "Your goals",
    "body": "Goals you set in the quiz become ★ objectives in your top trees. They earn treasure like any other objective, and you can retake the quiz to change them."
+  },
+  "later": {
+   "title": "Suggested order",
+   "body": "Steps have a suggested order, not locks. If you already know something or just want to try it, start it now anyway."
+  },
+  "change": {
+   "title": "Change course any time",
+   "body": "Your path isn't set. Switch routes, aim for a new goal or start a new program whenever you're ready. Everything you've done stays with you."
   }
  },
  "compass": [
+  "It's never too late to change direction. Students switch programs in second year, and people change careers at every age.",
+  "Your path isn't set in stone. It's a sketch you keep redrawing as you learn more about yourself.",
+  "Starting over isn't starting from zero. Every skill you've built comes with you.",
   "Changing your mind is part of learning, not a failure. Every objective you finish stays on your character sheet.",
   "Electives and breadth courses exist so you can explore. Use them to test-drive something new.",
   "A minor lets you keep a second passion alive without switching programs.",
@@ -85,6 +96,7 @@
   "Lots of careers sit between fields. Patent lawyers, health data analysts and UX engineers all combined two interests.",
   "Thinking about switching? An academic advisor can show you what carries over. Talking to one is free.",
   "You don't have to know your whole future. You only need a next step that interests you.",
-  "Curiosity compounds. The skills you build on one path, like logic, writing and teamwork, travel with you everywhere."
+  "Curiosity compounds. The skills you build on one path, like logic, writing and teamwork, travel with you everywhere.",
+  "There's no deadline on curiosity. Add a new path whenever something catches your interest."
  ]
 }

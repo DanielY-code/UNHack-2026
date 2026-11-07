@@ -42,7 +42,7 @@ function destCard(pid){const P=allPaths(),cd=currentDest();
  const rp=P[cd.pid];const paused=(S.paused||[]).includes(cd.pid)||!S.pinned.includes(cd.pid);const onRoute=pid===cd.pid||pid===cd.route.via;
  const doneN=rp.nodes.filter(n=>done(cd.pid,n.id)).length;
  return`<div class="panel dst-card ${paused?"warn":""}"><div class="dst-flag" aria-hidden="true">◎</div><div class="dst-main"><div class="eyebrow">Your destination</div><h3>${esc(cd.dest.name)}</h3>
-  <p class="dst-route"><span class="muted">Route:</span> ${esc(routeLabel(cd.dest,cd.route))}${cd.route.kind==="steps"?` <span class="tag">Own steps</span>`:""}</p>
+  <p class="dst-route"><span class="muted">Current route:</span> ${esc(routeLabel(cd.dest,cd.route))}${cd.route.kind==="steps"?` <span class="tag">Own steps</span>`:""}</p>
   ${paused?`<p class="dst-note">This route is paused. Pick another route to the same goal, or resume it.</p>`:onRoute?`<p class="muted" style="margin:0;font-size:14px">${doneN} of ${rp.nodes.length} steps done on this route.${cd.route.via&&pid===cd.pid?` Head for the <b>${esc(P[cd.route.via].name)}</b> branch marked ◎.`:""}</p>`
    :`<p class="muted" style="margin:0;font-size:14px">You're exploring ${esc(P[pid].name)}. Your route runs through ${esc(rp.name)}. <button class="linkbtn" data-wfocus="${cd.pid}">Back to my route</button></p>`}
   <div class="dst-actions"><button class="btn small ${paused?"primary":""}" data-dst="roadblock">Hit a roadblock?</button><button class="btn small" data-dst="goal">New goal from this path</button><button class="btn small" data-dst="new">Start a new program</button></div></div></div>`}
@@ -51,13 +51,20 @@ function destCard(pid){const P=allPaths(),cd=currentDest();
 let DST=null;
 function openDest(mode){DST={mode,reasons:[],q:"",keepOld:true};let el=$("dst");
  if(!el){el=document.createElement("div");el.id="dst";el.setAttribute("role","dialog");el.setAttribute("aria-modal","true");document.body.append(el)}
- el.setAttribute("aria-label",mode==="roadblock"?"Other routes":mode==="goal"?"Choose a goal":"Start a new program");el.hidden=false;document.body.style.overflow="hidden";drawDest()}
+ el.setAttribute("aria-label",mode==="menu"?"Change course":mode==="roadblock"?"Other routes":mode==="goal"?"Choose a goal":"Start a new program");el.hidden=false;document.body.style.overflow="hidden";drawDest()}
 function closeDest(){const el=$("dst");if(el)el.hidden=true;document.body.style.overflow="";DST=null}
 function drawDest(){const el=$("dst"),D=DST,P=allPaths(),cd=currentDest(),pid=worldFocusId();let body="";
  const oldName=cd?P[cd.pid]?.name:P[S.major]?.name;
  const keep=oldName&&D.mode!=="goal"?`<label class="dst-keep"><input type="checkbox" id="dstKeep" ${D.keepOld?"checked":""}> Keep ${esc(oldName)} as a minor <span class="muted">(otherwise it's paused, with all progress saved)</span></label>`:"";
  const kind=(d,r)=>r.kind==="steps"?`<span class="tag">New route · own steps</span>`:r.via?`<span class="tag" style="color:var(--cross);border-color:var(--cross)">Via a branch</span>`:`<span class="tag">Program</span>`;
- if(D.mode==="roadblock"){const alts=alternateRoutes(D.reasons);
+ if(D.mode==="menu"){const opt=(attr,title,text,ok=true)=>ok?`<button type="button" class="cc-opt" ${attr}><b>${title}</b><span>${text}</span></button>`:"";
+  body=`<div class="eyebrow">Change course</div><h2>It's never too late</h2><p class="muted">Your path isn't set. Pick what fits where you are right now. Everything you've done stays with you.</p>
+   <div class="cc-list">${opt('data-ccmode="update"',"Something changed","A tough grade, a new interest, a change of heart. Tell your companion and your trees adapt.")}
+   ${opt('data-dstmode="roadblock"',"Same goal, different route",cd?`Find another way to become a ${esc(cd.dest.name)}.`:"",!!cd)}
+   ${opt('data-dstmode="goal"',`New goal from ${esc(P[pid].name)}`,"Keep your path and aim it somewhere new, through one of its branches.")}
+   ${opt('data-dstmode="new"',"Start a new program","Switch fields completely. Your old path can stay as a minor.")}
+   ${opt('data-ccmode="quiz"',"Retake the quiz","Answer the questions again as the person you are now.")}</div>`}
+ else if(D.mode==="roadblock"){const alts=alternateRoutes(D.reasons);
   body=`<div class="eyebrow">Same goal, another way</div><h2>Other routes to ${esc(cd.dest.name)}</h2><p class="muted">Roadblocks are normal. What's getting in the way? Routes that help most move to the top.</p>
    <div class="chips">${DESTS.reasons.map(x=>`<button type="button" class="chip" data-reason="${x.id}" aria-pressed="${D.reasons.includes(x.id)}" title="${esc(x.hint)}">${esc(x.label)}</button>`).join("")}</div>
    <div class="dst-list">${alts.length?alts.map(r=>{const fit=r.goodFor.filter(g=>D.reasons.includes(g));return`<div class="dst-item ${fit.length?"match":""}"><div class="dst-item-top"><b>${esc(routeLabel(cd.dest,r))}</b>${kind(cd.dest,r)}</div><p>${esc(r.why)}</p>
@@ -78,6 +85,7 @@ function drawDest(){const el=$("dst"),D=DST,P=allPaths(),cd=currentDest(),pid=wo
 function bindDest(){const el=$("dst"),D=DST;$("dstClose").onclick=closeDest;el.onkeydown=e=>{if(e.key==="Escape")closeDest()};
  el.querySelectorAll("[data-reason]").forEach(b=>b.onclick=()=>{const r=b.dataset.reason;D.reasons=D.reasons.includes(r)?D.reasons.filter(x=>x!==r):[...D.reasons,r];drawDest()});
  el.querySelectorAll("[data-dstmode]").forEach(b=>b.onclick=()=>{D.mode=b.dataset.dstmode;drawDest()});
+ el.querySelectorAll("[data-ccmode]").forEach(b=>b.onclick=()=>{const m=b.dataset.ccmode;closeDest();m==="update"?openUpdate():openQuiz()});
  const k=$("dstKeep");if(k)k.onchange=()=>D.keepOld=k.checked;
  const q=$("dstQ");if(q){q.oninput=()=>{D.q=q.value;const pos=q.selectionStart;drawDest();const n=$("dstQ");n.focus();n.setSelectionRange(pos,pos)}}
  const gb=$("dstGrowBtn");if(gb)gb.onclick=()=>{const v=$("dstGrow").value.trim();if(!v)return;closeDest();$("orbPanel").hidden=false;greet();grow(v)};
