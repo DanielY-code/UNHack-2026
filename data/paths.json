@@ -1,0 +1,1171 @@
+{
+ "cs": {
+  "name": "Computer Science",
+  "blurb": "Make software that people use: logic, data structures, and shipping real apps.",
+  "weights": {
+   "logic": 3,
+   "tech": 3,
+   "creativity": 1
+  },
+  "nodes": [
+   {
+    "id": "cs1",
+    "t": 0,
+    "title": "Think like a programmer",
+    "learn": "Variables, loops, conditionals and functions in Python. You learn to break a problem into small steps a computer can follow.",
+    "objective": "Write a number-guessing game in Python that gives 'higher/lower' hints and counts tries.",
+    "res": [
+     {
+      "name": "CS50's Intro to Programming with Python",
+      "url": "https://cs50.harvard.edu/python/"
+     },
+     {
+      "name": "Official Python tutorial",
+      "url": "https://docs.python.org/3/tutorial/"
+     }
+    ],
+    "req": []
+   },
+   {
+    "id": "cs2",
+    "t": 1,
+    "title": "Data structures",
+    "learn": "Lists, dictionaries, stacks and queues, plus a first feel for why some code is faster (big-O).",
+    "objective": "Build a command-line to-do app that stores tasks in a dictionary and sorts them by due date.",
+    "res": [
+     {
+      "name": "Khan Academy: Algorithms",
+      "url": "https://www.khanacademy.org/computing/computer-science/algorithms"
+     },
+     {
+      "name": "Exercism Python track",
+      "url": "https://exercism.org/tracks/python"
+     }
+    ],
+    "req": [
+     "cs1"
+    ]
+   },
+   {
+    "id": "cs3",
+    "t": 1,
+    "title": "Web foundations",
+    "learn": "HTML for structure, CSS for style, JavaScript for behaviour. How a browser turns files into a page.",
+    "objective": "Build and publish a personal homepage with an about section and one project.",
+    "res": [
+     {
+      "name": "freeCodeCamp curriculum",
+      "url": "https://www.freecodecamp.org/learn"
+     },
+     {
+      "name": "The Odin Project",
+      "url": "https://www.theodinproject.com"
+     }
+    ],
+    "req": [
+     "cs1"
+    ]
+   },
+   {
+    "id": "cs4",
+    "t": 2,
+    "title": "Git & teamwork",
+    "learn": "Version control with git: commits, branches, pull requests. How real teams build software together.",
+    "objective": "Put one of your projects on GitHub with at least 5 meaningful commits and a README.",
+    "res": [
+     {
+      "name": "Learn Git Branching",
+      "url": "https://learngitbranching.js.org"
+     },
+     {
+      "name": "GitHub Skills",
+      "url": "https://skills.github.com"
+     }
+    ],
+    "req": [
+     "cs2"
+    ]
+   },
+   {
+    "id": "cs5",
+    "t": 2,
+    "title": "Discrete math",
+    "learn": "Binary, logic, sets and simple proofs — the math university CS courses lean on most in first year.",
+    "objective": "Convert 10 numbers between binary and decimal by hand and explain a truth table to a friend.",
+    "res": [
+     {
+      "name": "Khan Academy: Computers & the Internet",
+      "url": "https://www.khanacademy.org/computing/computers-and-internet"
+     },
+     {
+      "name": "MIT OCW: Mathematics for CS",
+      "url": "https://ocw.mit.edu/courses/6-042j-mathematics-for-computer-science-fall-2010/"
+     }
+    ],
+    "req": [
+     "cs2"
+    ]
+   },
+   {
+    "id": "cs6",
+    "t": 3,
+    "title": "Ship a real app",
+    "learn": "Planning, building and iterating on software with real users. Feedback beats guessing.",
+    "objective": "Build an app someone else actually uses, then collect feedback from 3 users and make one fix.",
+    "res": [
+     {
+      "name": "CS50x final project",
+      "url": "https://cs50.harvard.edu/x/"
+     },
+     {
+      "name": "The Odin Project: Full Stack JavaScript",
+      "url": "https://www.theodinproject.com/paths"
+     }
+    ],
+    "req": [
+     "cs3",
+     "cs4"
+    ],
+    "mastery": [
+     "Grow your app to 10 real users and track one usage number weekly.",
+     "Ship a version 2 based on that data and write a short postmortem."
+    ],
+    "cross": {
+     "to": "biz",
+     "title": "Tech entrepreneurship",
+     "learn": "Building an app is half a startup. The other half is customers, money and pitching.",
+     "objective": "Write a one-page lean canvas for your app.",
+     "res": [
+      {
+       "name": "Y Combinator Startup School",
+       "url": "https://www.startupschool.org"
+      }
+     ]
+    }
+   },
+   {
+    "id": "csb1",
+    "t": 3,
+    "title": "Cybersecurity",
+    "branch": "cyber",
+    "learn": "Security grows out of CS: you need to know how systems work before you can protect or break them.",
+    "objective": "Watch the first CS50 Cybersecurity lecture and write 3 things that surprised you.",
+    "res": [
+     {
+      "name": "CS50's Introduction to Cybersecurity",
+      "url": "https://cs50.harvard.edu/cybersecurity/"
+     }
+    ],
+    "req": [
+     "cs5"
+    ]
+   },
+   {
+    "id": "csb2",
+    "t": 3,
+    "title": "Data Science & AI",
+    "branch": "data",
+    "learn": "Data science mixes CS with statistics to find patterns and build models that learn.",
+    "objective": "Watch the first CS50 AI lecture and describe one real app that uses search or prediction.",
+    "res": [
+     {
+      "name": "CS50's Introduction to AI with Python",
+      "url": "https://cs50.harvard.edu/ai/"
+     }
+    ],
+    "req": [
+     "cs5"
+    ]
+   }
+  ]
+ },
+ "cyber": {
+  "name": "Cybersecurity",
+  "blurb": "Defend networks, find vulnerabilities ethically, and think like an attacker to stop one.",
+  "weights": {
+   "tech": 3,
+   "logic": 2,
+   "charisma": 1
+  },
+  "nodes": [
+   {
+    "id": "cy1",
+    "t": 0,
+    "title": "Networking basics",
+    "learn": "IP addresses, DNS, ports, TCP vs UDP. How a message actually crosses the internet.",
+    "objective": "Draw a diagram of your home network (devices, router, internet) and label what each part does.",
+    "res": [
+     {
+      "name": "Khan Academy: The Internet",
+      "url": "https://www.khanacademy.org/computing/computers-and-internet"
+     },
+     {
+      "name": "Professor Messer (free videos)",
+      "url": "https://www.professormesser.com"
+     }
+    ],
+    "req": []
+   },
+   {
+    "id": "cy2",
+    "t": 1,
+    "title": "Linux command line",
+    "learn": "Navigating files, permissions and processes from a terminal — the daily tool of security work.",
+    "objective": "Beat OverTheWire Bandit levels 0 to 10.",
+    "res": [
+     {
+      "name": "OverTheWire: Bandit",
+      "url": "https://overthewire.org/wargames/bandit/"
+     },
+     {
+      "name": "Linux Journey",
+      "url": "https://linuxjourney.com"
+     }
+    ],
+    "req": [
+     "cy1"
+    ]
+   },
+   {
+    "id": "cy3",
+    "t": 1,
+    "title": "Cryptography",
+    "learn": "Ciphers, hashing and public-key encryption: how secrets stay secret online.",
+    "objective": "Encrypt and decrypt a message with Caesar and Vigenère ciphers, then explain public-key crypto in 5 sentences.",
+    "res": [
+     {
+      "name": "Khan Academy: Cryptography",
+      "url": "https://www.khanacademy.org/computing/computer-science/cryptography"
+     },
+     {
+      "name": "CS50 Cybersecurity",
+      "url": "https://cs50.harvard.edu/cybersecurity/"
+     }
+    ],
+    "req": [
+     "cy1"
+    ]
+   },
+   {
+    "id": "cy4",
+    "t": 2,
+    "title": "Ethics & the law",
+    "learn": "Authorization, responsible disclosure and computer-misuse laws. The line between a researcher and a criminal is permission.",
+    "objective": "Write a one-page summary of responsible disclosure and your country's computer-misuse law.",
+    "res": [
+     {
+      "name": "picoCTF Primer",
+      "url": "https://primer.picoctf.org"
+     },
+     {
+      "name": "CS50 Cybersecurity",
+      "url": "https://cs50.harvard.edu/cybersecurity/"
+     }
+    ],
+    "req": [
+     "cy2"
+    ],
+    "mastery": [
+     "Write a responsible-disclosure policy for a pretend school website.",
+     "Give a 5-minute talk on hacking ethics to a class or club."
+    ],
+    "cross": {
+     "to": "law",
+     "title": "Cyber law & privacy",
+     "learn": "Privacy, breach and cybercrime laws are written by people who understand both technology and law.",
+     "objective": "Read the Privacy Commissioner's summary of PIPEDA and explain it in plain words.",
+     "res": [
+      {
+       "name": "Office of the Privacy Commissioner",
+       "url": "https://www.priv.gc.ca/en/"
+      }
+     ]
+    }
+   },
+   {
+    "id": "cy5",
+    "t": 2,
+    "title": "Capture the Flag",
+    "learn": "Legal hacking puzzles: web exploits, forensics, reverse engineering. Learn by breaking practice targets.",
+    "objective": "Solve 10 picoCTF practice challenges across at least 3 categories.",
+    "res": [
+     {
+      "name": "picoCTF",
+      "url": "https://picoctf.org"
+     },
+     {
+      "name": "TryHackMe",
+      "url": "https://tryhackme.com"
+     }
+    ],
+    "req": [
+     "cy2",
+     "cy3"
+    ]
+   },
+   {
+    "id": "cy6",
+    "t": 3,
+    "title": "Blue team defender",
+    "learn": "Logs, alerts and incident response — the defensive side most security jobs start in.",
+    "objective": "Complete an introductory SOC room on TryHackMe and write a short incident report.",
+    "res": [
+     {
+      "name": "TryHackMe",
+      "url": "https://tryhackme.com"
+     },
+     {
+      "name": "Professor Messer Security+ videos",
+      "url": "https://www.professormesser.com"
+     }
+    ],
+    "req": [
+     "cy4",
+     "cy5"
+    ]
+   }
+  ]
+ },
+ "data": {
+  "name": "Data Science & AI",
+  "blurb": "Turn messy numbers into answers and models that predict what comes next.",
+  "weights": {
+   "logic": 3,
+   "tech": 2,
+   "science": 2
+  },
+  "nodes": [
+   {
+    "id": "da1",
+    "t": 0,
+    "title": "Statistics foundations",
+    "learn": "Mean, median, spread, distributions and why a sample can lie.",
+    "objective": "Survey 20 classmates on one question and summarize the results with a chart and two statistics.",
+    "res": [
+     {
+      "name": "Khan Academy: Statistics",
+      "url": "https://www.khanacademy.org/math/statistics-probability"
+     },
+     {
+      "name": "StatQuest",
+      "url": "https://statquest.org"
+     }
+    ],
+    "req": []
+   },
+   {
+    "id": "da2",
+    "t": 1,
+    "title": "Spreadsheets & SQL",
+    "learn": "Asking questions of tables: filtering, grouping and joining data.",
+    "objective": "Finish all SQLBolt lessons and answer 5 of your own questions with queries.",
+    "res": [
+     {
+      "name": "SQLBolt",
+      "url": "https://sqlbolt.com"
+     },
+     {
+      "name": "Kaggle Learn: Intro to SQL",
+      "url": "https://www.kaggle.com/learn/intro-to-sql"
+     }
+    ],
+    "req": [
+     "da1"
+    ]
+   },
+   {
+    "id": "da3",
+    "t": 1,
+    "title": "Python for data",
+    "learn": "pandas for cleaning data and plotting libraries for charts.",
+    "objective": "Clean a public Kaggle dataset and make 3 charts that each answer a question.",
+    "res": [
+     {
+      "name": "Kaggle Learn: Pandas",
+      "url": "https://www.kaggle.com/learn/pandas"
+     },
+     {
+      "name": "Kaggle Learn: Data Visualization",
+      "url": "https://www.kaggle.com/learn/data-visualization"
+     }
+    ],
+    "req": [
+     "da1"
+    ]
+   },
+   {
+    "id": "da4",
+    "t": 1,
+    "title": "Math for models",
+    "learn": "Vectors, matrices and slopes — the intuition behind how models learn.",
+    "objective": "Explain in your own words, with a sketch, what a gradient is and why it points uphill.",
+    "res": [
+     {
+      "name": "3Blue1Brown: Linear Algebra",
+      "url": "https://www.3blue1brown.com/topics/linear-algebra"
+     },
+     {
+      "name": "Khan Academy: Calculus 1",
+      "url": "https://www.khanacademy.org/math/calculus-1"
+     }
+    ],
+    "req": [
+     "da1"
+    ]
+   },
+   {
+    "id": "da5",
+    "t": 2,
+    "title": "Machine learning",
+    "learn": "Training, testing and overfitting. Decision trees and how to measure a model honestly.",
+    "objective": "Train a model on the Kaggle Titanic dataset and beat 75% accuracy.",
+    "res": [
+     {
+      "name": "Kaggle Learn: Intro to Machine Learning",
+      "url": "https://www.kaggle.com/learn/intro-to-machine-learning"
+     },
+     {
+      "name": "CS50 AI",
+      "url": "https://cs50.harvard.edu/ai/"
+     }
+    ],
+    "req": [
+     "da3",
+     "da4"
+    ]
+   },
+   {
+    "id": "da6",
+    "t": 3,
+    "title": "Data story capstone",
+    "learn": "Communicating findings so non-experts can act on them.",
+    "objective": "Publish an analysis of a local issue (transit, sports, weather) with 3 charts and a clear conclusion.",
+    "res": [
+     {
+      "name": "Our World in Data",
+      "url": "https://ourworldindata.org"
+     },
+     {
+      "name": "Kaggle notebooks",
+      "url": "https://www.kaggle.com/code"
+     }
+    ],
+    "req": [
+     "da2",
+     "da5"
+    ],
+    "mastery": [
+     "Get feedback from someone affected by your issue and revise the analysis.",
+     "Present your data story to a local group, council meeting or school board."
+    ],
+    "cross": {
+     "to": "law",
+     "title": "Policy analysis",
+     "learn": "Policy analysts use data to shape laws and public programs.",
+     "objective": "Find a Statistics Canada table tied to a current policy debate and summarize what it shows.",
+     "res": [
+      {
+       "name": "Statistics Canada data",
+       "url": "https://www150.statcan.gc.ca/n1/en/type/data"
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "health": {
+  "name": "Health Sciences",
+  "blurb": "Pre-med, nursing, pharmacy and more: science in service of people.",
+  "weights": {
+   "science": 3,
+   "empathy": 3,
+   "charisma": 1
+  },
+  "nodes": [
+   {
+    "id": "he1",
+    "t": 0,
+    "title": "Biology & chemistry core",
+    "learn": "Cells, DNA, chemical reactions — the base every health program builds on.",
+    "objective": "Finish one Khan Academy biology unit and score 80%+ on its unit test.",
+    "res": [
+     {
+      "name": "Khan Academy: Biology",
+      "url": "https://www.khanacademy.org/science/biology"
+     },
+     {
+      "name": "OpenStax Biology 2e (free textbook)",
+      "url": "https://openstax.org/details/books/biology-2e"
+     }
+    ],
+    "req": []
+   },
+   {
+    "id": "he2",
+    "t": 1,
+    "title": "Anatomy & physiology",
+    "learn": "How the body's systems work together, from the heart to the nervous system.",
+    "objective": "Make labelled diagrams of 5 body systems and explain one disease affecting each.",
+    "res": [
+     {
+      "name": "OpenStax Anatomy & Physiology 2e",
+      "url": "https://openstax.org/details/books/anatomy-and-physiology-2e"
+     },
+     {
+      "name": "Crash Course",
+      "url": "https://thecrashcourse.com"
+     }
+    ],
+    "req": [
+     "he1"
+    ]
+   },
+   {
+    "id": "he3",
+    "t": 1,
+    "title": "First aid & CPR",
+    "learn": "Responding to emergencies: assessment, CPR and AED use. Most care roles expect this certificate.",
+    "objective": "Earn a first aid & CPR certificate.",
+    "res": [
+     {
+      "name": "Canadian Red Cross training",
+      "url": "https://www.redcross.ca/training-and-certification"
+     },
+     {
+      "name": "St. John Ambulance",
+      "url": "https://www.sja.ca"
+     }
+    ],
+    "req": [
+     "he1"
+    ]
+   },
+   {
+    "id": "he4",
+    "t": 2,
+    "title": "Volunteer in care",
+    "learn": "What patient care actually feels like day to day. Admissions committees look for this.",
+    "objective": "Volunteer 20 hours at a hospital, clinic or seniors' home and write a one-page reflection.",
+    "res": [
+     {
+      "name": "Volunteer Canada",
+      "url": "https://volunteer.ca"
+     }
+    ],
+    "req": [
+     "he3"
+    ]
+   },
+   {
+    "id": "he5",
+    "t": 2,
+    "title": "Reading research",
+    "learn": "How to read a study: sample size, controls and why one paper isn't proof.",
+    "objective": "Find one study on PubMed and summarize its question, method and limits in plain language.",
+    "res": [
+     {
+      "name": "PubMed",
+      "url": "https://pubmed.ncbi.nlm.nih.gov"
+     },
+     {
+      "name": "Cochrane evidence",
+      "url": "https://www.cochrane.org/evidence"
+     }
+    ],
+    "req": [
+     "he2"
+    ],
+    "mastery": [
+     "Compare two studies that disagree and explain why they might differ.",
+     "Write a plain-language evidence summary a family member could use."
+    ],
+    "cross": {
+     "to": "law",
+     "title": "Health policy & law",
+     "learn": "Evidence becomes rules through health policy and law: consent, privacy, public health orders.",
+     "objective": "Pick one Canadian public health policy and trace the evidence behind it.",
+     "res": [
+      {
+       "name": "Public Health Agency of Canada",
+       "url": "https://www.canada.ca/en/public-health.html"
+      }
+     ]
+    }
+   },
+   {
+    "id": "he6",
+    "t": 3,
+    "title": "Shadow a professional",
+    "learn": "Comparing real careers: doctor, nurse, pharmacist, physiotherapist, paramedic.",
+    "objective": "Job-shadow or interview a health professional and compare their path with one other role.",
+    "res": [
+     {
+      "name": "Explore Health Careers",
+      "url": "https://explorehealthcareers.org"
+     }
+    ],
+    "req": [
+     "he4",
+     "he5"
+    ]
+   },
+   {
+    "id": "heb1",
+    "t": 3,
+    "title": "Health data & bioinformatics",
+    "branch": "data",
+    "learn": "Hospitals and labs generate huge datasets; analysts who understand biology are rare and needed.",
+    "objective": "Read about bioinformatics and list 3 problems it helps solve.",
+    "res": [
+     {
+      "name": "Our World in Data: Health",
+      "url": "https://ourworldindata.org/health-meta"
+     }
+    ],
+    "req": [
+     "he5"
+    ]
+   }
+  ]
+ },
+ "eng": {
+  "name": "Engineering",
+  "blurb": "Design, build and test physical things — from phone stands to robots.",
+  "weights": {
+   "craft": 3,
+   "science": 2,
+   "logic": 2
+  },
+  "nodes": [
+   {
+    "id": "en1",
+    "t": 0,
+    "title": "Physics of motion",
+    "learn": "Forces, energy and Newton's laws: why bridges stand and eggs break.",
+    "objective": "Build an egg-drop device from 2 metres and calculate the impact force with and without it.",
+    "res": [
+     {
+      "name": "Khan Academy: Physics",
+      "url": "https://www.khanacademy.org/science/physics"
+     },
+     {
+      "name": "TeachEngineering",
+      "url": "https://www.teachengineering.org"
+     }
+    ],
+    "req": []
+   },
+   {
+    "id": "en2",
+    "t": 1,
+    "title": "CAD & 3D design",
+    "learn": "Computer-aided design: sketches, extrusions, tolerances.",
+    "objective": "Design a phone stand in CAD and export a printable STL file.",
+    "res": [
+     {
+      "name": "Tinkercad",
+      "url": "https://www.tinkercad.com"
+     },
+     {
+      "name": "Onshape for education",
+      "url": "https://www.onshape.com/en/education"
+     }
+    ],
+    "req": [
+     "en1"
+    ]
+   },
+   {
+    "id": "en3",
+    "t": 1,
+    "title": "Electronics & Arduino",
+    "learn": "Circuits, voltage, sensors and microcontrollers.",
+    "objective": "Build (or simulate in Tinkercad Circuits) a circuit where a sensor controls an LED.",
+    "res": [
+     {
+      "name": "Arduino docs",
+      "url": "https://docs.arduino.cc"
+     },
+     {
+      "name": "Tinkercad Circuits",
+      "url": "https://www.tinkercad.com/circuits"
+     }
+    ],
+    "req": [
+     "en1"
+    ]
+   },
+   {
+    "id": "en4",
+    "t": 2,
+    "title": "Design process",
+    "learn": "Define, ideate, prototype, test, repeat — how engineers solve messy real problems.",
+    "objective": "Document all 5 stages while fixing one real annoyance at home or school.",
+    "res": [
+     {
+      "name": "MIT OpenCourseWare",
+      "url": "https://ocw.mit.edu"
+     },
+     {
+      "name": "TeachEngineering",
+      "url": "https://www.teachengineering.org"
+     }
+    ],
+    "req": [
+     "en2"
+    ],
+    "mastery": [
+     "Run a second design cycle on the same problem using user feedback, and measure the improvement.",
+     "Mentor a younger student through a full design cycle, or enter a design competition."
+    ],
+    "cross": {
+     "to": "law",
+     "title": "Patent & tech law",
+     "learn": "Engineers who understand law become patent agents and tech lawyers: they decide who owns an invention.",
+     "objective": "Look up how patents work in Canada and summarize what an inventor must prove.",
+     "res": [
+      {
+       "name": "Canadian Intellectual Property Office",
+       "url": "https://ised-isde.canada.ca/site/canadian-intellectual-property-office/en"
+      }
+     ]
+    }
+   },
+   {
+    "id": "en5",
+    "t": 3,
+    "title": "Robotics",
+    "learn": "Mechanics, electronics and code working as one machine.",
+    "objective": "Join a FIRST team or build a line-following robot.",
+    "res": [
+     {
+      "name": "FIRST",
+      "url": "https://www.firstinspires.org"
+     },
+     {
+      "name": "Arduino docs",
+      "url": "https://docs.arduino.cc"
+     }
+    ],
+    "req": [
+     "en3",
+     "en4"
+    ]
+   },
+   {
+    "id": "enb1",
+    "t": 3,
+    "title": "Software for machines",
+    "branch": "cs",
+    "learn": "Embedded and robotics software sits right between engineering and CS.",
+    "objective": "Write a program that reads a sensor and makes a decision based on it.",
+    "res": [
+     {
+      "name": "CS50 Python",
+      "url": "https://cs50.harvard.edu/python/"
+     }
+    ],
+    "req": [
+     "en3"
+    ]
+   }
+  ]
+ },
+ "design": {
+  "name": "UX & Visual Design",
+  "blurb": "Make products people love using: research, visuals, prototypes and accessibility.",
+  "weights": {
+   "creativity": 3,
+   "empathy": 2,
+   "charisma": 2
+  },
+  "nodes": [
+   {
+    "id": "de1",
+    "t": 0,
+    "title": "Visual design basics",
+    "learn": "Colour, typography, layout and hierarchy — why some posters work and others don't.",
+    "objective": "Redesign one school poster three different ways and explain which works best.",
+    "res": [
+     {
+      "name": "Canva Design School",
+      "url": "https://www.canva.com/designschool/"
+     },
+     {
+      "name": "Google Fonts Knowledge",
+      "url": "https://fonts.google.com/knowledge"
+     }
+    ],
+    "req": []
+   },
+   {
+    "id": "de2",
+    "t": 1,
+    "title": "User research",
+    "learn": "Interviews and observation: designing from what people do, not what you assume.",
+    "objective": "Interview 3 people about an app they find annoying and list their top pain points.",
+    "res": [
+     {
+      "name": "Nielsen Norman Group articles",
+      "url": "https://www.nngroup.com/articles/"
+     },
+     {
+      "name": "Laws of UX",
+      "url": "https://lawsofux.com"
+     }
+    ],
+    "req": [
+     "de1"
+    ],
+    "mastery": [
+     "Run a usability test with 5 people on an existing app and rank the problems.",
+     "Turn your interviews into a persona and journey map and present them."
+    ],
+    "cross": {
+     "to": "biz",
+     "title": "Product management",
+     "learn": "Product managers decide what gets built and why. User research is their core skill.",
+     "objective": "Write a one-page requirements doc for a single feature.",
+     "res": [
+      {
+       "name": "Nielsen Norman Group articles",
+       "url": "https://www.nngroup.com/articles/"
+      }
+     ]
+    }
+   },
+   {
+    "id": "de3",
+    "t": 1,
+    "title": "Prototyping in Figma",
+    "learn": "Wireframes, components and clickable prototypes.",
+    "objective": "Make a clickable 5-screen prototype that fixes one pain point you found.",
+    "res": [
+     {
+      "name": "Figma for education",
+      "url": "https://www.figma.com/education/"
+     }
+    ],
+    "req": [
+     "de1"
+    ]
+   },
+   {
+    "id": "de4",
+    "t": 2,
+    "title": "Accessibility",
+    "learn": "Designing for everyone: contrast, screen readers, keyboard use (WCAG).",
+    "objective": "Audit a website with WAVE and propose fixes for 3 issues.",
+    "res": [
+     {
+      "name": "WAVE checker",
+      "url": "https://wave.webaim.org"
+     },
+     {
+      "name": "W3C accessibility fundamentals",
+      "url": "https://www.w3.org/WAI/fundamentals/"
+     }
+    ],
+    "req": [
+     "de2"
+    ]
+   },
+   {
+    "id": "de5",
+    "t": 3,
+    "title": "Portfolio case study",
+    "learn": "Telling the story of a design: problem, research, iterations, result.",
+    "objective": "Write a case study for your prototype with before/after screens.",
+    "res": [
+     {
+      "name": "Nielsen Norman Group articles",
+      "url": "https://www.nngroup.com/articles/"
+     }
+    ],
+    "req": [
+     "de3",
+     "de4"
+    ]
+   },
+   {
+    "id": "deb1",
+    "t": 3,
+    "title": "Front-end development",
+    "branch": "cs",
+    "learn": "Designers who can code their own prototypes become front-end developers.",
+    "objective": "Rebuild one of your Figma screens in HTML and CSS.",
+    "res": [
+     {
+      "name": "freeCodeCamp",
+      "url": "https://www.freecodecamp.org/learn"
+     }
+    ],
+    "req": [
+     "de3"
+    ]
+   }
+  ]
+ },
+ "law": {
+  "name": "Law & Policy",
+  "blurb": "Argue, research and shape the rules society runs on.",
+  "weights": {
+   "charisma": 3,
+   "logic": 2,
+   "empathy": 1
+  },
+  "nodes": [
+   {
+    "id": "la1",
+    "t": 0,
+    "title": "How law works",
+    "learn": "Courts, statutes, common law and Quebec's civil law, and where the Charter fits.",
+    "objective": "Watch a public court or tribunal hearing (many are streamed) and summarize each side's argument.",
+    "res": [
+     {
+      "name": "Justice Canada: Canada's System of Justice",
+      "url": "https://www.justice.gc.ca/eng/csj-sjc/just/"
+     },
+     {
+      "name": "CanLII",
+      "url": "https://www.canlii.org"
+     }
+    ],
+    "req": []
+   },
+   {
+    "id": "la2",
+    "t": 1,
+    "title": "Argument & debate",
+    "learn": "Building a case: claims, evidence, rebuttal, and persuading a neutral listener.",
+    "objective": "Compete in a debate or write a one-page persuasive brief on a school policy.",
+    "res": [
+     {
+      "name": "Ontario Justice Education Network",
+      "url": "https://ojen.ca"
+     }
+    ],
+    "req": [
+     "la1"
+    ]
+   },
+   {
+    "id": "la3",
+    "t": 1,
+    "title": "Legal research",
+    "learn": "Finding and reading real decisions: facts, issue, ruling, reasoning.",
+    "objective": "Find a Supreme Court of Canada decision on CanLII and summarize it in plain words.",
+    "res": [
+     {
+      "name": "CanLII",
+      "url": "https://www.canlii.org"
+     },
+     {
+      "name": "Supreme Court of Canada",
+      "url": "https://www.scc-csc.ca"
+     }
+    ],
+    "req": [
+     "la1"
+    ],
+    "mastery": [
+     "Brief a case: facts, issue, decision and reasoning.",
+     "Write a 2-page legal memo answering a real question."
+    ],
+    "cross": {
+     "to": "cs",
+     "title": "Legal tech",
+     "learn": "Legal tech builds tools that make law searchable and accessible to everyone.",
+     "objective": "Search CanLII for 5 cases on one topic and describe a tool that would make it easier.",
+     "res": [
+      {
+       "name": "CanLII",
+       "url": "https://www.canlii.org"
+      }
+     ]
+    }
+   },
+   {
+    "id": "la4",
+    "t": 2,
+    "title": "Rights & ethics",
+    "learn": "Charter rights, their limits, and the ethics lawyers must follow.",
+    "objective": "Write a short op-ed on a current Charter issue, presenting both sides fairly.",
+    "res": [
+     {
+      "name": "Canadian Charter of Rights and Freedoms",
+      "url": "https://www.justice.gc.ca/eng/csj-sjc/rfc-dlc/ccrf-ccdl/"
+     }
+    ],
+    "req": [
+     "la2"
+    ]
+   },
+   {
+    "id": "la5",
+    "t": 2,
+    "title": "Mock trial",
+    "learn": "Courtroom roles, examination of witnesses and closing arguments.",
+    "objective": "Take part in a mock trial as counsel or a witness.",
+    "res": [
+     {
+      "name": "OJEN mock trials",
+      "url": "https://ojen.ca"
+     }
+    ],
+    "req": [
+     "la2",
+     "la3"
+    ]
+   },
+   {
+    "id": "la6",
+    "t": 3,
+    "title": "Road to law school",
+    "learn": "In most of Canada law is a second-entry degree: an undergrad in any field, the LSAT, then a JD.",
+    "objective": "Compare admission requirements at 3 law schools and pick an undergrad that keeps the door open.",
+    "res": [
+     {
+      "name": "LSAC (LSAT)",
+      "url": "https://www.lsac.org"
+     },
+     {
+      "name": "OLSAS (Ontario law applications)",
+      "url": "https://www.ouac.on.ca/olsas/"
+     }
+    ],
+    "req": [
+     "la4",
+     "la5"
+    ]
+   }
+  ]
+ },
+ "biz": {
+  "name": "Business & Entrepreneurship",
+  "blurb": "Start ventures, manage money and lead teams.",
+  "weights": {
+   "charisma": 3,
+   "logic": 2,
+   "creativity": 1
+  },
+  "nodes": [
+   {
+    "id": "bu1",
+    "t": 0,
+    "title": "Money basics",
+    "learn": "Revenue, costs, profit and budgeting.",
+    "objective": "Build a one-month budget for a real or imagined small business.",
+    "res": [
+     {
+      "name": "Khan Academy: Personal finance",
+      "url": "https://www.khanacademy.org/college-careers-more/personal-finance"
+     },
+     {
+      "name": "JA Canada",
+      "url": "https://jacanada.org"
+     }
+    ],
+    "req": []
+   },
+   {
+    "id": "bu2",
+    "t": 1,
+    "title": "Marketing",
+    "learn": "Audiences, messaging and measuring whether a campaign worked.",
+    "objective": "Market a school club event and measure turnout against a goal.",
+    "res": [
+     {
+      "name": "HubSpot Academy",
+      "url": "https://academy.hubspot.com"
+     }
+    ],
+    "req": [
+     "bu1"
+    ]
+   },
+   {
+    "id": "bu3",
+    "t": 1,
+    "title": "Accounting basics",
+    "learn": "Income statements and balance sheets: the language of business.",
+    "objective": "Build an income statement for a small venture scenario.",
+    "res": [
+     {
+      "name": "Khan Academy: Accounting",
+      "url": "https://www.khanacademy.org/economics-finance-domain/core-finance/accounting-and-financial-statements"
+     }
+    ],
+    "req": [
+     "bu1"
+    ]
+   },
+   {
+    "id": "bu4",
+    "t": 2,
+    "title": "Pitch & sell",
+    "learn": "Pitching an idea clearly and handling tough questions.",
+    "objective": "Pitch an idea to 3 adults and write down their feedback.",
+    "res": [
+     {
+      "name": "JA Canada",
+      "url": "https://jacanada.org"
+     }
+    ],
+    "req": [
+     "bu2"
+    ]
+   },
+   {
+    "id": "bu5",
+    "t": 2,
+    "title": "Run a mini venture",
+    "learn": "Running something real: sourcing, pricing, selling and tracking results.",
+    "objective": "Run a small venture (bake sale, tutoring, reselling) and record revenue and costs.",
+    "res": [
+     {
+      "name": "Futurpreneur",
+      "url": "https://www.futurpreneur.ca"
+     }
+    ],
+    "req": [
+     "bu2",
+     "bu3"
+    ],
+    "mastery": [
+     "Run the venture again and improve your profit margin.",
+     "Teach someone else to run it and write your playbook."
+    ],
+    "cross": {
+     "to": "data",
+     "title": "Business analytics",
+     "learn": "Analysts turn sales and customer data into decisions.",
+     "objective": "Track your venture's sales in a spreadsheet and chart the trend.",
+     "res": [
+      {
+       "name": "Kaggle Learn: Pandas",
+       "url": "https://www.kaggle.com/learn/pandas"
+      }
+     ]
+    }
+   },
+   {
+    "id": "bu6",
+    "t": 3,
+    "title": "Choose a business path",
+    "learn": "Commerce, co-op and entrepreneurship programs, and how they differ.",
+    "objective": "Compare 3 commerce programs, including co-op options.",
+    "res": [
+     {
+      "name": "JA Canada",
+      "url": "https://jacanada.org"
+     }
+    ],
+    "req": [
+     "bu4",
+     "bu5"
+    ]
+   }
+  ]
+ }
+}

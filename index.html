@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Edventure</title>
+<meta name="description" content="Career skill trees for senior high school and first-year university students: preview, compare and switch paths before committing to a degree.">
+<meta name="theme-color" content="#0d1322">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500;700&family=Press+Start+2P&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header class="hud">
+  <div class="hud-in">
+    <div class="brand"><i></i>Edventure</div>
+    <div class="who"><b id="hudName">Adventurer</b><span id="hudTitle">Novice</span></div>
+    <div class="meters">
+      <div class="chip-stat" title="Level">LV <b id="hudLv">1</b><div class="xpbar"><i id="hudXp" style="width:0%"></i></div></div>
+      <div class="chip-stat" title="Treasure"><span class="gem"></span><b id="hudGems">0</b></div>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-view="profile" id="tab-profile">Character</button>
+      <button role="tab" data-view="paths" id="tab-paths">Career paths</button>
+      <button role="tab" data-view="world" id="tab-world">World tree</button>
+      <button role="tab" data-view="tree" id="tab-tree">Skill tree</button>
+      <button role="tab" data-view="compare" id="tab-compare">Compare</button>
+      <button role="tab" data-view="shop" id="tab-shop">Treasury</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="main"></main>
+
+<button class="orb" id="orbBtn" aria-label="Ask your companion"></button>
+<section class="orbpanel" id="orbPanel" hidden aria-label="Companion guide">
+  <header><div><b id="compName">Lumen</b><div class="muted" style="font-size:12px" id="compSub">Your guide orb · powered by Claude</div></div><button class="btn small" id="orbClose">Close</button></header>
+  <div class="log" id="orbLog"></div>
+  <div class="quick" id="orbQuick">
+    <button class="chip" data-q="Which path fits me best right now, and why?">Which path fits me?</button>
+    <button class="chip" data-q="What should I do this month to make progress?">Plan my month</button>
+    <button class="chip" data-q="I'm curious about a career that isn't on my map yet. Ask me a question to figure out which one.">Explore something new</button>
+  </div>
+  <form id="orbForm"><input type="text" id="orbInput" placeholder="Ask anything…" autocomplete="off"><button class="btn primary" id="orbSend">Ask</button></form>
+  <div class="grow">
+    <label class="fl" for="growInput">Grow a new path (e.g. Marine biology, Game design)</label>
+    <div style="display:flex;gap:8px"><input type="text" id="growInput" placeholder="Career or field"><button class="btn gold" id="growBtn">Grow</button></div>
+    <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="growBranch" checked> <span id="growBranchLbl">Branch it from the tree I'm viewing</span></label>
+  </div>
+</section>
+<canvas id="fxCanvas" aria-hidden="true"></canvas>
+<div id="lvlup" hidden aria-live="polite"></div>
+<div class="toast" id="toast" hidden></div>
+<div id="tipBubble" role="tooltip" hidden></div>
+<div class="hcard" id="hcard" hidden role="dialog" aria-label="Objective preview"></div>
+<noscript><p style="padding:24px">Edventure needs JavaScript to run.</p></noscript>
+<script src="js/content.js" defer></script>
+<script src="js/companions.js" defer></script>
+<script src="js/guidance.js" defer></script>
+<script src="js/game.js" defer></script>
+<script src="js/views.js" defer></script>
+<script src="js/world.js" defer></script>
+<script src="js/interactions.js" defer></script>
+<script src="js/hovercard.js" defer></script>
+<script src="js/companion-chat.js" defer></script>
+<script src="js/tooltips.js" defer></script>
+<script src="js/fx.js" defer></script>
+<script src="js/main.js" defer></script>
+</body>
+</html>

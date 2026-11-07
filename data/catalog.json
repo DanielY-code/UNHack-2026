@@ -1,0 +1,177 @@
+{
+ "stats": {
+  "logic": "Logic",
+  "tech": "Tech",
+  "science": "Science",
+  "creativity": "Creativity",
+  "charisma": "Charisma",
+  "empathy": "Empathy",
+  "craft": "Craft"
+ },
+ "tiers": [
+  "Now · Gr 9–10",
+  "Gr 10–11",
+  "Gr 11–12",
+  "Gr 12 · 1st year",
+  "Crossover"
+ ],
+ "gems": [
+  20,
+  30,
+  40,
+  60,
+  70
+ ],
+ "interests": {
+  "Video games": {
+   "tech": 1,
+   "creativity": 1,
+   "logic": 1
+  },
+  "Puzzles": {
+   "logic": 2
+  },
+  "Building things": {
+   "craft": 2,
+   "science": 1
+  },
+  "Drawing & art": {
+   "creativity": 2
+  },
+  "Helping people": {
+   "empathy": 2,
+   "charisma": 1
+  },
+  "Biology & the body": {
+   "science": 2,
+   "empathy": 1
+  },
+  "Coding": {
+   "tech": 2,
+   "logic": 1
+  },
+  "Hacking & privacy": {
+   "tech": 2,
+   "logic": 1
+  },
+  "Math": {
+   "logic": 2
+  },
+  "Writing & stories": {
+   "creativity": 1,
+   "charisma": 1
+  },
+  "Robots": {
+   "craft": 1,
+   "tech": 1,
+   "science": 1
+  },
+  "Data & sports stats": {
+   "logic": 1,
+   "tech": 1
+  },
+  "Fashion & design": {
+   "creativity": 2,
+   "charisma": 1
+  },
+  "Psychology": {
+   "empathy": 2,
+   "science": 1
+  },
+  "Business & money": {
+   "charisma": 2,
+   "logic": 1
+  },
+  "Nature & environment": {
+   "science": 2
+  }
+ },
+ "subjects": {
+  "Math": {
+   "logic": 1
+  },
+  "English": {
+   "charisma": 1,
+   "creativity": 0.5
+  },
+  "Biology": {
+   "science": 1,
+   "empathy": 0.3
+  },
+  "Chemistry": {
+   "science": 1
+  },
+  "Physics": {
+   "science": 1,
+   "logic": 0.5
+  },
+  "Computer Studies": {
+   "tech": 1,
+   "logic": 0.5
+  },
+  "Visual Arts": {
+   "creativity": 1
+  },
+  "Music": {
+   "creativity": 1
+  },
+  "History": {
+   "charisma": 0.6,
+   "empathy": 0.4
+  },
+  "Business": {
+   "charisma": 1
+  },
+  "Tech / Shop": {
+   "craft": 1
+  },
+  "Health & Phys Ed": {
+   "empathy": 0.5,
+   "craft": 0.5
+  },
+  "French": {
+   "charisma": 1
+  }
+ },
+ "gradePoints": {
+  "A": 10,
+  "B": 6,
+  "C": 3,
+  "—": 0
+ },
+ "activities": {
+  "Robotics club": {
+   "craft": 1,
+   "tech": 1
+  },
+  "Sports team": {
+   "charisma": 1,
+   "craft": 0.5
+  },
+  "Volunteering": {
+   "empathy": 1.5
+  },
+  "Part-time job": {
+   "charisma": 1,
+   "empathy": 0.5
+  },
+  "Art club": {
+   "creativity": 1.5
+  },
+  "Debate / Model UN": {
+   "charisma": 1.5
+  },
+  "Coding at home": {
+   "tech": 1.5
+  },
+  "Band / choir": {
+   "creativity": 1
+  },
+  "Student council": {
+   "charisma": 1.5
+  },
+  "Science fair": {
+   "science": 1.5
+  }
+ }
+}

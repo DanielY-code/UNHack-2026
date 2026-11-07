@@ -1,0 +1,86 @@
+{
+ "tips": {
+  "major": {
+   "title": "Major",
+   "body": "Your main field of study, making up most of your courses. Many universities let you declare or change it after first year, so an intended major is a starting point, not a contract."
+  },
+  "minor": {
+   "title": "Minor",
+   "body": "A shorter set of courses in a second field, on top of your major. It keeps another interest alive without switching programs. Requirements vary by school, so check your calendar."
+  },
+  "double": {
+   "title": "Double major",
+   "body": "Completing two full majors. It's demanding, and many students get most of the benefit from a major plus a minor instead."
+  },
+  "switch": {
+   "title": "Changing programs",
+   "body": "Switching programs is common, especially in first year. Courses you've passed often still count as electives or toward the new program. An academic advisor can map out exactly what transfers."
+  },
+  "transfer": {
+   "title": "Transfer credits",
+   "body": "Credits you've already earned that count toward a new program or school. Ask the registrar's office which ones apply before you switch."
+  },
+  "elective": {
+   "title": "Electives",
+   "body": "Courses you choose freely. They're built-in room to test-drive a new field before committing to it."
+  },
+  "breadth": {
+   "title": "Breadth requirements",
+   "body": "Many degrees require courses outside your main field. They're there on purpose, to help you explore and connect ideas."
+  },
+  "advisor": {
+   "title": "Academic advisor",
+   "body": "A free university service that helps you plan courses, add a minor or switch programs. Booking a chat before a big decision is always worth it."
+  },
+  "coop": {
+   "title": "Co-op",
+   "body": "Programs that alternate study terms with paid work terms in your field. It's a great way to test a career before you graduate."
+  },
+  "prereq": {
+   "title": "Prerequisites",
+   "body": "Courses or skills you need before the next step. In Edventure, the lines between nodes show these."
+  },
+  "branch": {
+   "title": "Branches",
+   "body": "Paths connect. A branch node shows a natural specialization, like CS into Cybersecurity. Following one doesn't erase where you came from."
+  },
+  "mastery": {
+   "title": "Mastery",
+   "body": "Going deeper on one skill through three stages. Mastering something gives you a foothold to jump into a different field."
+  },
+  "crossover": {
+   "title": "Crossovers",
+   "body": "Many careers live between fields: patent lawyers, health data analysts, UX engineers. Mastery unlocks these jumps."
+  },
+  "match": {
+   "title": "Match %",
+   "body": "How closely a path's key stats line up with yours today. It's a hint, not a verdict. Stats grow as you learn."
+  },
+  "stats": {
+   "title": "Stats",
+   "body": "Built from your interests, courses and activities, then grown by completing objectives. Everything you earn stays with you if you change paths."
+  },
+  "tiers": {
+   "title": "Stages",
+   "body": "Rough timing from Grade 9 through first year. Move faster or slower: there's no wrong pace."
+  },
+  "idea": {
+   "title": "Your own objectives",
+   "body": "You know what you want to learn. Add your own goal to any tree and it counts just like the built-in ones."
+  },
+  "minortrack": {
+   "title": "Minor track",
+   "body": "When a path is your minor, the foundation and core nodes form a lighter track. Finish them to complete the minor."
+  }
+ },
+ "compass": [
+  "Changing your mind is part of learning, not a failure. Every objective you finish stays on your character sheet.",
+  "Electives and breadth courses exist so you can explore. Use them to test-drive something new.",
+  "A minor lets you keep a second passion alive without switching programs.",
+  "Your ideas count. Add your own objective to any tree, and it earns treasure like the rest.",
+  "Lots of careers sit between fields. Patent lawyers, health data analysts and UX engineers all combined two interests.",
+  "Thinking about switching? An academic advisor can show you what carries over. Talking to one is free.",
+  "You don't have to know your whole future. You only need a next step that interests you.",
+  "Curiosity compounds. The skills you build on one path, like logic, writing and teamwork, travel with you everywhere."
+ ]
+}
