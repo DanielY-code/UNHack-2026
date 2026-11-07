@@ -55,11 +55,13 @@ function viewProfile(){const{b,e,t}=totalStats();const p=S.profile;const P=allPa
   </div>
  </div></div>`}
 
+function destLine(){const cd=currentDest();return`<div class="dst-line">${cd?`<span>◎ <b>${esc(cd.dest.name)}</b> <span class="muted">via ${esc(routeLabel(cd.dest,cd.route))}</span></span><button class="btn small" data-go="world">View route</button>`:`<span class="muted">No destination yet.</span><button class="btn small" data-dst="new">Choose a destination</button>`}</div>`}
 function goalsPanel(){const G=S.goals;const P=allPaths();
  const nodes=Object.entries(S.extraNodes).flatMap(([k,list])=>(list||[]).filter(n=>n.goal).map(n=>({k,n})));
- if(!G)return`<div class="panel" style="display:grid;gap:10px"><h3>Your goals</h3><p class="muted" style="margin:0;font-size:14px">Take the quiz to set goals. Edventure turns them into objectives in your skill trees.</p><button class="btn small primary" data-quiz style="justify-self:start">Take the quiz</button></div>`;
+ if(!G)return`<div class="panel" style="display:grid;gap:10px"><h3>Your goals</h3>${destLine()}<p class="muted" style="margin:0;font-size:14px">Take the quiz to set goals. Edventure turns them into objectives in your skill trees.</p><button class="btn small primary" data-quiz style="justify-self:start">Take the quiz</button></div>`;
  const labels=G.ids.map(id=>QUIZ.goals.find(g=>g.id===id)?.label).filter(Boolean);
  return`<div class="panel" style="display:grid;gap:10px"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap"><h3 style="display:flex;align-items:center">Your goals${tip("goal")}</h3><button class="btn small" data-quiz>Retake quiz</button></div>
+  ${destLine()}
   ${labels.length?`<div class="chips">${labels.map(l=>`<span class="chip" style="cursor:default">${esc(l)}</span>`).join("")}</div>`:""}
   ${G.text?`<div style="font-size:14px">“${esc(G.text)}”</div>`:""}
   ${G.timeframe?`<div class="muted" style="font-size:13px">Timeframe: ${esc(G.timeframe)}</div>`:""}

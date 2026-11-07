@@ -6,11 +6,12 @@
 /* ---------- offline reader: used when the AI companion isn't connected ---------- */
 const UPD_PATH_WORDS={cs:["computer science","coding","code","programming","program","software","app"],cyber:["cyber","hacking","hack","security"],data:["data","statistic","stats","spreadsheet","analytics"],
  health:["health","medicine","medical","doctor","nurse","biology","patient","hospital","anatomy"],eng:["engineer","build","building","construct","model","models","machine","robot","cad","3d","bridge","physics","hands-on","hands on"],
- design:["design","art","drawing","draw","visual","ux","graphic","creative"],law:["law","legal","debate","justice","policy","rights","argue"],biz:["business","startup","money","marketing","sell","entrepreneur","leading","manage"]};
+ design:["design","art","drawing","draw","visual","ux","graphic","creative"],law:["law","legal","debate","justice","policy","rights","argue"],biz:["business","startup","money","marketing","sell","entrepreneur","leading","manage"],
+ ag:["agriculture","farm","farming","crops","soil","garden","food","plants","greenhouse"]};
 const UPD_STAT_WORDS={logic:["problem solving","problem-solving","puzzle","logic","math","maths","calculus"],tech:["computer","coding","code","programming","tech","software"],science:["science","biology","chemistry","physics","experiment"],
  creativity:["creative","art","design","draw","music","writing"],charisma:["talking","present","debate","lead","people skills","speaking"],empathy:["helping","help people","care","caring","kids","community"],craft:["build","building","construct","hands","making","model","models","fix"]};
 const UPD_GROW_WORDS={"Architecture":["model","construct","architect","building design","buildings"],"Industrial Design":["prototype","product design","models"],"Psychology":["psychology","mind","behaviour","behavior","mental health"],
- "Environmental Science":["environment","climate","nature","sustainab"],"Game Design":["game design","video game","games"],"Education":["teach","tutor","teacher"],"Film & Media":["film","video editing","media","youtube"],"Trades & Construction":["carpentry","electrician","plumb","trades","welding"]};
+ "Environmental Science":["climate","nature","sustainab"],"Game Design":["game design","video game","games"],"Education":["teach","tutor","teacher"],"Film & Media":["film","video editing","media","youtube"],"Trades & Construction":["carpentry","electrician","plumb","trades","welding"]};
 const NEG=/\b(not|don'?t|do not|didn'?t|never|hate|dislike|failed|fail|failing|struggl\w*|bored|boring|no longer|stopped|quit|tired of|can'?t stand)\b/i;
 function heuristicUpdate(text){const P=allPaths(),journey=S.pinned.filter(k=>P[k]);
  const clauses=text.toLowerCase().split(/[.!?;,]|\bbut\b|\band\b|\bhowever\b/).map(c=>c.trim()).filter(Boolean);

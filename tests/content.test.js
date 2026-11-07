@@ -90,3 +90,29 @@ test("quiz options reference real stats and paths, and goals are complete", () =
   for (const g of quiz.goals) assert.ok(g.id && g.label && g.title && g.objective && g.learn, `goal ${g.id} is incomplete`);
   for (const c of quiz.certainty) assert.ok(c.pin >= 1, `certainty ${c.id} needs a pin count`);
 });
+
+test("destinations: every route reaches a real path, and branch routes really branch there", () => {
+  const { reasons, destinations } = readJson("destinations");
+  const reasonIds = reasons.map((r) => r.id);
+  const ids = new Set();
+  for (const d of destinations) {
+    assert.ok(!ids.has(d.id), `duplicate destination ${d.id}`); ids.add(d.id);
+    assert.ok(paths[d.field], `${d.id}: field ${d.field} is not a path`);
+    assert.ok(d.routes.length >= 2, `${d.id}: needs a main route and at least one backup`);
+    assert.equal(d.routes[0].id, "main", `${d.id}: first route should be the main one`);
+    for (const r of d.routes) {
+      for (const g of r.goodFor) assert.ok(reasonIds.includes(g), `${d.id}/${r.id}: unknown reason ${g}`);
+      if (r.kind === "path") {
+        assert.ok(paths[r.path], `${d.id}/${r.id}: ${r.path} is not a path`);
+        if (r.via) assert.ok(paths[r.path].nodes.some((n) => n.branch === r.via || n.cross?.to === r.via), `${d.id}/${r.id}: ${r.path} has no branch or crossover to ${r.via}`);
+      } else {
+        assert.equal(r.kind, "steps");
+        assert.ok(r.steps.length >= 3, `${d.id}/${r.id}: a step route needs 3+ steps`);
+        for (const s of r.steps) {
+          assert.ok(s.title && s.objective && s.learn, `${d.id}/${r.id}: incomplete step`);
+          for (const x of s.res || []) assert.match(x.url, /^https:\/\//);
+        }
+      }
+    }
+  }
+});

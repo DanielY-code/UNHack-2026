@@ -1,0 +1,804 @@
+{
+ "reasons": [
+  {
+   "id": "grades",
+   "label": "My grades or a prerequisite",
+   "hint": "Routes that don't depend on one tough course"
+  },
+  {
+   "id": "admission",
+   "label": "I didn't get in",
+   "hint": "Other ways in, like college and transfer"
+  },
+  {
+   "id": "cost",
+   "label": "Cost or time",
+   "hint": "Shorter or more affordable routes"
+  },
+  {
+   "id": "interest",
+   "label": "I don't enjoy this route",
+   "hint": "Same goal, different kind of work"
+  }
+ ],
+ "destinations": [
+  {
+   "id": "software-dev",
+   "name": "Software Developer",
+   "field": "cs",
+   "blurb": "Design, build and maintain the apps and systems people use every day.",
+   "routes": [
+    {
+     "id": "main",
+     "label": "Computer Science degree",
+     "kind": "path",
+     "path": "cs",
+     "why": "The classic route: programming, data structures and shipping a real app.",
+     "goodFor": []
+    },
+    {
+     "id": "design",
+     "label": "Design first, then front-end",
+     "kind": "path",
+     "path": "design",
+     "via": "cs",
+     "why": "Start from visual and UX design, then branch into coding what you design.",
+     "goodFor": [
+      "interest",
+      "grades"
+     ]
+    },
+    {
+     "id": "eng",
+     "label": "Engineering, then software for machines",
+     "kind": "path",
+     "path": "eng",
+     "via": "cs",
+     "why": "Build hardware and code together, then specialize in the software side.",
+     "goodFor": [
+      "interest"
+     ]
+    },
+    {
+     "id": "college",
+     "label": "College diploma + portfolio",
+     "kind": "steps",
+     "why": "A two- or three-year programming diploma with co-op. You can work, or transfer credits to a degree later.",
+     "goodFor": [
+      "grades",
+      "cost",
+      "admission"
+     ],
+     "steps": [
+      {
+       "title": "Compare college programs",
+       "objective": "Compare two college computer programming diplomas: length, co-op and transfer options.",
+       "learn": "Colleges teach practical programming with smaller classes and co-op placements.",
+       "res": [
+        {
+         "name": "Ontario Colleges",
+         "url": "https://www.ontariocolleges.ca"
+        }
+       ]
+      },
+      {
+       "title": "Build three projects",
+       "objective": "Finish three small coding projects and put them on GitHub with a short README each.",
+       "learn": "A portfolio shows employers what you can do, whatever your grades.",
+       "res": [
+        {
+         "name": "freeCodeCamp",
+         "url": "https://www.freecodecamp.org/learn"
+        }
+       ]
+      },
+      {
+       "title": "Plan a bridge to a degree",
+       "objective": "Look up which of your college credits would transfer to a university Computer Science degree.",
+       "learn": "Many colleges and universities have transfer agreements, so a diploma can lead to a degree.",
+       "res": [
+        {
+         "name": "ONTransfer (credit transfer)",
+         "url": "https://www.ontransfer.ca"
+        }
+       ]
+      },
+      {
+       "title": "Land a co-op or junior role",
+       "objective": "Apply to three co-op, internship or junior developer roles.",
+       "learn": "Real experience is often the strongest part of a developer's application.",
+       "res": [
+        {
+         "name": "Ontario Colleges",
+         "url": "https://www.ontariocolleges.ca"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cyber-analyst",
+   "name": "Cybersecurity Analyst",
+   "field": "cyber",
+   "blurb": "Protect networks and people's data by spotting and stopping attacks.",
+   "routes": [
+    {
+     "id": "main",
+     "label": "Cybersecurity program",
+     "kind": "path",
+     "path": "cyber",
+     "why": "Networking, Linux, cryptography and defending real systems.",
+     "goodFor": []
+    },
+    {
+     "id": "cs",
+     "label": "Computer Science, then branch into security",
+     "kind": "path",
+     "path": "cs",
+     "via": "cyber",
+     "why": "Learn how software works first, then specialize in breaking and defending it.",
+     "goodFor": [
+      "interest"
+     ]
+    },
+    {
+     "id": "college",
+     "label": "College diploma + certifications",
+     "kind": "steps",
+     "why": "A cybersecurity or networking diploma plus industry certificates is a common, faster way in.",
+     "goodFor": [
+      "grades",
+      "cost",
+      "admission"
+     ],
+     "steps": [
+      {
+       "title": "Compare college programs",
+       "objective": "Compare two college cybersecurity or networking diplomas, including co-op.",
+       "learn": "Colleges offer hands-on security programs with lab time and placements.",
+       "res": [
+        {
+         "name": "Ontario Colleges",
+         "url": "https://www.ontariocolleges.ca"
+        }
+       ]
+      },
+      {
+       "title": "Build a home lab",
+       "objective": "Complete five beginner rooms on TryHackMe and write notes on what you learned.",
+       "learn": "Practising in safe, legal labs is how most analysts build skills.",
+       "res": [
+        {
+         "name": "TryHackMe",
+         "url": "https://tryhackme.com"
+        }
+       ]
+      },
+      {
+       "title": "Earn an entry certificate",
+       "objective": "Study for an entry-level security certificate using free video courses.",
+       "learn": "Certificates show employers you know the fundamentals.",
+       "res": [
+        {
+         "name": "Professor Messer (free videos)",
+         "url": "https://www.professormesser.com"
+        }
+       ]
+      },
+      {
+       "title": "Start in IT support",
+       "objective": "Apply to help-desk, IT support or security co-op roles.",
+       "learn": "Many analysts start in IT support and move into security.",
+       "res": [
+        {
+         "name": "Ontario Colleges",
+         "url": "https://www.ontariocolleges.ca"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "data-analyst",
+   "name": "Data Analyst",
+   "field": "data",
+   "blurb": "Turn data into answers that help teams make better decisions.",
+   "routes": [
+    {
+     "id": "main",
+     "label": "Data Science program",
+     "kind": "path",
+     "path": "data",
+     "why": "Statistics, SQL, Python and machine learning.",
+     "goodFor": []
+    },
+    {
+     "id": "biz",
+     "label": "Business, then business analytics",
+     "kind": "path",
+     "path": "biz",
+     "via": "data",
+     "why": "Learn how companies work, then analyze their numbers.",
+     "goodFor": [
+      "interest",
+      "grades"
+     ]
+    },
+    {
+     "id": "health",
+     "label": "Health Sciences, then health data",
+     "kind": "path",
+     "path": "health",
+     "via": "data",
+     "why": "Combine biology with data to work in hospitals and research labs.",
+     "goodFor": [
+      "interest"
+     ]
+    },
+    {
+     "id": "ag",
+     "label": "Agriculture, then precision agriculture",
+     "kind": "path",
+     "path": "ag",
+     "via": "data",
+     "why": "Use data to help farms grow more with less.",
+     "goodFor": [
+      "interest"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "nurse",
+   "name": "Registered Nurse",
+   "field": "health",
+   "blurb": "Care for patients and families in hospitals, clinics and communities.",
+   "routes": [
+    {
+     "id": "main",
+     "label": "Health Sciences toward a nursing degree",
+     "kind": "path",
+     "path": "health",
+     "why": "Biology, anatomy, first aid and care experience.",
+     "goodFor": []
+    },
+    {
+     "id": "pn",
+     "label": "Practical Nursing diploma, then bridge",
+     "kind": "steps",
+     "why": "Become a Registered Practical Nurse through college, then bridge to a nursing degree if you want.",
+     "goodFor": [
+      "grades",
+      "cost",
+      "admission"
+     ],
+     "steps": [
+      {
+       "title": "Compare PN programs",
+       "objective": "Compare two college Practical Nursing diplomas: admission requirements, length and placements.",
+       "learn": "Practical nursing programs are a direct route into patient care.",
+       "res": [
+        {
+         "name": "Ontario Colleges",
+         "url": "https://www.ontariocolleges.ca"
+        }
+       ]
+      },
+      {
+       "title": "Get care experience",
+       "objective": "Volunteer 20 hours in a hospital, clinic or long-term care home.",
+       "learn": "Experience confirms nursing is right for you and strengthens applications.",
+       "res": [
+        {
+         "name": "Volunteer Canada",
+         "url": "https://volunteer.ca"
+        }
+       ]
+      },
+      {
+       "title": "Learn about licensing",
+       "objective": "Read how nurses are registered in your province and what the exam involves.",
+       "learn": "Nursing is a regulated profession, so licensing is part of every route.",
+       "res": [
+        {
+         "name": "College of Nurses of Ontario",
+         "url": "https://www.cno.org"
+        }
+       ]
+      },
+      {
+       "title": "Plan your bridge",
+       "objective": "Find a bridging program from practical nursing to a nursing degree.",
+       "learn": "Many nurses start as RPNs and bridge to a degree while working.",
+       "res": [
+        {
+         "name": "ONTransfer (credit transfer)",
+         "url": "https://www.ontransfer.ca"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mech-eng",
+   "name": "Mechanical Engineer",
+   "field": "eng",
+   "blurb": "Design machines, products and systems that move the world.",
+   "routes": [
+    {
+     "id": "main",
+     "label": "Engineering degree",
+     "kind": "path",
+     "path": "eng",
+     "why": "Physics, CAD, electronics and the design process.",
+     "goodFor": []
+    },
+    {
+     "id": "tech",
+     "label": "Engineering technology diploma",
+     "kind": "steps",
+     "why": "Become an engineering technologist through college, with options to transfer to a degree later.",
+     "goodFor": [
+      "grades",
+      "cost",
+      "admission"
+     ],
+     "steps": [
+      {
+       "title": "Compare technology diplomas",
+       "objective": "Compare two mechanical engineering technology diplomas, including co-op.",
+       "learn": "Technology programs are hands-on and lead straight to technical jobs.",
+       "res": [
+        {
+         "name": "Ontario Colleges",
+         "url": "https://www.ontariocolleges.ca"
+        }
+       ]
+      },
+      {
+       "title": "Build a CAD portfolio",
+       "objective": "Design three parts in free CAD software and export drawings of each.",
+       "learn": "A portfolio of designs shows practical skill to employers and schools.",
+       "res": [
+        {
+         "name": "Onshape for education",
+         "url": "https://www.onshape.com/en/education"
+        }
+       ]
+      },
+      {
+       "title": "Learn about certification",
+       "objective": "Read how engineering technicians and technologists are certified.",
+       "learn": "Certification shows your skills meet a professional standard.",
+       "res": [
+        {
+         "name": "OACETT",
+         "url": "https://www.oacett.org"
+        }
+       ]
+      },
+      {
+       "title": "Map a degree transfer",
+       "objective": "Find which diploma credits would transfer to an engineering degree.",
+       "learn": "Some students go on to a degree after their diploma.",
+       "res": [
+        {
+         "name": "ONTransfer (credit transfer)",
+         "url": "https://www.ontransfer.ca"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ux-designer",
+   "name": "UX Designer",
+   "field": "design",
+   "blurb": "Make apps and websites easy and enjoyable to use.",
+   "routes": [
+    {
+     "id": "main",
+     "label": "UX & Visual Design program",
+     "kind": "path",
+     "path": "design",
+     "why": "Visual design, user research, prototyping and accessibility.",
+     "goodFor": []
+    },
+    {
+     "id": "portfolio",
+     "label": "Self-taught portfolio route",
+     "kind": "steps",
+     "why": "UX hires often look most closely at your portfolio, so you can build skills while studying anything.",
+     "goodFor": [
+      "cost",
+      "admission",
+      "grades"
+     ],
+     "steps": [
+      {
+       "title": "Learn the basics free",
+       "objective": "Read ten articles on usability and user research and note one idea from each.",
+       "learn": "Strong UX starts with understanding people, not tools.",
+       "res": [
+        {
+         "name": "Nielsen Norman Group articles",
+         "url": "https://www.nngroup.com/articles/"
+        }
+       ]
+      },
+      {
+       "title": "Redesign an app",
+       "objective": "Pick an app you find annoying and prototype a better version in Figma.",
+       "learn": "Redesigns are a classic first portfolio piece.",
+       "res": [
+        {
+         "name": "Figma for education",
+         "url": "https://www.figma.com/education/"
+        }
+       ]
+      },
+      {
+       "title": "Test with real people",
+       "objective": "Run a usability test with five people and summarize what you changed.",
+       "learn": "Testing shows you design from evidence.",
+       "res": [
+        {
+         "name": "Laws of UX",
+         "url": "https://lawsofux.com"
+        }
+       ]
+      },
+      {
+       "title": "Publish two case studies",
+       "objective": "Write two portfolio case studies and share them with a designer for feedback.",
+       "learn": "Case studies are what employers read.",
+       "res": [
+        {
+         "name": "Nielsen Norman Group articles",
+         "url": "https://www.nngroup.com/articles/"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lawyer",
+   "name": "Lawyer",
+   "field": "law",
+   "blurb": "Advise and represent people, businesses and governments.",
+   "routes": [
+    {
+     "id": "main",
+     "label": "Law & Policy, then law school",
+     "kind": "path",
+     "path": "law",
+     "why": "An undergrad in any field, the LSAT, then a law degree.",
+     "goodFor": []
+    },
+    {
+     "id": "eng",
+     "label": "Engineering, then patent law",
+     "kind": "path",
+     "path": "eng",
+     "via": "law",
+     "why": "Master engineering design, then cross over to protect inventions.",
+     "goodFor": [
+      "interest"
+     ]
+    },
+    {
+     "id": "paralegal",
+     "label": "Paralegal route",
+     "kind": "steps",
+     "why": "Licensed paralegals in Ontario can represent people in some courts and tribunals after a college program.",
+     "goodFor": [
+      "cost",
+      "grades",
+      "admission"
+     ],
+     "steps": [
+      {
+       "title": "Learn what paralegals do",
+       "objective": "Read what licensed paralegals can and can't do in your province.",
+       "learn": "In Ontario, licensed paralegals can handle some cases on their own.",
+       "res": [
+        {
+         "name": "Law Society of Ontario",
+         "url": "https://lso.ca"
+        }
+       ]
+      },
+      {
+       "title": "Compare paralegal programs",
+       "objective": "Compare two accredited college paralegal programs.",
+       "learn": "An accredited program is required before the licensing exam.",
+       "res": [
+        {
+         "name": "Ontario Colleges",
+         "url": "https://www.ontariocolleges.ca"
+        }
+       ]
+      },
+      {
+       "title": "Volunteer at a legal clinic",
+       "objective": "Volunteer or job-shadow at a community legal clinic or law office.",
+       "learn": "Seeing legal work up close shows you which area you enjoy.",
+       "res": [
+        {
+         "name": "Ontario Justice Education Network",
+         "url": "https://ojen.ca"
+        }
+       ]
+      },
+      {
+       "title": "Keep law school open",
+       "objective": "Note what you'd need to apply to law school later, if you choose to.",
+       "learn": "Some paralegals later become lawyers.",
+       "res": [
+        {
+         "name": "LSAC (LSAT)",
+         "url": "https://www.lsac.org"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "policy-analyst",
+   "name": "Policy Analyst (Political Science)",
+   "field": "law",
+   "blurb": "Research problems and help governments and non-profits decide what to do about them.",
+   "routes": [
+    {
+     "id": "main",
+     "label": "Law & Policy / Political Science",
+     "kind": "path",
+     "path": "law",
+     "why": "Argument, research, rights and how decisions get made.",
+     "goodFor": []
+    },
+    {
+     "id": "data",
+     "label": "Data Science, then policy analysis",
+     "kind": "path",
+     "path": "data",
+     "via": "law",
+     "why": "Use data to show what's really happening, then shape policy.",
+     "goodFor": [
+      "interest"
+     ]
+    },
+    {
+     "id": "ag",
+     "label": "Agriculture, then food & environmental policy",
+     "kind": "path",
+     "path": "ag",
+     "via": "law",
+     "why": "Bring real farming knowledge to food, land and climate policy.",
+     "goodFor": [
+      "interest"
+     ]
+    },
+    {
+     "id": "health",
+     "label": "Health Sciences, then health policy",
+     "kind": "path",
+     "path": "health",
+     "via": "law",
+     "why": "Turn health evidence into public rules.",
+     "goodFor": [
+      "interest"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "founder",
+   "name": "Startup Founder",
+   "field": "biz",
+   "blurb": "Start and grow a business of your own.",
+   "routes": [
+    {
+     "id": "main",
+     "label": "Business & Entrepreneurship",
+     "kind": "path",
+     "path": "biz",
+     "why": "Money, marketing, pitching and running a venture.",
+     "goodFor": []
+    },
+    {
+     "id": "cs",
+     "label": "Computer Science, then tech entrepreneurship",
+     "kind": "path",
+     "path": "cs",
+     "via": "biz",
+     "why": "Build the product yourself, then learn to sell it.",
+     "goodFor": [
+      "interest"
+     ]
+    },
+    {
+     "id": "build",
+     "label": "Build while you study",
+     "kind": "steps",
+     "why": "You don't need a business degree to start. Many founders begin with a small project alongside school.",
+     "goodFor": [
+      "cost",
+      "admission",
+      "grades"
+     ],
+     "steps": [
+      {
+       "title": "Talk to ten customers",
+       "objective": "Interview ten people who might use your idea and write down their problems.",
+       "learn": "Founders who listen first build things people actually want.",
+       "res": [
+        {
+         "name": "Y Combinator Startup School",
+         "url": "https://www.startupschool.org"
+        }
+       ]
+      },
+      {
+       "title": "Launch something small",
+       "objective": "Sell a first version to five people, even if it's simple.",
+       "learn": "A small launch teaches more than a perfect plan.",
+       "res": [
+        {
+         "name": "JA Canada",
+         "url": "https://jacanada.org"
+        }
+       ]
+      },
+      {
+       "title": "Find a mentor",
+       "objective": "Reach out to a local founder or youth entrepreneurship program.",
+       "learn": "Mentors help you avoid common mistakes.",
+       "res": [
+        {
+         "name": "Futurpreneur",
+         "url": "https://www.futurpreneur.ca"
+        }
+       ]
+      },
+      {
+       "title": "Track your numbers",
+       "objective": "Track revenue and costs for a month in a spreadsheet.",
+       "learn": "Knowing your numbers is the core business skill.",
+       "res": [
+        {
+         "name": "Khan Academy: Accounting",
+         "url": "https://www.khanacademy.org/economics-finance-domain/core-finance/accounting-and-financial-statements"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "product-manager",
+   "name": "Product Manager",
+   "field": "biz",
+   "blurb": "Decide what a team builds and why.",
+   "routes": [
+    {
+     "id": "main",
+     "label": "Business & Entrepreneurship",
+     "kind": "path",
+     "path": "biz",
+     "why": "Strategy, customers and leading teams.",
+     "goodFor": []
+    },
+    {
+     "id": "design",
+     "label": "UX Design, then product management",
+     "kind": "path",
+     "path": "design",
+     "via": "biz",
+     "why": "User research is a product manager's core skill.",
+     "goodFor": [
+      "interest",
+      "grades"
+     ]
+    },
+    {
+     "id": "cs",
+     "label": "Computer Science, then tech entrepreneurship",
+     "kind": "path",
+     "path": "cs",
+     "via": "biz",
+     "why": "Understand how products are built, then lead them.",
+     "goodFor": [
+      "interest"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "agronomist",
+   "name": "Agronomist / Farm Manager",
+   "field": "ag",
+   "blurb": "Help farms grow healthy crops and run sustainably.",
+   "routes": [
+    {
+     "id": "main",
+     "label": "Agriculture & Food Systems program",
+     "kind": "path",
+     "path": "ag",
+     "why": "Soil and plant science, hands-on farming and agri-tech.",
+     "goodFor": []
+    },
+    {
+     "id": "college",
+     "label": "College agriculture diploma + farm work",
+     "kind": "steps",
+     "why": "A practical diploma plus seasonal farm jobs is a strong, affordable route.",
+     "goodFor": [
+      "cost",
+      "grades",
+      "admission"
+     ],
+     "steps": [
+      {
+       "title": "Compare ag diplomas",
+       "objective": "Compare two college agriculture or horticulture diplomas, including placements.",
+       "learn": "College ag programs are hands-on and closely tied to local farms.",
+       "res": [
+        {
+         "name": "Ontario Colleges",
+         "url": "https://www.ontariocolleges.ca"
+        }
+       ]
+      },
+      {
+       "title": "Work a growing season",
+       "objective": "Get a seasonal job or volunteer role on a farm, greenhouse or orchard.",
+       "learn": "Nothing replaces a season of real farm work.",
+       "res": [
+        {
+         "name": "4-H Ontario",
+         "url": "https://4-hontario.ca"
+        }
+       ]
+      },
+      {
+       "title": "Learn farm data tools",
+       "objective": "Chart a local crop's yields or weather using a free dataset.",
+       "learn": "Modern farms run on data as much as tractors.",
+       "res": [
+        {
+         "name": "Kaggle Learn: Data Visualization",
+         "url": "https://www.kaggle.com/learn/data-visualization"
+        }
+       ]
+      },
+      {
+       "title": "Plan your next step",
+       "objective": "Decide between working, a degree transfer, or running a farm, and list what each needs.",
+       "learn": "Diplomas can lead to work or further study.",
+       "res": [
+        {
+         "name": "ONTransfer (credit transfer)",
+         "url": "https://www.ontransfer.ca"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

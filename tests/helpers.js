@@ -6,7 +6,7 @@ const root = new URL("../", import.meta.url);
 export const readJson = (name) => JSON.parse(readFileSync(new URL(`data/${name}.json`, root), "utf8"));
 export const content = () => ({
   catalog: readJson("catalog"), paths: readJson("paths"), shop: readJson("shop"),
-  guidance: readJson("guidance"), prompts: readJson("prompts"), quiz: readJson("quiz"),
+  guidance: readJson("guidance"), prompts: readJson("prompts"), quiz: readJson("quiz"), destinations: readJson("destinations"),
 });
 
 export function loadGame({ hostname = "edventure.example", hash = "" } = {}) {
@@ -18,7 +18,7 @@ export function loadGame({ hostname = "edventure.example", hash = "" } = {}) {
     document: { getElementById: () => null },
     window: {},
   });
-  for (const f of ["content", "game", "views", "quiz", "update", "world"]) {
+  for (const f of ["content", "game", "views", "quiz", "update", "world", "destination"]) {
     vm.runInContext(readFileSync(new URL(`js/${f}.js`, root), "utf8"), ctx, { filename: `js/${f}.js` });
   }
   vm.runInContext("applyContent(__content); initState();", Object.assign(ctx, { __content: content() }));

@@ -1167,5 +1167,157 @@
     ]
    }
   ]
+ },
+ "ag": {
+  "name": "Agriculture & Food Systems",
+  "blurb": "Grow food sustainably, from soil science to farm tech and food policy.",
+  "weights": {
+   "science": 3,
+   "craft": 2,
+   "empathy": 1
+  },
+  "nodes": [
+   {
+    "id": "ag1",
+    "t": 0,
+    "title": "Plant & soil science",
+    "learn": "How plants grow, what healthy soil needs, and how water and nutrients move through a field.",
+    "objective": "Grow the same plant from seed in two different soils for four weeks and record its growth every week.",
+    "res": [
+     {
+      "name": "Khan Academy: Ecology",
+      "url": "https://www.khanacademy.org/science/biology/ecology"
+     },
+     {
+      "name": "OpenStax Biology 2e (free textbook)",
+      "url": "https://openstax.org/details/books/biology-2e"
+     }
+    ],
+    "req": []
+   },
+   {
+    "id": "ag2",
+    "t": 1,
+    "title": "Food systems",
+    "learn": "How food travels from farm to table: growing, processing, transport, retail and waste.",
+    "objective": "Trace one food from your kitchen back to where it was grown and map every step it took.",
+    "res": [
+     {
+      "name": "Agriculture and Agri-Food Canada",
+      "url": "https://agriculture.canada.ca/en"
+     }
+    ],
+    "req": [
+     "ag1"
+    ]
+   },
+   {
+    "id": "ag3",
+    "t": 1,
+    "title": "Hands-on farming",
+    "learn": "Real farm work: planting, animal care, equipment and the rhythm of a growing season.",
+    "objective": "Volunteer on a farm or community garden, or join a 4-H club, for one season.",
+    "res": [
+     {
+      "name": "4-H Ontario",
+      "url": "https://4-hontario.ca"
+     }
+    ],
+    "req": [
+     "ag1"
+    ]
+   },
+   {
+    "id": "ag4",
+    "t": 2,
+    "title": "Agri-tech & data",
+    "learn": "Sensors, drones and data that help farmers decide when to plant, water and harvest.",
+    "objective": "Use a free weather dataset to chart how rainfall affected a local crop over five years.",
+    "res": [
+     {
+      "name": "Kaggle Learn: Data Visualization",
+      "url": "https://www.kaggle.com/learn/data-visualization"
+     },
+     {
+      "name": "Agriculture and Agri-Food Canada",
+      "url": "https://agriculture.canada.ca/en"
+     }
+    ],
+    "req": [
+     "ag2"
+    ]
+   },
+   {
+    "id": "ag5",
+    "t": 2,
+    "title": "Sustainable farming",
+    "learn": "Soil conservation, climate, water and biodiversity: farming that lasts for generations.",
+    "objective": "Write a one-page plan to cut food waste or emissions at a local farm or your school cafeteria.",
+    "res": [
+     {
+      "name": "Agriculture and Agri-Food Canada",
+      "url": "https://agriculture.canada.ca/en"
+     }
+    ],
+    "req": [
+     "ag2",
+     "ag3"
+    ],
+    "mastery": [
+     "Interview a farmer or grower about a sustainability challenge they face.",
+     "Present your plan to a club, class or community group and record their feedback."
+    ],
+    "cross": {
+     "to": "law",
+     "title": "Food & environmental policy",
+     "learn": "Rules about land, water and food safety are shaped by people who understand how farming really works.",
+     "objective": "Find a current Canadian agriculture or food policy and summarize who it helps and who it costs.",
+     "res": [
+      {
+       "name": "Agriculture and Agri-Food Canada",
+       "url": "https://agriculture.canada.ca/en"
+      }
+     ]
+    }
+   },
+   {
+    "id": "ag6",
+    "t": 3,
+    "title": "Choose an ag program",
+    "learn": "Agriculture, agronomy, food science and environmental programs, plus college diplomas with co-op.",
+    "objective": "Compare three agriculture or food science programs, including at least one college option.",
+    "res": [
+     {
+      "name": "Ontario Colleges",
+      "url": "https://www.ontariocolleges.ca"
+     },
+     {
+      "name": "Ontario Universities' Info",
+      "url": "https://www.ouinfo.ca"
+     }
+    ],
+    "req": [
+     "ag4",
+     "ag5"
+    ]
+   },
+   {
+    "id": "agb1",
+    "t": 3,
+    "title": "Precision agriculture",
+    "branch": "data",
+    "learn": "Precision agriculture uses data and models to grow more food with less water and fertilizer.",
+    "objective": "Read about precision agriculture and list three decisions a farmer could make with better data.",
+    "res": [
+     {
+      "name": "Kaggle Learn: Pandas",
+      "url": "https://www.kaggle.com/learn/pandas"
+     }
+    ],
+    "req": [
+     "ag4"
+    ]
+   }
+  ]
  }
 }

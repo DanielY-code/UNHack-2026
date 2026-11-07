@@ -11,7 +11,7 @@ function branchesOf(pid){const P=allPaths(),p=P[pid];const out=[],seen=new Set()
   const req=n.req.map(r=>p.nodes.find(x=>x.id===r)?.title).filter(Boolean);
   out.push({to:n.branch,kind:n.crossSrc?"cross":"branch",tier:Math.min(n.t,4),node:n.id,state:st,
    how:st==="done"?"Explored":st==="open"?"Ready to explore":n.crossSrc?`Master ${n.crossSrc.title} (${mlevel(pid,n.crossSrc)} of ${stageCount(n.crossSrc)})`:`After ${req.join(" + ")}`})}
- const related=Object.entries(P).filter(([k])=>k!==pid&&!seen.has(k)).map(([k,q])=>({k,sh:sharedStats(p,q),w:SK.reduce((s,st)=>s+Math.min(p.weights?.[st]||0,q.weights?.[st]||0),0)}))
+ const related=Object.entries(P).filter(([k,q])=>k!==pid&&!seen.has(k)&&!q.route).map(([k,q])=>({k,sh:sharedStats(p,q),w:SK.reduce((s,st)=>s+Math.min(p.weights?.[st]||0,q.weights?.[st]||0),0)}))
   .filter(r=>r.w>=2).sort((a,b)=>b.w-a.w).slice(0,2);
  for(const r of related)out.push({to:r.k,kind:"related",tier:null,node:null,state:"related",how:r.sh.length?`Also uses ${r.sh.map(s=>STATS[s]).join(" and ")}`:"A close neighbour"});
  return out}
@@ -31,6 +31,7 @@ function worldTreeSVG(pid){const P=allPaths(),p=P[pid];const trunk=trunkOf(pid),
  const H=crownU+(rel.length?46+24+16:40)+16;const Y=u=>H-u;
  const leaves=[...placed,...rel].map(l=>({...l,y:Y(l.u),from:{x:l.fromX,y:Y(l.fromU)}}));
  const yOf=i=>Y(uOf(i)),rootY=Y(34),crownY=Y(crownU);
+ const cd=currentDest();const goalHere=cd&&((cd.pid===pid&&!cd.route.via)||cd.route.via===pid);const towardLeaf=cd&&cd.pid===pid&&cd.route.via;
  const initials=s=>s.split(/[\s&]+/).filter(w=>/^[A-Za-z]/.test(w)).slice(0,2).map(w=>w[0].toUpperCase()).join("");
  let g=`<defs><linearGradient id="bark" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="var(--gold)"/><stop offset="1" stop-color="var(--accent)"/></linearGradient></defs>`;
  // roots + trunk (the climbed part glows)
@@ -49,13 +50,15 @@ function worldTreeSVG(pid){const P=allPaths(),p=P[pid];const trunk=trunkOf(pid),
    <text x="${cx}" y="${y+5}" text-anchor="middle" class="wt-count" fill="${full?"var(--gold-ink)":"var(--ink)"}">${full?"✓":`${m.done}/${m.total}`}</text>
    <rect x="${cx-64}" y="${y+38}" width="128" height="24" rx="12" fill="var(--panel)" stroke="var(--line)"/><text x="${cx}" y="${y+54}" text-anchor="middle" class="wt-stage">${esc(TIERS[m.tier])}</text></g>`});
  // crown + root labels
- g+=`<circle cx="${cx}" cy="${crownY}" r="9" fill="var(--orb)" opacity=".85"/><rect x="${cx-56}" y="${crownY+16}" width="112" height="24" rx="12" fill="var(--panel)" stroke="color-mix(in oklab,var(--orb) 50%,var(--line))"/><text x="${cx}" y="${crownY+32}" text-anchor="middle" class="wt-stage" style="fill:var(--orb)">Where next?</text>`;
+ g+=`<circle cx="${cx}" cy="${crownY}" r="9" fill="var(--orb)" opacity=".85"/>${(()=>{const t=goalHere?`◎ ${cd.dest.name}`:"Where next?";const w=Math.max(112,t.length*8.6+28);const c=goalHere?"var(--gold)":"var(--orb)";return`<rect x="${cx-w/2}" y="${crownY+16}" width="${w}" height="24" rx="12" fill="var(--panel)" stroke="color-mix(in oklab,${c} 60%,var(--line))"/><text x="${cx}" y="${crownY+32}" text-anchor="middle" class="wt-stage" style="fill:${c}">${esc(t)}</text>`})()}`;
  g+=`<circle cx="${cx}" cy="${rootY-20}" r="16" fill="var(--panel-2)" stroke="var(--accent)" stroke-width="2"/><text x="${cx}" y="${rootY-15}" text-anchor="middle" class="wt-you">You</text>`;
  // leaves
  leaves.forEach(l=>{const q=P[l.to];const prog=q.nodes.filter(n=>done(l.to,n.id)).length;const col=l.state==="done"?"var(--gold)":l.kind==="related"?"var(--orb)":l.kind==="cross"?"var(--cross)":l.state==="open"?"var(--accent)":"var(--locked)";
   const name=wrapText(q.name,15);const how=l.how.length>24?l.how.slice(0,23)+"…":l.how;
   const shape=l.kind==="cross"?`<polygon points="${[0,1,2,3,4,5].map(i=>{const a=Math.PI/3*i-Math.PI/2;return`${(l.x+Math.cos(a)*26).toFixed(1)},${(l.y+Math.sin(a)*26).toFixed(1)}`}).join(" ")}"`:`<circle cx="${l.x}" cy="${l.y}" r="24"`;
-  g+=`<g class="wt-leaf ${l.kind} ${l.state}" data-focus="${esc(l.to)}" tabindex="0" role="button" aria-label="${esc(q.name)}: ${esc(l.how)}">
+  const toward=towardLeaf&&l.to===cd.route.via;
+  if(toward)g+=`<circle cx="${l.x}" cy="${l.y}" r="34" fill="none" stroke="var(--gold)" stroke-width="2" stroke-dasharray="3 5" class="wt-goalring"/><text x="${l.x}" y="${l.y+46+(wrapText(q.name,15).length+1)*19}" text-anchor="middle" class="wt-stage" style="fill:var(--gold)">◎ Toward your goal</text>`;
+  g+=`<g class="wt-leaf ${l.kind} ${l.state}${toward?" toward":""}" data-focus="${esc(l.to)}" tabindex="0" role="button" aria-label="${esc(q.name)}: ${esc(l.how)}">
    ${l.state==="open"?`<circle class="ring" cx="${l.x}" cy="${l.y}" r="24" style="stroke:${col}"/>`:""}${shape} fill="${l.state==="done"?"var(--gold)":"var(--panel-2)"}" stroke="${col}" stroke-width="2.5" ${l.kind==="related"?'stroke-dasharray="4 4"':""}/>
    <text x="${l.x}" y="${l.y+5}" text-anchor="middle" class="wt-init" fill="${l.state==="done"?"var(--gold-ink)":col}">${esc(initials(q.name))}</text>
    ${name.map((t,i)=>`<text x="${l.x}" y="${l.y+46+i*19}" text-anchor="middle" class="wt-name">${esc(t)}</text>`).join("")}
@@ -69,10 +72,11 @@ function viewWorld(){const P=allPaths();const pid=worldFocusId();S.worldFocus=pi
  return`<div class="section wt"><div class="treehead"><div><div class="eyebrow">World tree${roleOf(pid)==="major"?" · your major":""}</div><h2>Where ${esc(p.name)} can take you</h2></div>
   <div class="pathpick">${picks.map(k=>`<button class="chip" data-wfocus="${k}" aria-pressed="${k===pid}">${esc(P[k].name)}</button>`).join("")}<button class="chip" data-go="paths">All paths…</button></div></div>
  ${trail.length?`<nav class="wt-trail" aria-label="Paths you came from">${trail.map(k=>`<button class="linkbtn" data-trail="${k}">${esc(P[k].name)}</button><span aria-hidden="true">›</span>`).join("")}<b>${esc(p.name)}</b></nav>`:""}
+ ${destCard(pid)}
  <p class="muted" style="margin:0;max-width:62ch">Climb from the roots through each stage of <b>${esc(p.name)}</b>. Branches show where it can lead; tap one to follow it and see where <i>that</i> path goes.</p>
  <div class="wt-layout"><div class="branchbox">${worldTreeSVG(pid)}</div>
   <aside class="panel wt-list"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><h3>Branches from here</h3><span class="muted" style="font-family:var(--f-mono);font-size:12px">${doneN}/${p.nodes.length} done</span></div>
-   ${br.length?br.map(b=>`<div class="wt-card ${b.state}"><div class="wt-card-top"><b>${esc(P[b.to].name)}</b>${kindTag[b.kind]}</div><div class="muted" style="font-size:13px">${esc(b.how)}</div><div class="wt-card-actions"><button class="btn small primary" data-focus="${b.to}">Follow branch</button><button class="btn small" data-open="${b.to}">See steps</button></div></div>`).join(""):`<p class="muted" style="margin:0;font-size:14px">No branches yet. Ask your companion to grow one.</p>`}
+   ${br.length?br.map(b=>`<div class="wt-card ${b.state}"><div class="wt-card-top"><b>${esc(P[b.to].name)}</b>${currentDest()?.pid===pid&&currentDest()?.route.via===b.to?`<span class="tag" style="color:var(--gold);border-color:var(--gold)">◎ Your goal</span>`:kindTag[b.kind]}</div><div class="muted" style="font-size:13px">${esc(b.how)}</div><div class="wt-card-actions"><button class="btn small primary" data-focus="${b.to}">Follow branch</button><button class="btn small" data-open="${b.to}">See steps</button></div></div>`).join(""):`<p class="muted" style="margin:0;font-size:14px">No branches yet. Ask your companion to grow one.</p>`}
    <button class="btn small" data-open="${pid}" style="justify-self:start">Open ${esc(p.name)} steps</button>
    <div class="wlegend" style="margin:0"><span><i style="background:var(--gold);border-color:var(--gold)"></i>Done</span><span><i style="border-color:var(--accent)"></i>Ready</span><span><i></i>Locked</span><span><i style="border-color:var(--cross);border-radius:3px"></i>Crossover</span><span><i style="border-color:var(--orb);border-style:dashed"></i>Could branch</span></div>
   </aside></div></div>`}
