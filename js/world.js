@@ -23,20 +23,24 @@ function trunkOf(pid){const p=allPaths()[pid];const core=p.nodes.filter(n=>!n.br
 function worldTreeSVG(pid){const P=allPaths(),p=P[pid];const trunk=trunkOf(pid),br=branchesOf(pid);
  // Layout is computed upward from the roots (u), then flipped to SVG y. Narrow enough to fit a phone without scrolling.
  const W=520,cx=260,gap=190,arm=150,stackGap=130;
- const uOf=i=>160+i*gap,idxFor=t=>{let i=0;trunk.forEach((m,j)=>{if(m.tier<=t)i=j});return i};
+ const F=foundationFor(pid),FR=F.slice(0,8),more=F.length-FR.length,rows=Math.ceil(FR.length/2),base=rows?rows*30+(more?44:24):0;
+ const uOf=i=>base+160+i*gap,idxFor=t=>{let i=0;trunk.forEach((m,j)=>{if(m.tier<=t)i=j});return i};
  let side=1;const stack={};const placed=br.filter(b=>b.kind!=="related").map(b=>{const i=idxFor(b.tier);side=-side;const key=i+":"+side;const k=stack[key]=(stack[key]??-1)+1;
   return{...b,side,x:cx+side*arm,u:uOf(i)+58+k*stackGap,fromU:uOf(i)+k*stackGap,fromX:k?cx+side*5:cx+side*30}});
  const crownU=Math.max(uOf(trunk.length-1)+140,...placed.map(l=>l.u+110));
- const rel=br.filter(b=>b.kind==="related").map(b=>{side=-side;return{...b,side,x:cx+side*arm,u:crownU+46,fromU:crownU,fromX:cx}});
- const H=crownU+(rel.length?46+24+16:40)+16;const Y=u=>H-u;
+ const rel=br.filter(b=>b.kind==="related").map(b=>{side=-side;return{...b,side,x:cx+side*arm,u:crownU+100,fromU:crownU,fromX:cx}});
+ const H=crownU+(rel.length?100+24+16:40)+16;const Y=u=>H-u;
  const leaves=[...placed,...rel].map(l=>({...l,y:Y(l.u),from:{x:l.fromX,y:Y(l.fromU)}}));
- const yOf=i=>Y(uOf(i)),rootY=Y(34),crownY=Y(crownU);
+ const yOf=i=>Y(uOf(i)),rootY=Y(base+34),crownY=Y(crownU);
  const cd=currentDest();const goalHere=cd&&((cd.pid===pid&&!cd.route.via)||cd.route.via===pid);const towardLeaf=cd&&cd.pid===pid&&cd.route.via;
  const initials=s=>s.split(/[\s&]+/).filter(w=>/^[A-Za-z]/.test(w)).slice(0,2).map(w=>w[0].toUpperCase()).join("");
  let g=`<defs><linearGradient id="bark" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="var(--gold)"/><stop offset="1" stop-color="var(--accent)"/></linearGradient></defs>`;
  // roots + trunk (the climbed part glows)
  const lastDone=trunk.reduce((a,m,i)=>m.done===m.total?i:a,-1);const climbY=lastDone<0?rootY-20:yOf(lastDone);
- g+=`<path d="M${cx} ${rootY} q-26 18 -64 22 M${cx} ${rootY} q26 18 64 22 M${cx} ${rootY} q-6 20 -20 30 M${cx} ${rootY} q6 20 20 30" stroke="var(--locked)" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+ if(!FR.length)g+=`<path d="M${cx} ${rootY} q-26 18 -64 22 M${cx} ${rootY} q26 18 64 22 M${cx} ${rootY} q-6 20 -20 30 M${cx} ${rootY} q6 20 20 30" stroke="var(--locked)" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+ FR.forEach((it,j)=>{const side=j%2?1:-1,r=Math.floor(j/2),ry=Y(base-4-r*30)+(more?-14:0),ex=cx+side*(44+r*16);const col=it.related?"var(--gold)":"var(--locked)";const lab=it.label.length>20?it.label.slice(0,19)+"…":it.label;
+  g+=`<g class="wt-root ${it.related?"rel":"dim"}"><title>${esc(it.label)} (${esc(it.kind==="course"?"course, "+it.grade:it.from)}): ${esc(it.related?"helps with this path":"not connected to this path yet, kept in case it is later")}</title><path d="M${cx} ${rootY} C${cx+side*10} ${rootY+20},${ex-side*20} ${ry-12},${ex} ${ry}" fill="none" stroke="${col}" stroke-width="${it.related?3:2}" stroke-linecap="round"/><circle cx="${ex}" cy="${ry}" r="4" fill="${col}"/><text x="${ex+side*9}" y="${ry+4}" text-anchor="${side<0?"end":"start"}" class="wt-rootlbl">${esc(lab)}<tspan class="wt-rootfrom"> · ${esc(it.kind==="course"?it.grade:it.from.split(" ")[0])}</tspan></text></g>`});
+ if(more)g+=`<text x="${cx}" y="${H-12}" text-anchor="middle" class="wt-how">+${more} more in your foundation</text>`;
  g+=`<line x1="${cx}" y1="${rootY}" x2="${cx}" y2="${crownY}" stroke="var(--line)" stroke-width="10" stroke-linecap="round"/>`;
  g+=`<line class="wt-grow" x1="${cx}" y1="${rootY}" x2="${cx}" y2="${climbY}" stroke="url(#bark)" stroke-width="10" stroke-linecap="round"/>`;
  // branches
@@ -66,11 +70,11 @@ function worldTreeSVG(pid){const P=allPaths(),p=P[pid];const trunk=trunkOf(pid),
  return`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(p.name)} world tree">${g}</svg>`}
 
 function viewWorld(){const P=allPaths();const pid=worldFocusId();S.worldFocus=pid;const p=P[pid];const br=branchesOf(pid);
- const trail=(S.worldTrail||[]).filter(k=>P[k]&&k!==pid);const picks=[...new Set([S.major,...S.pinned,pid].filter(k=>P[k]))];
+ const trail=(S.worldTrail||[]).filter(k=>P[k]&&k!==pid);const picks=[...new Set([S.major,...S.pinned,pid,...(S.paused||[]).filter(k=>(S.progress[k]||[]).length)].filter(k=>P[k]))];
  const kindTag={branch:`<span class="tag">Branch</span>`,cross:`<span class="tag" style="color:var(--cross);border-color:var(--cross)">Crossover</span>`,related:`<span class="tag ai">Could branch</span>`};
  const doneN=p.nodes.filter(n=>done(pid,n.id)).length;
  return`<div class="section wt"><div class="treehead"><div><div class="eyebrow">World tree${roleOf(pid)==="major"?" · your major":""}</div><h2>Where ${esc(p.name)} can take you</h2></div><button type="button" class="btn small" data-dst="menu">⤳ Change course</button>
-  <div class="pathpick">${picks.map(k=>`<button class="chip" data-wfocus="${k}" aria-pressed="${k===pid}">${esc(P[k].name)}</button>`).join("")}<button class="chip" data-go="paths">All paths…</button></div></div>
+  <div class="pathpick">${picks.map(k=>`<button class="chip${(S.paused||[]).includes(k)&&k!==pid?" paused":""}" data-wfocus="${k}" aria-pressed="${k===pid}">${esc(P[k].name)}${(S.paused||[]).includes(k)?" · paused":""}</button>`).join("")}<button class="chip" data-go="paths">All paths…</button></div></div>
  ${trail.length?`<nav class="wt-trail" aria-label="Paths you came from">${trail.map(k=>`<button class="linkbtn" data-trail="${k}">${esc(P[k].name)}</button><span aria-hidden="true">›</span>`).join("")}<b>${esc(p.name)}</b></nav>`:""}
  ${destCard(pid)}
  <p class="muted" style="margin:0;max-width:62ch">Climb from the roots through each stage of <b>${esc(p.name)}</b>. Branches show where it can lead; tap one to follow it. Nothing here is fixed: you can change course at any point, and it's never too late.</p>
@@ -78,6 +82,7 @@ function viewWorld(){const P=allPaths();const pid=worldFocusId();S.worldFocus=pi
   <aside class="panel wt-list"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><h3>Branches from here</h3><span class="muted" style="font-family:var(--f-mono);font-size:12px">${doneN}/${p.nodes.length} done</span></div>
    ${br.length?br.map(b=>`<div class="wt-card ${b.state}"><div class="wt-card-top"><b>${esc(P[b.to].name)}</b>${currentDest()?.pid===pid&&currentDest()?.route.via===b.to?`<span class="tag" style="color:var(--gold);border-color:var(--gold)">◎ Your goal</span>`:kindTag[b.kind]}</div><div class="muted" style="font-size:13px">${esc(b.how)}</div><div class="wt-card-actions"><button class="btn small primary" data-focus="${b.to}">Follow branch</button><button class="btn small" data-open="${b.to}">See steps</button></div></div>`).join(""):`<p class="muted" style="margin:0;font-size:14px">No branches yet. Ask your companion to grow one.</p>`}
    <button class="btn small" data-open="${pid}" style="justify-self:start">Open ${esc(p.name)} steps</button>
+   ${(()=>{const{F,html}=foundationChips(pid);return F.length?`<div class="wt-roots"><h4>Your roots <span class="muted">${F.filter(i=>i.related).length} of ${F.length} connect</span></h4>${html}</div>`:""})()}
    <div class="wlegend" style="margin:0"><span><i style="background:var(--gold);border-color:var(--gold)"></i>Done</span><span><i style="border-color:var(--accent)"></i>Ready</span><span><i></i>Later</span><span><i style="border-color:var(--cross);border-radius:3px"></i>Crossover</span><span><i style="border-color:var(--orb);border-style:dashed"></i>Could branch</span></div>
   </aside></div></div>`}
 

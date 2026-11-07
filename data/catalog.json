@@ -173,5 +173,285 @@
   "Science fair": {
    "science": 1.5
   }
- }
+ },
+ "skills": {
+  "programming": {
+   "label": "Programming",
+   "words": [
+    "programming",
+    "programmer",
+    "python",
+    "code",
+    "coding",
+    "software",
+    "javascript",
+    "html",
+    "git",
+    "front-end",
+    "homepage",
+    "app!",
+    "apps!"
+   ]
+  },
+  "math": {
+   "label": "Math",
+   "words": [
+    "math",
+    "calculus",
+    "algebra",
+    "discrete",
+    "binary",
+    "gradient",
+    "vector",
+    "equation"
+   ]
+  },
+  "data": {
+   "label": "Data & statistics",
+   "words": [
+    "statistic",
+    "data",
+    "dataset",
+    "chart!",
+    "charts!",
+    "sql",
+    "spreadsheet",
+    "pandas",
+    "survey",
+    "analy"
+   ]
+  },
+  "research": {
+   "label": "Research",
+   "words": [
+    "research",
+    "study!",
+    "studies",
+    "evidence",
+    "pubmed",
+    "sources",
+    "case study"
+   ]
+  },
+  "writing": {
+   "label": "Writing",
+   "words": [
+    "write",
+    "writing",
+    "essay",
+    "op-ed",
+    "memo",
+    "report",
+    "summar",
+    "brief",
+    "readme"
+   ],
+   "soft": true
+  },
+  "communication": {
+   "label": "Communication",
+   "words": [
+    "present",
+    "pitch",
+    "interview",
+    "debate",
+    "argu",
+    "persuasive",
+    "explain",
+    "conversation",
+    "talk"
+   ],
+   "soft": true
+  },
+  "biology": {
+   "label": "Biology & health",
+   "words": [
+    "biolog",
+    "cell",
+    "anatomy",
+    "body!",
+    "patient",
+    "disease",
+    "health",
+    "plant",
+    "soil",
+    "crop",
+    "seed"
+   ]
+  },
+  "chemistry": {
+   "label": "Chemistry",
+   "words": [
+    "chemi"
+   ]
+  },
+  "physics": {
+   "label": "Physics",
+   "words": [
+    "physics",
+    "force",
+    "motion",
+    "newton"
+   ]
+  },
+  "building": {
+   "label": "Building & making",
+   "words": [
+    "cad!",
+    "prototype",
+    "circuit",
+    "arduino",
+    "robot",
+    "sensor",
+    "egg-drop",
+    "hands-on",
+    "3d!",
+    "machine",
+    "stl!"
+   ]
+  },
+  "design": {
+   "label": "Design",
+   "words": [
+    "design",
+    "visual",
+    "figma",
+    "poster",
+    "ux!",
+    "layout",
+    "colour",
+    "color",
+    "typograph",
+    "usability"
+   ]
+  },
+  "people": {
+   "label": "Helping people",
+   "words": [
+    "volunteer",
+    "care!",
+    "caring",
+    "community",
+    "helping",
+    "help a",
+    "customers",
+    "users"
+   ]
+  },
+  "business": {
+   "label": "Business",
+   "words": [
+    "business",
+    "budget",
+    "revenue",
+    "profit",
+    "market",
+    "sell",
+    "venture",
+    "customer",
+    "accounting",
+    "startup",
+    "income"
+   ]
+  },
+  "security": {
+   "label": "Security",
+   "words": [
+    "security",
+    "hack",
+    "cyber",
+    "encrypt",
+    "crypto",
+    "privacy",
+    "attack",
+    "defen",
+    "capture the flag"
+   ]
+  },
+  "law": {
+   "label": "Law & ethics",
+   "words": [
+    "law!",
+    "legal",
+    "rights",
+    "charter",
+    "ethic",
+    "policy",
+    "court",
+    "patent",
+    "disclosure",
+    "justice",
+    "tribunal",
+    "lawyer"
+   ]
+  },
+  "networks": {
+   "label": "Networks & systems",
+   "words": [
+    "network",
+    "linux",
+    "internet",
+    "dns!",
+    "server",
+    "terminal",
+    "command line"
+   ]
+  },
+  "environment": {
+   "label": "Environment",
+   "words": [
+    "sustainab",
+    "climate",
+    "environment",
+    "emission",
+    "waste"
+   ]
+  }
+ },
+ "courseSkills": {
+  "Math": [
+   "math"
+  ],
+  "English": [
+   "writing",
+   "communication"
+  ],
+  "Biology": [
+   "biology"
+  ],
+  "Chemistry": [
+   "chemistry"
+  ],
+  "Physics": [
+   "physics"
+  ],
+  "Computer Studies": [
+   "programming"
+  ],
+  "Visual Arts": [
+   "design"
+  ],
+  "Music": [],
+  "History": [
+   "research",
+   "writing"
+  ],
+  "Business": [
+   "business"
+  ],
+  "Tech / Shop": [
+   "building"
+  ],
+  "Health & Phys Ed": [
+   "biology",
+   "people"
+  ],
+  "French": [
+   "communication"
+  ]
+ },
+ "skillIgnore": [
+  "data structure",
+  "data structures"
+ ]
 }

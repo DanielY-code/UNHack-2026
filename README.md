@@ -13,6 +13,7 @@ Edventure turns career planning into a video-game skill tree. Students roll stat
 | Area | What it does |
 |---|---|
 | **Never too late** | Stages are phases (Start, Build, Deepen, Launch, Branch out), not school years, and the quiz accepts anyone from Grade 9 to "graduated or working". Steps have a suggested order rather than locks: any step can be started early ("Start it now anyway"); only mastery crossovers need their mastery first. One **Change course** button (Skill tree, World tree, Character tab) gathers every way to change direction, and **Your journey so far** logs each turn as progress. |
+| **Your foundation** | Courses taken and objectives finished on earlier paths follow the student to every new tree. Related work glows and gives **Head start** badges on matching steps, with a **Count my earlier work** button to carry it over; unrelated work is greyed out but stays, in case a later choice connects it. On the World tree, this foundation is drawn as the tree's roots. Paused paths with progress stay reachable as greyed chips. Relatedness comes from skill tags read from each objective's text (`catalog.json` → `skills`, `courseSkills`, `skillIgnore`). |
 | **Onboarding quiz** | New students start with a short quest-style quiz: about you, interests, courses, activities, six scenario questions, goals with a timeframe, and how sure they are of their direction. Results rank every path with reasons, add the chosen paths to the student's journey, set a major when they're sure, and plant their goals as ★ objectives in their top trees. Retake it any time from the Character tab. |
 | **Path updates** | "Something changed?" lets students describe a recent event or change of heart in their own words, for example *"I failed my Computer Science course, I don't enjoy problem solving, I like constructing models."* Their companion suggests paths to try next, new trees to grow, paths to pause and a small first step. Applying it reshapes their journey: paused paths keep all progress and resume when pinned again. Without an API key, a built-in keyword reader gives a simpler version. Updates are logged on the Character tab. |
 | **Character** | Interests, course grades and activities become seven stats (Logic, Tech, Science, Creativity, Charisma, Empathy, Craft). Set an intended major and up to two minors. |
@@ -47,6 +48,7 @@ js/                   Plain browser scripts, loaded in order (no build step)
   update.js             "Something changed?" path updates and the offline keyword reader
   simple.js             Simple view (path debrief + step list), view switch, Start over
   destination.js        Destinations, backup routes, new goals and new programs
+  foundation.js         Earlier courses and objectives: skill tags, head starts, World tree roots
   guidance.js           Tooltip and compass helpers, majors/minors
   tooltips.js           Tooltip bubble
   fx.js                 Animated backgrounds, flying gems, banners
@@ -113,6 +115,7 @@ The Treasury's test tools (free gems, reset purchases) and a one-time 25,000-gem
 - **Change prices or add items:** edit `data/shop.json`.
 - **Change companion personalities:** edit `data/prompts.json`.
 - **Add a destination or route:** edit `data/destinations.json`. The first route must be `main`. A `path` route names a path id and optionally `via` (a branch or crossover that path really has). A `steps` route lists 3+ steps and becomes its own small path when chosen. Tag routes with `goodFor` reasons so roadblock suggestions rank well.
+- **Tune what counts as related:** edit `skills` in `data/catalog.json`. Words are matched at the start of a word; end a word with `!` to match it exactly (`law!` won't match "lawn"). Skills marked `"soft": true` never create a connection on their own. Add misleading phrases to `skillIgnore`.
 - **Change the quiz:** edit `data/quiz.json`. Each option can add `stats` (keys from `catalog.json`) and `paths` (path ids with an affinity weight). Goals need a `label` for the quiz and a `title`, `objective` and `learn` for the objective they create.
 
 Run `npm test` afterwards. It catches broken prerequisites, missing branch targets, non-https links and missing tooltips.
