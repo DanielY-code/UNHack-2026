@@ -2,10 +2,10 @@
 /* ---------- state ---------- */
 const KEY="edventure.v1";
 function fresh(){return{example:true,profile:{name:"Maya (example)",grade:"10",interests:["Coding","Puzzles","Video games","Helping people"],subjects:{"Math":"A","English":"B","Biology":"B","Chemistry":"—","Physics":"—","Computer Studies":"A","Visual Arts":"C","Music":"—","History":"B","Business":"—","Tech / Shop":"—","Health & Phys Ed":"B","French":"C"},activities:["Coding at home","Volunteering"]},
- progress:{cs:["cs1","cs2"]},notes:{},pinned:["cs"],gems:50,earned:50,owned:["skin-aurora","orb-moon","comp-orb"],equip:{skin:"aurora",orb:"moon",title:"",comp:"orb"},custom:{},extraNodes:{},redeem:[],view:"profile",path:"cs",sel:null,chat:[],compare:["cs","cyber"],mastery:{},major:"cs",minors:[]};}
+ progress:{cs:["cs1","cs2"]},notes:{},pinned:["cs"],gems:50,earned:50,owned:["skin-aurora","orb-moon","comp-orb"],equip:{skin:"aurora",orb:"moon",title:"",comp:"orb"},custom:{},extraNodes:{},redeem:[],view:"profile",path:"cs",sel:null,chat:[],compare:["cs","cyber"],mastery:{},major:"cs",minors:[],onboarded:false,goals:null};}
 let S,testGrantToast=0;
-/* Test mode shows the treasure tools. It's on for localhost, Vercel preview deploys and any URL ending in #test. */
-const TEST_MODE=/^(localhost|127\.0\.0\.1)$/.test(location.hostname)||location.hostname.includes("-git-")||location.hash==="#test";
+/* Test mode shows the treasure tools. It's on for localhost, Vercel preview deploys, claude.ai previews and any URL ending in #test. */
+const TEST_MODE=/^(localhost|127\.0\.0\.1)$/.test(location.hostname)||location.hostname.includes("-git-")||location.hash==="#test"||!!window.claude;
 function initState(){try{S=JSON.parse(localStorage.getItem(KEY))||fresh()}catch(e){S=fresh()}S=Object.assign(fresh(),S);
  if(TEST_MODE){if(!S.testGrant){S.testGrant=1;S.gems+=5000;testGrantToast+=5000}if(!S.testGrant2){S.testGrant2=1;S.gems+=20000;testGrantToast+=20000}if(testGrantToast)save()}
  if(!S.equip.comp)S.equip.comp="orb";if(!S.owned.includes("comp-orb"))S.owned.push("comp-orb")}
@@ -50,7 +50,9 @@ function gemsFor(n){return n.branch?25:GEMS[Math.min(n.t,4)]}
 function statReward(p,n){const r={};const w=Object.entries(p.weights||{}).sort((a,b)=>b[1]-a[1]).slice(0,2);w.forEach(([k],i)=>r[k]=(i?1:2)+(n.t>=2?1:0));return r}
 
 /* ---------- stats ---------- */
-function baseStats(){const s={};SK.forEach(k=>s[k]=8);const p=S.profile;
+function quizStatBonus(quiz){const s={};for(const q of QUIZ?.questions||[]){const o=q.options[quiz?.answers?.[q.id]];if(o)for(const[k,v]of Object.entries(o.stats||{}))s[k]=(s[k]||0)+v}return s}
+function baseStats(p=S.profile){const s={};SK.forEach(k=>s[k]=8);
+ for(const[k,v]of Object.entries(quizStatBonus(p.quiz)))if(k in s)s[k]+=v*4;
  p.interests.forEach(i=>{for(const[k,v]of Object.entries(INTERESTS[i]||{}))s[k]+=v*7});
  for(const[sub,g]of Object.entries(p.subjects)){for(const[k,v]of Object.entries(SUBJECTS[sub]||{}))s[k]+=v*(GRADEPTS[g]||0)}
  p.activities.forEach(a=>{for(const[k,v]of Object.entries(ACTIVITIES[a]||{}))s[k]+=v*7});

@@ -71,6 +71,10 @@
   "minortrack": {
    "title": "Minor track",
    "body": "When a path is your minor, the foundation and core nodes form a lighter track. Finish them to complete the minor."
+  },
+  "goal": {
+   "title": "Your goals",
+   "body": "Goals you set in the quiz become ★ objectives in your top trees. They earn treasure like any other objective, and you can retake the quiz to change them."
   }
  },
  "compass": [

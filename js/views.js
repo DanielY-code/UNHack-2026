@@ -6,7 +6,7 @@ function render(){
  document.body.dataset.skin=S.equip.skin;document.body.dataset.orb=S.equip.orb;document.body.dataset.titlefx=S.equip.title==="Legend of the Skill Tree"?"1":"0";
  $("hudName").textContent=S.profile.name||"Adventurer";
  const lv=level();$("hudLv").textContent=lv;$("hudXp").style.width=((S.earned%120)/120*100)+"%";
- $("hudTitle").textContent=(S.equip.title||["Novice","Apprentice","Explorer","Adept","Expert"][Math.min(4,Math.floor((lv-1)/2))])+" · Grade "+S.profile.grade;
+ $("hudTitle").textContent=(S.equip.title||["Novice","Apprentice","Explorer","Adept","Expert"][Math.min(4,Math.floor((lv-1)/2))])+" · "+(S.profile.grade==="First year"?"First year":"Grade "+S.profile.grade);
  countGems(S.gems);applyCompanion();
  document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.view===S.view));
  const m=$("main");
@@ -26,13 +26,13 @@ function radar(t,b){const cx=110,cy=110,r=82,n=SK.length;const pt=(i,v)=>{const 
 function viewProfile(){const{b,e,t}=totalStats();const p=S.profile;const P=allPaths();
  const ranked=Object.entries(P).map(([k,x])=>[k,x,fit(x,t)]).sort((a,c)=>c[2]-a[2]).slice(0,3);
  return`<div class="section">
- ${S.example?`<div class="banner"><span>You're looking at an example student. Replace the answers with your own to roll your real stats.</span><button class="btn small gold" id="clearEx">Start with my own</button></div>`:""}
+ ${S.example?`<div class="banner"><span>You're looking at an example student. Take the quiz to roll your own stats and build your skill trees.</span><button class="btn small gold" id="clearEx">Take the quiz</button></div>`:""}
  <div><div class="eyebrow">Character creation</div><h2>Who are you so far?</h2><p class="muted" style="max-width:62ch;margin:6px 0 0">Your interests, courses and activities become your starting stats. Finishing objectives on a skill tree adds more on top (shown in gold).</p></div>
  <div class="grid-2">
   <div class="panel" style="display:grid;gap:16px">
    <div style="display:grid;grid-template-columns:minmax(0,1fr) 120px;gap:12px">
     <label class="fl" for="pName">Name<input type="text" id="pName" value="${esc(p.name)}"></label>
-    <label class="fl" for="pGrade">Grade<select id="pGrade">${["9","10","11","12"].map(g=>`<option ${g===p.grade?"selected":""}>${g}</option>`).join("")}</select></label>
+    <label class="fl" for="pGrade">Grade<select id="pGrade">${QUIZ.grades.map(g=>`<option value="${esc(g)}" ${g===p.grade?"selected":""}>${esc(g)}</option>`).join("")}</select></label>
    </div>
    <div class="fl">Interests<div class="chips">${Object.keys(INTERESTS).map(i=>`<button class="chip" data-int="${esc(i)}" aria-pressed="${p.interests.includes(i)}">${esc(i)}</button>`).join("")}</div></div>
    <div class="fl">Courses taken and your usual grade<div class="subj">${Object.keys(SUBJECTS).map(s=>`<label for="sub-${s.replace(/\W/g,"")}">${esc(s)}<select id="sub-${s.replace(/\W/g,"")}" data-sub="${esc(s)}">${Object.keys(GRADEPTS).map(g=>`<option ${p.subjects[s]===g?"selected":""}>${g}</option>`).join("")}</select></label>`).join("")}</div></div>
@@ -42,6 +42,7 @@ function viewProfile(){const{b,e,t}=totalStats();const p=S.profile;const P=allPa
    <div class="panel"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap"><h3 style="display:flex;align-items:center">Character sheet${tip("stats")}</h3><div class="legend"><span><i style="background:var(--accent)"></i>From your past</span><span><i style="background:var(--gold)"></i>Earned in Edventure</span></div></div>
     <div class="sheet" style="margin-top:12px"><div>${radar(t,b)}</div><div style="display:grid;gap:8px">${SK.map(k=>`<div class="statrow"><span>${STATS[k]}</span><div class="bar"><i class="earned" style="width:${t[k]}%"></i><i style="width:${b[k]}%"></i></div><b>${t[k]}</b></div>`).join("")}</div></div>
    </div>
+   ${goalsPanel()}
    <div class="panel plan"><div style="display:flex;align-items:center"><h3>Degree plan</h3>${tip("major")}</div>
     <label class="fl" for="pMajor"><span>Intended major</span><select id="pMajor"><option value="">Still exploring</option>${Object.entries(P).map(([k,x])=>`<option value="${k}" ${S.major===k?"selected":""}>${esc(x.name)}</option>`).join("")}</select></label>
     <div class="fl"><span style="display:flex;align-items:center">Minors (up to 2)${tip("minor")}</span><div class="chips">${Object.entries(P).filter(([k])=>k!==S.major).map(([k,x])=>`<button class="chip" data-minor="${k}" aria-pressed="${S.minors.includes(k)}" ${!S.minors.includes(k)&&S.minors.length>=2?"disabled":""}>${esc(x.name)}</button>`).join("")}</div></div>
@@ -52,6 +53,17 @@ function viewProfile(){const{b,e,t}=totalStats();const p=S.profile;const P=allPa
    <div><button class="btn small" id="resetAll">Reset everything</button> <span id="resetConfirm"></span></div>
   </div>
  </div></div>`}
+
+function goalsPanel(){const G=S.goals;const P=allPaths();
+ const nodes=Object.entries(S.extraNodes).flatMap(([k,list])=>(list||[]).filter(n=>n.goal).map(n=>({k,n})));
+ if(!G)return`<div class="panel" style="display:grid;gap:10px"><h3>Your goals</h3><p class="muted" style="margin:0;font-size:14px">Take the quiz to set goals. Edventure turns them into objectives in your skill trees.</p><button class="btn small primary" data-quiz style="justify-self:start">Take the quiz</button></div>`;
+ const labels=G.ids.map(id=>QUIZ.goals.find(g=>g.id===id)?.label).filter(Boolean);
+ return`<div class="panel" style="display:grid;gap:10px"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap"><h3 style="display:flex;align-items:center">Your goals${tip("goal")}</h3><button class="btn small" data-quiz>Retake quiz</button></div>
+  ${labels.length?`<div class="chips">${labels.map(l=>`<span class="chip" style="cursor:default">${esc(l)}</span>`).join("")}</div>`:""}
+  ${G.text?`<div style="font-size:14px">“${esc(G.text)}”</div>`:""}
+  ${G.timeframe?`<div class="muted" style="font-size:13px">Timeframe: ${esc(G.timeframe)}</div>`:""}
+  ${nodes.length?`<div style="display:grid;gap:6px">${nodes.map(({k,n})=>`<button class="btn small" data-goto="${k}|${esc(n.id)}" style="justify-self:start;text-align:left">${done(k,n.id)?"✓":"★"} ${esc(n.title)} · ${esc(P[k]?.name||"")}</button>`).join("")}</div>`:""}
+ </div>`}
 
 function viewPaths(){const{t}=totalStats();const P=allPaths();
  const entries=Object.entries(P).sort((a,b)=>fit(b[1],t)-fit(a[1],t));
@@ -112,7 +124,7 @@ function treeSVG(pid,p){const tiers={};p.nodes.forEach(n=>(tiers[n.t]??=[]).push
   let c=st==="done"?"var(--gold)":st==="open"?"var(--accent)":"var(--locked)";const xc=n.crossSrc&&!done(pid,n.id);if(xc)c=mastered(pid,n.crossSrc)?"var(--cross)":"color-mix(in oklab,var(--cross) 45%,var(--locked))";const my=(a.y+b.y)/2;
   edges+=`<path d="M${a.x} ${a.y+76} C${a.x} ${my+24},${b.x} ${my-10},${b.x} ${b.y-34}" fill="none" stroke="${c}" stroke-width="${st==="locked"&&!xc?1.5:2.5}" ${st==="locked"||xc?'stroke-dasharray="4 5"':""}/>`}));
  p.nodes.forEach(n=>{const{x,y}=pos[n.id];const sel=S.sel===n.id;const G=nodeGfx(x,y,27,pid,n,true);const st=G.st;
-  const L=wrapText((n.crossSrc?"⇄ ":n.branch?"→ ":n.mine?"✎ ":"")+n.title);const mt=roleOf(pid)==="minor"&&minorTrack(p).includes(n.id);
+  const L=wrapText((n.crossSrc?"⇄ ":n.branch?"→ ":n.goal?"★ ":n.mine?"✎ ":"")+n.title);const mt=roleOf(pid)==="minor"&&minorTrack(p).includes(n.id);
   nodes+=`<g class="node ${st} ${sel?"sel":""}" data-node="${esc(n.id)}" tabindex="0" role="button" aria-label="${esc(n.title)}, ${st}">${mt?`<text x="${x}" y="${y-40}" text-anchor="middle" font-family="var(--f-display)" font-size="10" letter-spacing="1.5" fill="var(--orb)">MINOR</text>`:""}${G.html}${L.map((l,i)=>`<text class="lbl" x="${x}" y="${y+50+i*16}" text-anchor="middle">${esc(l)}</text>`).join("")}</g>`});
  return`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(p.name)} skill tree">${lbls}${edges}${nodes}</svg>`}
 
@@ -128,7 +140,7 @@ function viewTree(){const P=allPaths();if(!P[S.path])S.path="cs";const p=P[S.pat
  <div class="tree-layout"><div class="treebox">${treeSVG(pid,p)}</div>
  <aside class="panel detail" aria-live="polite">
   <div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span class="eyebrow" style="display:flex;align-items:center">${esc(TIERS[Math.min(n.t,4)])}${tip("tiers")}</span><span class="status ${st}">${statusLabel(pid,n,st)}</span></div>
-  ${roleOf(pid)==="minor"&&minorTrack(p).includes(n.id)?`<div><span class="tag minor">Minor track</span>${tip("minortrack")}</div>`:""}${n.mine?`<div><span class="tag" style="color:var(--accent);border-color:var(--accent)">Your idea</span>${tip("idea")}</div>`:""}
+  ${roleOf(pid)==="minor"&&minorTrack(p).includes(n.id)?`<div><span class="tag minor">Minor track</span>${tip("minortrack")}</div>`:""}${n.goal?`<div><span class="tag" style="color:var(--gold);border-color:var(--gold)">Your goal</span>${tip("goal")}</div>`:n.mine?`<div><span class="tag" style="color:var(--accent);border-color:var(--accent)">Your idea</span>${tip("idea")}</div>`:""}
   <h3 style="font-size:21px">${esc(n.title)}</h3>
   <div class="kv"><h4>What you learn</h4><div>${esc(n.learn)}</div></div>
   ${n.mastery?`<div class="kv"><h4 style="display:flex;align-items:center">Mastery stages${tip("mastery")}</h4>${ladder(pid,n)}</div>`:`<div class="kv"><h4>Current objective</h4><div class="objective">${esc(n.objective)}</div></div>`}${crossBlock(P,p,pid,n)}

@@ -31,7 +31,7 @@ function context(){const{t}=totalStats();const P=allPaths();const p=S.profile;
  return`Student: ${p.name||"unnamed"}, grade ${p.grade}. Interests: ${p.interests.join(", ")||"none listed"}. Courses & grades: ${Object.entries(p.subjects).filter(([,g])=>g!=="—").map(([s,g])=>s+" "+g).join(", ")||"none"}. Activities: ${p.activities.join(", ")||"none"}.
 Stats (0-99): ${SK.map(k=>STATS[k]+" "+t[k]).join(", ")}.
 Paths on their map: ${Object.values(P).map(x=>x.name).join(", ")}. Pinned: ${S.pinned.map(k=>P[k]?.name).filter(Boolean).join(", ")||"none"}.
-Intended major: ${P[S.major]?.name||"still exploring"}. Minors: ${S.minors.map(k=>P[k]?.name).filter(Boolean).join(", ")||"none"}. Completed objectives: ${comp.join("; ")||"none yet"}. Currently viewing: ${P[S.path]?.name||"none"}.`}
+Intended major: ${P[S.major]?.name||"still exploring"}. Minors: ${S.minors.map(k=>P[k]?.name).filter(Boolean).join(", ")||"none"}. Goals: ${(S.goals?.ids||[]).map(id=>QUIZ.goals.find(g=>g.id===id)?.label).filter(Boolean).join("; ")||"none set"}${S.goals?.text?` (in their words: "${S.goals.text}")`:""}${S.goals?.timeframe?`, timeframe: ${S.goals.timeframe}`:""}. Completed objectives: ${comp.join("; ")||"none yet"}. Currently viewing: ${P[S.path]?.name||"none"}.`}
 const RULES=()=>fill(PROMPTS.chat,{persona:PROMPTS.personas[S.equip.comp]||PROMPTS.personas.orb,context:context()});
 let ctl=null;
 async function ask(q){if(!q.trim())return;addMsg("me",q);S.chat.push({role:"user",content:q});

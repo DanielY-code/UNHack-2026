@@ -76,3 +76,17 @@ test("every tooltip used in the code exists in guidance.json", () => {
   for (const k of used) assert.ok(guidance.tips[k], `tooltip "${k}" is missing`);
   assert.ok(guidance.compass.length >= 4);
 });
+
+test("quiz options reference real stats and paths, and goals are complete", () => {
+  const quiz = readJson("quiz");
+  assert.ok(quiz.questions.length >= 4);
+  for (const q of quiz.questions) {
+    assert.ok(q.id && q.prompt && q.options.length >= 2, `question ${q.id} is incomplete`);
+    for (const o of q.options) {
+      for (const k of Object.keys(o.stats || {})) assert.ok(statKeys.includes(k), `${q.id}: "${k}" is not a stat`);
+      for (const k of Object.keys(o.paths || {})) assert.ok(paths[k], `${q.id}: "${k}" is not a path`);
+    }
+  }
+  for (const g of quiz.goals) assert.ok(g.id && g.label && g.title && g.objective && g.learn, `goal ${g.id} is incomplete`);
+  for (const c of quiz.certainty) assert.ok(c.pin >= 1, `certainty ${c.id} needs a pin count`);
+});

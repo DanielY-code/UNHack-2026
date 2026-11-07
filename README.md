@@ -10,6 +10,7 @@ Edventure turns career planning into a video-game skill tree. Students roll stat
 
 | Area | What it does |
 |---|---|
+| **Onboarding quiz** | New students start with a short quest-style quiz: about you, interests, courses, activities, six scenario questions, goals with a timeframe, and how sure they are of their direction. Results rank every path with reasons, add the chosen paths to the student's journey, set a major when they're sure, and plant their goals as ★ objectives in their top trees. Retake it any time from the Character tab. |
 | **Character** | Interests, course grades and activities become seven stats (Logic, Tech, Science, Creativity, Charisma, Empathy, Craft). Set an intended major and up to two minors. |
 | **Career paths** | Eight starter trees with a match % based on your stats: Computer Science, Cybersecurity, Data Science & AI, Health Sciences, Engineering, UX & Visual Design, Law & Policy, Business. |
 | **Skill tree** | Objectives laid out by grade stage, each with what you learn, a concrete task and free resources. Hover any node for an interactive card. Branches lead into related paths. |
@@ -35,6 +36,7 @@ js/                   Plain browser scripts, loaded in order (no build step)
   hovercard.js          Hover card beside skill nodes
   companions.js         Companion characters (original SVG art)
   companion-chat.js     Chat panel, AI adapter, AI-grown paths
+  quiz.js               Onboarding quiz, path scoring, planting goal objectives
   guidance.js           Tooltip and compass helpers, majors/minors
   tooltips.js           Tooltip bubble
   fx.js                 Animated backgrounds, flying gems, banners
@@ -45,8 +47,10 @@ data/                 Editable content, no code knowledge needed
   shop.json             Treasury items and prices
   guidance.json         Tooltip text and compass messages
   prompts.json          Companion personalities and AI prompts
+  quiz.json             Quiz questions, goals, timeframes and direction options
 api/companion.js      Vercel serverless function: calls Claude with the secret API key
-tests/                Content, game-rule and API tests (node --test)
+scripts/build-single.mjs   Bundles everything into one HTML file (npm run build:single)
+tests/                Content, game-rule, quiz and API tests (node --test)
 ```
 
 ## Run it locally
@@ -71,6 +75,11 @@ vercel dev                      # site and /api at http://localhost:3000
 npm test
 ```
 
+**Single-file build** (for sharing a preview as one file):
+```bash
+npm run build:single      # writes dist/edventure.html
+```
+
 ## Deploy to Vercel
 
 1. Go to [vercel.com/new](https://vercel.com/new) and import this GitHub repo. There's no framework to choose and no build command.
@@ -92,6 +101,7 @@ The Treasury's test tools (free gems, reset purchases) and a one-time 25,000-gem
 - **Add or change a skill tree:** edit `data/paths.json`. Each node needs an `id`, a stage `t` (0 to 4), a `title`, `learn`, `objective`, a `req` list of earlier node ids, and `res` resources (https links). Add `mastery` (two extra stage objectives) and a `cross` object to make a mastery node with a crossover.
 - **Change prices or add items:** edit `data/shop.json`.
 - **Change companion personalities:** edit `data/prompts.json`.
+- **Change the quiz:** edit `data/quiz.json`. Each option can add `stats` (keys from `catalog.json`) and `paths` (path ids with an affinity weight). Goals need a `label` for the quiz and a `title`, `objective` and `learn` for the objective they create.
 
 Run `npm test` afterwards. It catches broken prerequisites, missing branch targets, non-https links and missing tooltips.
 

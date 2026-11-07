@@ -1,0 +1,81 @@
+{
+ "grades": ["9", "10", "11", "12", "First year"],
+ "questions": [
+  {
+   "id": "saturday",
+   "prompt": "A free Saturday. What sounds best?",
+   "options": [
+    { "label": "Building or fixing something with my hands", "stats": { "craft": 2, "science": 1 }, "paths": { "eng": 3 } },
+    { "label": "Coding, gaming or tinkering with tech", "stats": { "tech": 2, "logic": 1 }, "paths": { "cs": 2, "cyber": 1 } },
+    { "label": "Drawing, designing or making content", "stats": { "creativity": 2 }, "paths": { "design": 3 } },
+    { "label": "Helping out a friend or someone in my community", "stats": { "empathy": 2 }, "paths": { "health": 2, "law": 1 } }
+   ]
+  },
+  {
+   "id": "group",
+   "prompt": "In a group project, you're usually the one who…",
+   "options": [
+    { "label": "Organizes the plan and keeps everyone on track", "stats": { "charisma": 2 }, "paths": { "biz": 3 } },
+    { "label": "Crunches the data or solves the hardest problem", "stats": { "logic": 2 }, "paths": { "data": 2, "cs": 1 } },
+    { "label": "Makes it look and feel great", "stats": { "creativity": 2 }, "paths": { "design": 3 } },
+    { "label": "Presents it and argues our case", "stats": { "charisma": 2 }, "paths": { "law": 3 } }
+   ]
+  },
+  {
+   "id": "problem",
+   "prompt": "Which problem would you most like to help solve?",
+   "options": [
+    { "label": "Stopping hackers from stealing people's data", "stats": { "tech": 1, "logic": 1 }, "paths": { "cyber": 3 } },
+    { "label": "Helping people recover from illness or injury", "stats": { "science": 1, "empathy": 2 }, "paths": { "health": 3 } },
+    { "label": "Designing cleaner energy or smarter machines", "stats": { "craft": 1, "science": 1 }, "paths": { "eng": 3 } },
+    { "label": "Making laws and systems fairer for everyone", "stats": { "empathy": 1, "charisma": 1 }, "paths": { "law": 3 } }
+   ]
+  },
+  {
+   "id": "power",
+   "prompt": "Pick a superpower for your future job.",
+   "options": [
+    { "label": "Spotting patterns in any pile of numbers", "stats": { "logic": 2 }, "paths": { "data": 3 } },
+    { "label": "Making any app easy and fun to use", "stats": { "creativity": 1, "empathy": 1 }, "paths": { "design": 2, "cs": 1 } },
+    { "label": "Convincing anyone of a good idea", "stats": { "charisma": 2 }, "paths": { "biz": 2, "law": 1 } },
+    { "label": "Knowing exactly how the human body works", "stats": { "science": 2 }, "paths": { "health": 3 } }
+   ]
+  },
+  {
+   "id": "learn",
+   "prompt": "How do you learn best?",
+   "options": [
+    { "label": "Hands-on: try it, break it, fix it", "stats": { "craft": 2 }, "paths": { "eng": 1, "cyber": 1 } },
+    { "label": "Reading and researching deeply", "stats": { "science": 1, "logic": 1 }, "paths": { "health": 1, "law": 1, "data": 1 } },
+    { "label": "Making things and getting feedback", "stats": { "creativity": 2 }, "paths": { "design": 1, "cs": 1 } },
+    { "label": "Talking it through with people", "stats": { "charisma": 1, "empathy": 1 }, "paths": { "biz": 1, "law": 1 } }
+   ]
+  },
+  {
+   "id": "matters",
+   "prompt": "What matters most to you in a future career?",
+   "options": [
+    { "label": "Helping people directly", "stats": { "empathy": 2 }, "paths": { "health": 3 } },
+    { "label": "Creating new things", "stats": { "creativity": 1, "tech": 1 }, "paths": { "cs": 1, "design": 1, "eng": 1 } },
+    { "label": "Leading and building something of my own", "stats": { "charisma": 2 }, "paths": { "biz": 3 } },
+    { "label": "Solving puzzles nobody else can", "stats": { "logic": 2 }, "paths": { "data": 1, "cyber": 1, "cs": 1 } }
+   ]
+  }
+ ],
+ "goals": [
+  { "id": "program", "label": "Choose the right university program", "title": "Research 3 programs", "objective": "Compare three university programs for this path: admission requirements, co-op options and first-year courses.", "learn": "Knowing your real options makes application decisions far less stressful." },
+  { "id": "coop", "label": "Land a co-op, internship or summer job", "title": "Get real experience", "objective": "Apply to three co-op, internship, volunteer or summer roles connected to this path.", "learn": "Experience shows you what the work is really like, and it stands out on applications." },
+  { "id": "portfolio", "label": "Build a portfolio of projects", "title": "Portfolio piece", "objective": "Finish one project for this path and write a short page about what you made and learned.", "learn": "A portfolio proves your skills in a way grades can't." },
+  { "id": "cert", "label": "Earn a certificate or credential", "title": "Earn a credential", "objective": "Complete a free online certificate or badge connected to this path.", "learn": "Credentials show initiative and give you a structured way to learn." },
+  { "id": "network", "label": "Meet people working in the field", "title": "Talk to a professional", "objective": "Have a 15-minute conversation with someone working in this field and write down three things you learned.", "learn": "One conversation can teach you more about a career than hours of reading." },
+  { "id": "grades", "label": "Raise my grades in key courses", "title": "Level up a key course", "objective": "Pick the course that matters most for this path, set a grade goal, and follow a weekly study plan for a month.", "learn": "Strong grades in the right courses keep more doors open." },
+  { "id": "venture", "label": "Start a project, club or business", "title": "Launch something", "objective": "Start a small project, club or venture related to this path and keep it running for a month.", "learn": "Running something yourself builds leadership and shows real drive." },
+  { "id": "community", "label": "Give back to my community", "title": "Make an impact", "objective": "Use a skill from this path to help a local group, club or person.", "learn": "Helping others with your skills is one of the best ways to find meaning in a career." }
+ ],
+ "timeframes": ["This semester", "This school year", "Before university starts", "No rush, I'm exploring"],
+ "certainty": [
+  { "id": "wide", "label": "Exploring widely", "desc": "I'm open to anything right now.", "pin": 4 },
+  { "id": "few", "label": "I have a few ideas", "desc": "A couple of fields interest me.", "pin": 3 },
+  { "id": "set", "label": "Pretty sure", "desc": "I know roughly where I'm headed.", "pin": 2 }
+ ]
+}
