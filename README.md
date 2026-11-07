@@ -14,7 +14,9 @@ Edventure turns career planning into a video-game skill tree. Students roll stat
 | **Path updates** | "Something changed?" lets students describe a recent event or change of heart in their own words, for example *"I failed my Computer Science course, I don't enjoy problem solving, I like constructing models."* Their companion suggests paths to try next, new trees to grow, paths to pause and a small first step. Applying it reshapes their journey: paused paths keep all progress and resume when pinned again. Without an API key, a built-in keyword reader gives a simpler version. Updates are logged on the Character tab. |
 | **Character** | Interests, course grades and activities become seven stats (Logic, Tech, Science, Creativity, Charisma, Empathy, Craft). Set an intended major and up to two minors. |
 | **Career paths** | Eight starter trees with a match % based on your stats: Computer Science, Cybersecurity, Data Science & AI, Health Sciences, Engineering, UX & Visual Design, Law & Policy, Business. |
-| **Skill tree** | Objectives laid out by grade stage, each with what you learn, a concrete task and free resources. Hover any node for an interactive card. Branches lead into related paths. |
+| **Simple view** (default) | Each path opens with a short debrief: a progress ring, the next step, the skills it builds and where it can lead. Below it, every stage is a plain list; tap a step to see what you'll learn, your task, where to start and a "Mark as done" button. A temporary **Simple / Detailed** switch lets the team compare it with the original diagram view. |
+| **Start over** | A button in the top bar (and on the Character tab) wipes the profile, progress, goals, treasure and purchases after a confirmation, then reopens the starting quiz. |
+| **Skill tree** (detailed) | Objectives laid out by grade stage, each with what you learn, a concrete task and free resources. Hover any node for an interactive card. Branches lead into related paths. |
 | **Mastery & crossovers** | Some objectives have three mastery stages. Mastering one unlocks a crossover into a completely different field, such as Engineering → Patent law. |
 | **World tree** | Every path on one radial map, which re-flows automatically as new paths are added. |
 | **Compare** | Two or three trees side by side: stat demands, year-by-year objectives, shared ground and connections. |
@@ -39,6 +41,7 @@ js/                   Plain browser scripts, loaded in order (no build step)
   companion-chat.js     Chat panel, AI adapter, AI-grown paths
   quiz.js               Onboarding quiz, path scoring, planting goal objectives
   update.js             "Something changed?" path updates and the offline keyword reader
+  simple.js             Simple view (path debrief + step list), view switch, Start over
   guidance.js           Tooltip and compass helpers, majors/minors
   tooltips.js           Tooltip bubble
   fx.js                 Animated backgrounds, flying gems, banners

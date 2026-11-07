@@ -360,10 +360,10 @@ details.idea[open]{display:grid;gap:8px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 /* ---------- onboarding quiz ---------- */
-#quiz,#upd{position:fixed;inset:0;z-index:90;display:grid;place-items:center;background:color-mix(in oklab,var(--void) 88%,transparent);backdrop-filter:blur(6px);
+#quiz,#upd,#cfm{position:fixed;inset:0;z-index:90;display:grid;place-items:center;background:color-mix(in oklab,var(--void) 88%,transparent);backdrop-filter:blur(6px);
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-bottom,0px))}
 .qz-card{width:min(720px,100%);max-height:100%;overflow-y:auto;background:var(--panel);border:1px solid var(--accent);border-radius:14px;box-shadow:0 20px 60px #000c,0 0 40px color-mix(in oklab,var(--accent) 18%,transparent);display:grid;grid-template-rows:auto 1fr auto;scrollbar-width:thin}
-:is(#quiz,#upd):not([hidden]){animation:qzin .25s ease-out}
+:is(#quiz,#upd,#cfm):not([hidden]){animation:qzin .25s ease-out}
 @keyframes qzin{from{opacity:0}}
 .qz-top{display:flex;align-items:center;gap:12px;padding:16px 20px 0}
 .qz-progress{flex:1;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
@@ -413,3 +413,57 @@ body[data-skin="pixel"] :is(.qz-card,.qz-opt,.qz-res,.qz-key){border-radius:0}
 .upd-log{display:grid;gap:6px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel-2)}
 .qz-body h3{margin-top:6px}
 body[data-skin="pixel"] :is(.upd-summary,.upd-log){border-radius:0}
+
+/* ---------- simple view + start over ---------- */
+#cfm{z-index:95}
+.btn.danger{border-color:var(--rose);color:var(--rose)}
+.btn.danger:hover{background:color-mix(in oklab,var(--rose) 14%,var(--panel-2))}
+.hud-reset{font-size:12px;padding:5px 10px}
+.modeswitch{display:inline-flex;align-items:center;gap:2px;padding:3px;border:1px dashed var(--line);border-radius:999px;background:var(--panel)}
+.modeswitch .ms-tag{font-family:var(--f-display);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:0 8px}
+.modeswitch button{border:0;background:none;color:var(--muted);font:600 13px var(--f-display);padding:6px 12px;border-radius:999px;cursor:pointer}
+.modeswitch button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.simple .pathpick{margin-top:-6px}
+.debrief{display:grid;grid-template-columns:auto minmax(0,1fr);gap:20px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
+@media (max-width:560px){.debrief{grid-template-columns:1fr;justify-items:start}}
+.db-ring{--pct:0;width:96px;height:96px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(closest-side,var(--panel) 78%,transparent 80% 100%),conic-gradient(var(--gold) calc(var(--pct)*1%),var(--line) 0)}
+.db-ring b{font-family:var(--f-mono);font-size:20px}
+.db-main{display:grid;gap:10px;min-width:0}
+.db-blurb{margin:0;font-size:16px;max-width:60ch}
+.db-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 18px;margin:0}
+.db-facts div{min-width:0}
+.db-facts dt{font-family:var(--f-display);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.db-facts dd{margin:2px 0 0;font-size:15px}
+.db-main .btn{justify-self:start}
+.stages{list-style:none;margin:0;padding:0;display:grid;gap:22px}
+.stage{display:grid;gap:10px;position:relative}
+.stage-h{display:flex;align-items:center;gap:10px;font-size:15px;letter-spacing:.04em}
+.stage-n{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--panel-2);border:1px solid var(--line);font-family:var(--f-mono);font-size:12px}
+.stage-list{display:grid;gap:8px;padding-left:13px;margin-left:12px;border-left:2px solid var(--line)}
+.scard{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;transition:border-color .15s}
+.scard.open{border-color:var(--accent)}
+.scard.open.done{border-color:var(--gold)}
+.scard-head{width:100%;display:flex;align-items:center;gap:12px;padding:14px 16px;background:none;border:0;text-align:left;cursor:pointer;font-size:15px}
+.scard-head:hover .scard-title{color:var(--accent)}
+.sdot{flex:none;width:14px;height:14px;border-radius:50%;border:2px solid var(--locked)}
+.scard.open .sdot,.scard.open-state .sdot{border-color:var(--accent)}
+.scard.open .sdot{box-shadow:0 0 0 4px color-mix(in oklab,var(--accent) 20%,transparent)}
+.scard.done .sdot{background:var(--gold);border-color:var(--gold)}
+.scard.mastering .sdot{border-color:var(--gold);background:linear-gradient(90deg,var(--gold) 50%,transparent 50%)}
+.scard.locked{opacity:.7}
+.scard-title{flex:1;min-width:0;font-weight:700;font-family:var(--f-display);letter-spacing:.01em}
+.scard-meta{flex:none;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.scard:not(.locked):not(.done) .scard-meta{color:var(--gold)}
+.scard.done .scard-meta{color:var(--gold)}
+.scard-body{display:grid;gap:10px;padding:0 16px 16px 42px;font-size:15px}
+.scard-body p{margin:0;max-width:62ch}
+.scard-body .lbl{display:block;font-family:var(--f-display);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.scard-body .small{font-size:13px}
+.scard-claim{display:grid;gap:8px;padding-top:4px}
+.scard-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.linkbtn{justify-self:start;background:none;border:0;padding:0;color:var(--muted);font-size:13px;text-decoration:underline;cursor:pointer}
+.linkbtn:hover{color:var(--accent)}
+.smore{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--panel)}
+.smore summary{cursor:pointer;font-family:var(--f-display);font-weight:600;color:var(--muted)}
+@media (max-width:520px){.scard-body{padding-left:16px}.hud-reset{padding:4px 8px}}
+body[data-skin="pixel"] :is(.debrief,.scard,.smore,.modeswitch,.modeswitch button,.stage-n,.sdot,.db-ring){border-radius:0}

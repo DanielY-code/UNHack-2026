@@ -51,7 +51,7 @@ function viewProfile(){const{b,e,t}=totalStats();const p=S.profile;const P=allPa
     <p class="muted" style="margin:0;font-size:13px">Plans change, and that's normal.${tip("switch")} Try pairing your major with a minor in something completely different.${tip("breadth")}</p>
    </div>
    <div class="panel"><h3>Paths that fit your stats</h3><div style="display:grid;gap:10px;margin-top:12px">${ranked.map(([k,x,f])=>`<div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><div style="min-width:0"><b style="font-family:var(--f-display)">${esc(x.name)}</b><div class="muted" style="font-size:13px">${esc(x.blurb)}</div></div><button class="btn small" data-open="${k}">${f}% · Preview</button></div>`).join("")}</div></div>
-   <div><button class="btn small" id="resetAll">Reset everything</button> <span id="resetConfirm"></span></div>
+   <div><button class="btn small danger" data-startover>↺ Start over from the quiz</button></div>
   </div>
  </div></div>`}
 
@@ -137,13 +137,13 @@ function treeSVG(pid,p){const tiers={};p.nodes.forEach(n=>(tiers[n.t]??=[]).push
   nodes+=`<g class="node ${st} ${sel?"sel":""}" data-node="${esc(n.id)}" tabindex="0" role="button" aria-label="${esc(n.title)}, ${st}">${mt?`<text x="${x}" y="${y-40}" text-anchor="middle" font-family="var(--f-display)" font-size="10" letter-spacing="1.5" fill="var(--orb)">MINOR</text>`:""}${G.html}${L.map((l,i)=>`<text class="lbl" x="${x}" y="${y+50+i*16}" text-anchor="middle">${esc(l)}</text>`).join("")}</g>`});
  return`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(p.name)} skill tree">${lbls}${edges}${nodes}</svg>`}
 
-function viewTree(){const P=allPaths();if(!P[S.path])S.path="cs";const p=P[S.path];const pid=S.path;
+function viewTree(){if(viewMode()==="simple")return viewTreeSimple();const P=allPaths();if(!P[S.path])S.path="cs";const p=P[S.path];const pid=S.path;
  if(!S.sel||!p.nodes.find(n=>n.id===S.sel))S.sel=(p.nodes.find(n=>nodeState(pid,n)==="open")||p.nodes[0]).id;
  const n=p.nodes.find(x=>x.id===S.sel);const st=nodeState(pid,n);const tgt=n.branch&&P[n.branch];
  const reqNames=n.req.map(r=>p.nodes.find(x=>x.id===r)?.title).filter(Boolean);
  const order=[...new Set([...S.pinned,pid])];
  return`<div class="section"><div class="treehead"><div><div class="eyebrow">${roleOf(pid)==="major"?"Your intended major":roleOf(pid)==="minor"?"Your minor":S.pinned.includes(pid)?"On your journey":"Preview mode"}</div><h2>${esc(p.name)}</h2></div>
- <div class="pathpick">${order.filter(k=>P[k]).map(k=>`<button class="chip" data-open="${k}" aria-pressed="${k===pid}">${esc(P[k].name)}</button>`).join("")}<button class="chip" data-go="paths">All paths…</button></div></div>
+ <div class="pathpick">${order.filter(k=>P[k]).map(k=>`<button class="chip" data-open="${k}" aria-pressed="${k===pid}">${esc(P[k].name)}</button>`).join("")}<button class="chip" data-go="paths">All paths…</button></div>${modeSwitch()}</div>
  ${p.ai?`<div class="notice">Your companion grew this tree with AI. Check each resource link before relying on it.</div>`:""}
  ${planBar(P,pid,p)}
  <div class="tree-layout"><div class="treebox">${treeSVG(pid,p)}</div>

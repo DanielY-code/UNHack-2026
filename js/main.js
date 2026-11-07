@@ -5,5 +5,6 @@
  initState();compassI=Math.floor(Math.random()*COMPASS.length);AI.init();render();
  if(!S.onboarded)setTimeout(openQuiz,300);
  $("orbUpdate").onclick=()=>openUpdate();
+ $("startOver").onclick=startOver;
  if(testGrantToast)setTimeout(()=>{toast(`Test treasure added: +${testGrantToast.toLocaleString()} gems`);flyGems({x:innerWidth/2,y:innerHeight/2},testGrantToast)},700);
 })();
