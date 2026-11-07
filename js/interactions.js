@@ -8,7 +8,7 @@ function bind(){const m=$("main");
  m.querySelectorAll("[data-cmpadd]").forEach(b=>b.onclick=()=>{const k=b.dataset.cmpadd;if(!S.compare.includes(k))S.compare=[...S.compare,k].slice(-3);setView("compare")});
  const ca=$("cmpAsk");if(ca)ca.onclick=()=>{const P=allPaths();const names=S.compare.map(k=>P[k].name);$("orbPanel").hidden=false;greet();ask(`Compare ${names.join(" vs ")} for me. Which fits my profile better, what's the biggest difference in day-to-day work, and what's one thing I could do this month that helps with ${names.length>2?"all of them":"both"}?`)};
  m.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>setView(b.dataset.go));
- m.querySelectorAll("[data-pin]").forEach(b=>b.onclick=()=>{const k=b.dataset.pin;S.pinned=S.pinned.includes(k)?S.pinned.filter(x=>x!==k):[...S.pinned,k];save();render()});
+ m.querySelectorAll("[data-pin]").forEach(b=>b.onclick=()=>{const k=b.dataset.pin;const on=S.pinned.includes(k);S.pinned=on?S.pinned.filter(x=>x!==k):[...S.pinned,k];if(!on&&(S.paused||[]).includes(k)){S.paused=S.paused.filter(x=>x!==k);if(S.pathNotes?.[k]?.tag==="paused")delete S.pathNotes[k];toast("Welcome back. Your progress was saved.")}save();render()});
  m.querySelectorAll(".node").forEach(g=>{const f=()=>{if(canHover&&hcPinned)return;hideCard(true);S.sel=g.dataset.node;save();render()};g.onclick=f;g.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();f()}}});
  const nm=$("pName");if(nm){nm.oninput=()=>{S.profile.name=nm.value;S.example=false;save();$("hudName").textContent=nm.value||"Adventurer"};nm.onchange=()=>render()}
  const gr=$("pGrade");if(gr)gr.onchange=()=>{S.profile.grade=gr.value;S.example=false;save();render()};
@@ -17,6 +17,7 @@ function bind(){const m=$("main");
  m.querySelectorAll("[data-sub]").forEach(s=>s.onchange=()=>{S.profile.subjects[s.dataset.sub]=s.value;S.example=false;save();render()});
  const ce=$("clearEx");if(ce)ce.onclick=openQuiz;
  m.querySelectorAll("[data-quiz]").forEach(b=>b.onclick=openQuiz);
+ m.querySelectorAll("[data-update]").forEach(b=>b.onclick=()=>openUpdate());
  m.querySelectorAll("[data-goto]").forEach(b=>b.onclick=()=>{const[k,id]=b.dataset.goto.split("|");S.path=k;S.sel=id;setView("tree")});
  const ra=$("resetAll");if(ra)ra.onclick=()=>{$("resetConfirm").innerHTML=`<button class="btn small" id="resetYes" style="border-color:var(--rose);color:var(--rose)">Yes, erase my progress</button>`;$("resetYes").onclick=()=>{S=fresh();save();render()}};
  const cl=$("claim");if(cl)cl.onclick=()=>{const txt=$("reflect").value.trim();if(txt.length<15){$("claimMsg").textContent="Write at least a sentence about what you did — it's your proof of progress.";return}claimNode(S.path,S.sel,txt)};

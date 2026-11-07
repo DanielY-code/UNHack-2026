@@ -43,6 +43,7 @@ function viewProfile(){const{b,e,t}=totalStats();const p=S.profile;const P=allPa
     <div class="sheet" style="margin-top:12px"><div>${radar(t,b)}</div><div style="display:grid;gap:8px">${SK.map(k=>`<div class="statrow"><span>${STATS[k]}</span><div class="bar"><i class="earned" style="width:${t[k]}%"></i><i style="width:${b[k]}%"></i></div><b>${t[k]}</b></div>`).join("")}</div></div>
    </div>
    ${goalsPanel()}
+   ${updatesPanel()}
    <div class="panel plan"><div style="display:flex;align-items:center"><h3>Degree plan</h3>${tip("major")}</div>
     <label class="fl" for="pMajor"><span>Intended major</span><select id="pMajor"><option value="">Still exploring</option>${Object.entries(P).map(([k,x])=>`<option value="${k}" ${S.major===k?"selected":""}>${esc(x.name)}</option>`).join("")}</select></label>
     <div class="fl"><span style="display:flex;align-items:center">Minors (up to 2)${tip("minor")}</span><div class="chips">${Object.entries(P).filter(([k])=>k!==S.major).map(([k,x])=>`<button class="chip" data-minor="${k}" aria-pressed="${S.minors.includes(k)}" ${!S.minors.includes(k)&&S.minors.length>=2?"disabled":""}>${esc(x.name)}</button>`).join("")}</div></div>
@@ -65,12 +66,20 @@ function goalsPanel(){const G=S.goals;const P=allPaths();
   ${nodes.length?`<div style="display:grid;gap:6px">${nodes.map(({k,n})=>`<button class="btn small" data-goto="${k}|${esc(n.id)}" style="justify-self:start;text-align:left">${done(k,n.id)?"✓":"★"} ${esc(n.title)} · ${esc(P[k]?.name||"")}</button>`).join("")}</div>`:""}
  </div>`}
 
+function updatesPanel(){const P=allPaths();const U=S.updates||[];
+ return`<div class="panel" style="display:grid;gap:10px"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap"><h3>Path updates</h3><button class="btn small" data-update>Something changed?</button></div>
+  ${U.length?U.slice(0,3).map(u=>`<div class="upd-log"><div class="muted" style="font-size:12px;font-family:var(--f-mono)">${esc(u.date)}</div><div style="font-size:14px">“${esc(u.text.length>140?u.text.slice(0,138)+"…":u.text)}”</div>
+   <div class="chips" style="gap:6px">${u.added.map(k=>`<span class="tag" style="color:var(--gold);border-color:var(--gold)">+ ${esc(P[k]?.name||k)}</span>`).join("")}${(u.grown||[]).map(k=>`<span class="tag ai">+ ${esc(P[k]?.name||k)}</span>`).join("")}${u.paused.map(k=>`<span class="tag">Paused ${esc(P[k]?.name||k)}</span>`).join("")}</div>
+   ${u.step&&P[u.step.pid]?.nodes.some(n=>n.id===u.step.id)?`<button class="btn small" data-goto="${u.step.pid}|${esc(u.step.id)}" style="justify-self:start">${done(u.step.pid,u.step.id)?"✓":"★"} First step</button>`:""}</div>`).join(""):`<p class="muted" style="margin:0;font-size:14px">When something changes, like a tough grade, a new interest or a summer job, tell your companion and your trees will adapt. Your updates are logged here.</p>`}
+ </div>`}
+
 function viewPaths(){const{t}=totalStats();const P=allPaths();
  const entries=Object.entries(P).sort((a,b)=>fit(b[1],t)-fit(a[1],t));
  return`<div class="section"><div><div class="eyebrow">World map</div><h2>Career paths</h2><p class="muted" style="max-width:62ch;margin:6px 0 0">Preview any tree before you commit time to it. Match %${tip("match")} compares a path's key stats with yours. Ask ${esc(compName())} to grow a path that isn't here yet.</p></div>
+ ${updateCard()}
  ${compassCard()}
  <div class="cards">${entries.map(([k,p])=>{const f=fit(p,t);const d=(S.progress[k]||[]).length;const branches=p.nodes.filter(n=>n.branch&&P[n.branch]).map(n=>P[n.branch].name);
-  return`<article class="pcard"><div class="top"><div><h3>${esc(p.name)}</h3><div class="row" style="margin-top:6px">${roleOf(k)==="major"?`<span class="tag major">Major</span>`:roleOf(k)==="minor"?`<span class="tag minor">Minor</span>`:""}${S.pinned.includes(k)?`<span class="tag">On my journey</span>`:""}${p.ai?`<span class="tag ai">AI-grown</span>`:""}</div></div><span class="fit ${f>=75?"hi":""}">${f}% match</span></div>
+  return`<article class="pcard"><div class="top"><div><h3>${esc(p.name)}</h3><div class="row" style="margin-top:6px">${roleOf(k)==="major"?`<span class="tag major">Major</span>`:roleOf(k)==="minor"?`<span class="tag minor">Minor</span>`:""}${S.pinned.includes(k)?`<span class="tag">On my journey</span>`:""}${S.pathNotes?.[k]?.tag==="new"&&S.pinned.includes(k)?`<span class="tag" style="color:var(--gold);border-color:var(--gold)">New interest</span>`:""}${(S.paused||[]).includes(k)?`<span class="tag">Paused</span>`:""}${p.ai?`<span class="tag ai">AI-grown</span>`:""}</div></div><span class="fit ${f>=75?"hi":""}">${f}% match</span></div>
   <p class="muted" style="margin:0;font-size:14px">${esc(p.blurb)}</p>
   <div style="display:grid;gap:6px;align-content:end"><div class="row" style="justify-content:space-between;font-size:12px"><span class="muted">${d} / ${p.nodes.length} objectives</span><span class="muted">${Object.keys(p.weights||{}).map(s=>STATS[s]).filter(Boolean).join(" · ")}</span></div><div class="prog"><i style="width:${p.nodes.length?d/p.nodes.length*100:0}%"></i></div>${branches.length?`<div class="branchline">Branches to: ${branches.map(esc).join(", ")}</div>`:""}</div>
   <div class="row"><button class="btn small primary" data-open="${k}">Open tree</button><button class="btn small" data-pin="${k}">${S.pinned.includes(k)?"Unpin":"Pin to journey"}</button><button class="btn small" data-cmpadd="${k}">${S.compare.includes(k)?"In compare ✓":"Compare"}</button>${roleOf(k)?"":`<button class="btn small" data-addminor="${k}" ${S.minors.length>=2?"disabled":""}>Add as minor</button>`}</div></article>`}).join("")}</div></div>`}

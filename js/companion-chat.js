@@ -12,7 +12,11 @@ const AI={mode:"api",sample:null,configured:null,
   const r=await apiPost({kind:"chat",companion:S.equip.comp||"orb",context:context(),messages:turns},signal);onText?.({text:r.text});return r.text},
  async grow(topic,pathIds){if(this.configured===false)throw{code:"not_configured"}
   if(this.mode==="artifact")return this.sample.json(fill(PROMPTS.grow,{topic,pathIds:pathIds.join(", "),context:context()}),{modelTier:"default"});
-  return(await apiPost({kind:"grow",topic,pathIds,context:context()})).path}};
+  return(await apiPost({kind:"grow",topic,pathIds,context:context()})).path},
+ async reflect(text){if(this.configured===false)throw{code:"not_configured"}
+  const P=allPaths(),pathIds=Object.keys(P),journey=S.pinned.filter(k=>P[k]),pathNames=pathIds.map(k=>`${k}=${P[k].name}`).join("; ");
+  if(this.mode==="artifact")return this.sample.json(fill(PROMPTS.reflect,{text,context:context(),pathIds:pathIds.join(", "),journey:journey.join(", ")||"none",pathNames}),{modelTier:"default"});
+  return(await apiPost({kind:"reflect",text,pathIds,journey,pathNames,context:context()})).update}};
 async function apiPost(body,signal){let res;try{res=await fetch("api/companion",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body),signal})}catch(e){throw{code:e.name==="AbortError"?"aborted":"offline"}}
  const j=await res.json().catch(()=>({}));if(!res.ok)throw{code:j.code||"server_error",message:j.error};return j}
 function aiError(e,doing){return e.code==="not_granted"?`You chose not to let me use Claude, so I can't ${doing}. The trees still work without me.`
@@ -31,7 +35,7 @@ function context(){const{t}=totalStats();const P=allPaths();const p=S.profile;
  return`Student: ${p.name||"unnamed"}, grade ${p.grade}. Interests: ${p.interests.join(", ")||"none listed"}. Courses & grades: ${Object.entries(p.subjects).filter(([,g])=>g!=="—").map(([s,g])=>s+" "+g).join(", ")||"none"}. Activities: ${p.activities.join(", ")||"none"}.
 Stats (0-99): ${SK.map(k=>STATS[k]+" "+t[k]).join(", ")}.
 Paths on their map: ${Object.values(P).map(x=>x.name).join(", ")}. Pinned: ${S.pinned.map(k=>P[k]?.name).filter(Boolean).join(", ")||"none"}.
-Intended major: ${P[S.major]?.name||"still exploring"}. Minors: ${S.minors.map(k=>P[k]?.name).filter(Boolean).join(", ")||"none"}. Goals: ${(S.goals?.ids||[]).map(id=>QUIZ.goals.find(g=>g.id===id)?.label).filter(Boolean).join("; ")||"none set"}${S.goals?.text?` (in their words: "${S.goals.text}")`:""}${S.goals?.timeframe?`, timeframe: ${S.goals.timeframe}`:""}. Completed objectives: ${comp.join("; ")||"none yet"}. Currently viewing: ${P[S.path]?.name||"none"}.`}
+Intended major: ${P[S.major]?.name||"still exploring"}. Minors: ${S.minors.map(k=>P[k]?.name).filter(Boolean).join(", ")||"none"}. Goals: ${(S.goals?.ids||[]).map(id=>QUIZ.goals.find(g=>g.id===id)?.label).filter(Boolean).join("; ")||"none set"}${S.goals?.text?` (in their words: "${S.goals.text}")`:""}${S.goals?.timeframe?`, timeframe: ${S.goals.timeframe}`:""}. Completed objectives: ${comp.join("; ")||"none yet"}. Currently viewing: ${P[S.path]?.name||"none"}.${S.updates?.[0]?` Latest update they shared: "${S.updates[0].text.slice(0,200)}"`:""}`}
 const RULES=()=>fill(PROMPTS.chat,{persona:PROMPTS.personas[S.equip.comp]||PROMPTS.personas.orb,context:context()});
 let ctl=null;
 async function ask(q){if(!q.trim())return;addMsg("me",q);S.chat.push({role:"user",content:q});

@@ -73,3 +73,14 @@ test("rate limits a single visitor", async () => {
   for (let i = 0; i < 21; i++) last = await call({ body: { kind: "chat", messages: [{ role: "user", content: "hi" }] }, ip: "9.9.9.9" });
   assert.equal(last.status, 429);
 });
+
+test("reflect returns a parsed update and fills the prompt", async () => {
+  process.env.ANTHROPIC_API_KEY = "test-key";
+  const calls = mockClaude('{"summary":"That sounds hard.","add":[{"id":"eng","why":"models"}]}');
+  const r = await call({ body: { kind: "reflect", text: "I failed CS and like models", pathIds: ["cs", "eng"], journey: ["cs"], pathNames: "cs=Computer Science; eng=Engineering" }, ip: "6.6.6.6" });
+  assert.equal(r.status, 200);
+  assert.equal(r.body.update.add[0].id, "eng");
+  assert.match(calls[0].messages[0].content, /I failed CS and like models/);
+  assert.match(calls[0].messages[0].content, /keep or pause: cs\./);
+  assert.equal((await call({ body: { kind: "reflect", text: "" }, ip: "6.6.6.6" })).status, 400);
+});

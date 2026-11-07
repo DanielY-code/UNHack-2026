@@ -11,6 +11,7 @@ Edventure turns career planning into a video-game skill tree. Students roll stat
 | Area | What it does |
 |---|---|
 | **Onboarding quiz** | New students start with a short quest-style quiz: about you, interests, courses, activities, six scenario questions, goals with a timeframe, and how sure they are of their direction. Results rank every path with reasons, add the chosen paths to the student's journey, set a major when they're sure, and plant their goals as ★ objectives in their top trees. Retake it any time from the Character tab. |
+| **Path updates** | "Something changed?" lets students describe a recent event or change of heart in their own words, for example *"I failed my Computer Science course, I don't enjoy problem solving, I like constructing models."* Their companion suggests paths to try next, new trees to grow, paths to pause and a small first step. Applying it reshapes their journey: paused paths keep all progress and resume when pinned again. Without an API key, a built-in keyword reader gives a simpler version. Updates are logged on the Character tab. |
 | **Character** | Interests, course grades and activities become seven stats (Logic, Tech, Science, Creativity, Charisma, Empathy, Craft). Set an intended major and up to two minors. |
 | **Career paths** | Eight starter trees with a match % based on your stats: Computer Science, Cybersecurity, Data Science & AI, Health Sciences, Engineering, UX & Visual Design, Law & Policy, Business. |
 | **Skill tree** | Objectives laid out by grade stage, each with what you learn, a concrete task and free resources. Hover any node for an interactive card. Branches lead into related paths. |
@@ -37,6 +38,7 @@ js/                   Plain browser scripts, loaded in order (no build step)
   companions.js         Companion characters (original SVG art)
   companion-chat.js     Chat panel, AI adapter, AI-grown paths
   quiz.js               Onboarding quiz, path scoring, planting goal objectives
+  update.js             "Something changed?" path updates and the offline keyword reader
   guidance.js           Tooltip and compass helpers, majors/minors
   tooltips.js           Tooltip bubble
   fx.js                 Animated backgrounds, flying gems, banners
@@ -50,7 +52,7 @@ data/                 Editable content, no code knowledge needed
   quiz.json             Quiz questions, goals, timeframes and direction options
 api/companion.js      Vercel serverless function: calls Claude with the secret API key
 scripts/build-single.mjs   Bundles everything into one HTML file (npm run build:single)
-tests/                Content, game-rule, quiz and API tests (node --test)
+tests/                Content, game-rule, quiz, path-update and API tests (node --test)
 ```
 
 ## Run it locally
@@ -108,7 +110,7 @@ Run `npm test` afterwards. It catches broken prerequisites, missing branch targe
 ## How the AI is kept safe
 
 - The API key lives only on the server, in the Vercel function.
-- The browser sends a small, validated request ("chat" or "grow"). The server builds the actual prompt from `data/prompts.json`, so the endpoint can't be used as a general-purpose chatbot.
+- The browser sends a small, validated request ("chat", "grow" or "reflect"). The server builds the actual prompt from `data/prompts.json`, so the endpoint can't be used as a general-purpose chatbot.
 - Inputs are length-capped, conversations are trimmed, and each visitor is rate-limited (best effort per server instance).
 - AI-grown trees are labelled, and students are told to check their links.
 

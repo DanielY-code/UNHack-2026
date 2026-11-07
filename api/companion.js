@@ -1,7 +1,7 @@
 // Edventure companion API (Vercel serverless function).
 //
 // The browser never sees the Anthropic API key. It sends a small, validated request
-// ("chat" or "grow"), and this function builds the real prompt from data/prompts.json,
+// ("chat", "grow" or "reflect"), and this function builds the real prompt from data/prompts.json,
 // so the endpoint can't be used as a general-purpose Claude proxy.
 //
 // Environment variables (set them in Vercel → Project → Settings → Environment Variables):
@@ -15,7 +15,7 @@ import { join } from "node:path";
 
 const PROMPTS = JSON.parse(readFileSync(join(process.cwd(), "data", "prompts.json"), "utf8"));
 const API_URL = "https://api.anthropic.com/v1/messages";
-const LIMITS = { context: 2500, message: 1200, turns: 12, topic: 80, pathIds: 40 };
+const LIMITS = { context: 2500, message: 1200, turns: 12, topic: 80, pathIds: 40, reflection: 1000, pathNames: 1500 };
 
 // Best-effort rate limit: 20 requests per 10 minutes per visitor, per server instance.
 // For a public launch, move this to a shared store such as Upstash Redis or Vercel KV.
@@ -125,7 +125,25 @@ export default async function handler(req, res) {
       return res.status(200).json({ path });
     }
 
-    return fail(res, 400, "bad_request", 'kind must be "chat" or "grow".');
+    if (body.kind === "reflect") {
+      const text = str(body.text, LIMITS.reflection).trim();
+      if (!text) return fail(res, 400, "bad_request", "text is required.");
+      const ids = (list) => (Array.isArray(list) ? list : []).slice(0, LIMITS.pathIds).map((id) => String(id).replace(/[^\w-]/g, "").slice(0, 40)).filter(Boolean);
+      const out = await callClaude({
+        model: process.env.ANTHROPIC_GROW_MODEL || "claude-sonnet-5-5",
+        system: "You are a supportive career-exploration guide for teenagers. Reply with a single JSON object and nothing else.",
+        messages: [{ role: "user", content: fill(PROMPTS.reflect, {
+          text, context, pathIds: ids(body.pathIds).join(", "), journey: ids(body.journey).join(", ") || "none",
+          pathNames: str(body.pathNames, LIMITS.pathNames),
+        }) }],
+        maxTokens: 1200,
+      });
+      const update = extractJson(out);
+      if (!update || typeof update.summary !== "string") return fail(res, 502, "invalid_json", "The model returned an unreadable update.");
+      return res.status(200).json({ update });
+    }
+
+    return fail(res, 400, "bad_request", 'kind must be "chat", "grow" or "reflect".');
   } catch (e) {
     console.error("companion error:", e.status || "", e.message);
     if (e.status === 429) return fail(res, 429, "rate_limited", "The AI service is busy. Try again shortly.");

@@ -2,7 +2,7 @@
 /* ---------- state ---------- */
 const KEY="edventure.v1";
 function fresh(){return{example:true,profile:{name:"Maya (example)",grade:"10",interests:["Coding","Puzzles","Video games","Helping people"],subjects:{"Math":"A","English":"B","Biology":"B","Chemistry":"—","Physics":"—","Computer Studies":"A","Visual Arts":"C","Music":"—","History":"B","Business":"—","Tech / Shop":"—","Health & Phys Ed":"B","French":"C"},activities:["Coding at home","Volunteering"]},
- progress:{cs:["cs1","cs2"]},notes:{},pinned:["cs"],gems:50,earned:50,owned:["skin-aurora","orb-moon","comp-orb"],equip:{skin:"aurora",orb:"moon",title:"",comp:"orb"},custom:{},extraNodes:{},redeem:[],view:"profile",path:"cs",sel:null,chat:[],compare:["cs","cyber"],mastery:{},major:"cs",minors:[],onboarded:false,goals:null};}
+ progress:{cs:["cs1","cs2"]},notes:{},pinned:["cs"],gems:50,earned:50,owned:["skin-aurora","orb-moon","comp-orb"],equip:{skin:"aurora",orb:"moon",title:"",comp:"orb"},custom:{},extraNodes:{},redeem:[],view:"profile",path:"cs",sel:null,chat:[],compare:["cs","cyber"],mastery:{},major:"cs",minors:[],onboarded:false,goals:null,updates:[],paused:[],pathNotes:{}};}
 let S,testGrantToast=0;
 /* Test mode shows the treasure tools. It's on for localhost, Vercel preview deploys, claude.ai previews and any URL ending in #test. */
 const TEST_MODE=/^(localhost|127\.0\.0\.1)$/.test(location.hostname)||location.hostname.includes("-git-")||location.hash==="#test"||!!window.claude;
