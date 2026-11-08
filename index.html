@@ -461,6 +461,12 @@ const GOALS={
     net:[[2,"Department seminar → chat with a grad student"]],hands:[[2,"Lab volunteer"],[3,"Summer research assistant"]],side:[[1,"Join the science student society"],[3,"Present a poster at a student conference"]]},
   policy:{title:"Policy analyst",field:"social",kw:["policy","politics","political","government","law"],programs:["pols","econ","psych"],
     net:[[2,"Public policy event → coffee chat with an analyst"]],hands:[[3,"Government internship (co-op)"]],side:[[1,"Join Model UN or debate"],[3,"Write a policy brief for a student journal"]]},
+  pa:{title:"Physician assistant",field:"health",kw:["physician assistant","pa program"],programs:["hlth","bio","kine"],
+    net:[[2,"Hospital career night → coffee chat with a physician assistant"]],hands:[[2,"Hospital volunteer program (for credit)"],[3,"Clinical research assistant"]],side:[[2,"Log patient care hours"],[3,"Practise clinical interview skills"]]},
+  physio:{title:"Physiotherapist",field:"health",kw:["physio","physiotherapy","physiotherapist","rehab","rehabilitation"],programs:["kine","hlth","bio"],
+    net:[[2,"Clinic open house → coffee chat with a physiotherapist"]],hands:[[2,"Rehab clinic volunteer"],[3,"Physiotherapy clinic placement"]],side:[[1,"Shadow a physiotherapist"],[3,"First aid and CPR certification"]]},
+  pubhealth:{title:"Public health analyst",field:"health",kw:["public health","epidemiology","community health","health policy"],programs:["hlth","psych","pols"],
+    net:[[2,"Public health seminar → coffee chat with an epidemiologist"]],hands:[[3,"Public health unit placement"]],side:[[2,"Volunteer on a community health campaign"]]},
   hinf:{title:"Health informatics specialist",field:"health",kw:["informatics","health data"],programs:["hlth","it"],
     net:[[3,"Health tech meetup → coffee chat with an analyst"]],hands:[[3,"Hospital IT placement"]],side:[]}};
 const TYPES={academic:{label:"Academic",gems:40,done:"Course passed with a B or higher."},
@@ -604,7 +610,7 @@ const B_WORDS=["interested in","don't want","dont want","do not want","switch to
 function classify(t){const s=t.toLowerCase();if(/\bminor\b/.test(s))return"C";
   if(/certificate|continuing|after (i )?grad|post-?degree|post-?grad|diploma|part-time studies/.test(s))return"D";
   const a=A_WORDS.filter(k=>s.includes(k)).length,b=B_WORDS.filter(k=>s.includes(k)).length;return a>b?"A":b>a?"B":null}
-const kwHit=(s,w)=>{const m=new RegExp("\\b"+w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"\\b").exec(s);if(!m)return 0;return/don'?t want|do not want|no longer|not into|quit|hate/.test(s.slice(Math.max(0,m.index-28),m.index))?-2:1};
+const kwHit=(s,w)=>{const m=new RegExp("\\b"+w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"\\b").exec(s);if(!m)return 0;const pre=s.slice(Math.max(0,m.index-32),m.index),post=s.slice(m.index,m.index+m[0].length+14);return/don'?t (\w+ ){0,3}want|do not want|not sure i want|no longer|not into|quit|hate/.test(pre)||/anymore|no more/.test(post)?-2:1};
 function guessGoal(t){const s=t.toLowerCase();let best=null,sc=0;for(const[k,g]of Object.entries(GOALS)){const v=g.kw.reduce((a,w)=>a+kwHit(s,w),0);if(v>sc){sc=v;best=k}}return best}
 function guessProg(kind,t){const s=t.toLowerCase();let best=null,sc=0;for(const[k,P]of Object.entries(PROGRAMS)){if(P.kind!==kind)continue;const v=(P.kw||[]).reduce((a,w)=>a+kwHit(s,w),0);if(v>sc){sc=v;best=k}}return best}
 const ALIAS={orgo:"organic",ochem:"organic",calc:"calculus",stats:"statistics",chem:"chemistry",bio:"biology",physio:"physiology",psych:"psychology",econ:"economics",programming:"programming"};
@@ -651,7 +657,7 @@ function shapeSVG(n,x,y,st){if(n.type==="side"){const f=st==="done"?"var(--gold)
    :st==="below"?`<text x="${x}" y="${y+5}" text-anchor="middle" font-family="var(--f-mono)" font-weight="700" font-size="15" fill="var(--rose)">!</text>`:"";
   return s+g}
 function laneStyle(p){return p.kind==="main"||p.kind==="newgoal"?{col:"var(--ink)",dash:""}:p.kind==="minor"?{col:"var(--t-network)",dash:"7 6"}:p.kind==="cont"?{col:"var(--t-hands)",dash:"7 6"}:{col:"var(--accent)",dash:"7 6"}}
-function laneCaption(p){return p.kind==="detour"?`Route · ${KIND.detour}`:p.kind==="main"?"Main path":`${KIND[p.kind]} · ${PROGRAMS[p.prog].name.replace(/^(BHSc|BSc|BA|BBA) /,"")}`}
+function laneCaption(p){return p.kind==="detour"?`Route · ${KIND.detour}`:p.kind==="main"?"Main path":p.kind==="newgoal"&&GOALS[p.goal]?`${KIND.newgoal} · ${GOALS[p.goal].title}`:`${KIND[p.kind]} · ${PROGRAMS[p.prog].name.replace(/^(BHSc|BSc|BA|BBA) /,"")}`}
 function treeSVG(){const L=layout();lastLayout=L;const{W,H}=L;let bands="",edges="",nodes="";
   L.bands.forEach(b=>{const t=L.bandTop[b.key];bands+=`${b.now?`<rect x="0" y="${t}" width="${W}" height="${b.h}" class="band-now"/>`:""}<path d="M0 ${t}H${W}" stroke="var(--line)"/><text x="12" y="${t+20}" class="band-lbl halo">${b.label}${b.now?" · now":""}</text>`});
   for(const p of L.lanes){const lane=L.items.get(p.id);const it=lane.list;if(!it.length)continue;const x=lane.x;const{col,dash}=laneStyle(p);const aside=p.status!=="active";const nw=fresh.has("lane:"+p.id);
@@ -712,9 +718,11 @@ const CHOICES={A:["Same goal, new route","Route around it: an alternative course
   B:["New goal or major","Change your end goal and grow a new path toward it. Courses you've passed come with you."],
   C:["Add a minor","Grow a minor alongside your degree, without leaving it."],
   D:["Continuing studies","Add a certificate or a new specialty after your degree."]};
+/* careers the student's current path already leads to: same program, a different goal */
+function simGoals(p){return isMajorPath(p)?Object.keys(GOALS).filter(k=>k!==p.goal&&GOALS[k].programs.includes(p.prog)):[]}
 function initPick(type){RB.type=type;const p=pathById(RB.path);
   if(type==="A")RB.course=p?guessCourse(p,RB.text):null;
-  if(type==="B")RB.goal=guessGoal(RB.text)||Object.keys(GOALS).find(g=>!S.paths.some(q=>q.goal===g))||"soft";
+  if(type==="B"){const g=guessGoal(RB.text);RB.goal=(g&&g!==p?.goal?g:null)||(simGoals(p).length?null:Object.keys(GOALS).find(x=>!S.paths.some(q=>q.goal===x))||"soft")}
   if(type==="C")RB.pick=guessProg("minor",RB.text);if(type==="D")RB.pick=guessProg("cert",RB.text);RB.step="options"}
 function optCard(o,attr,label,extra=""){const P=PROGRAMS[o.prog];return`<div class="opt"><b>${esc(P.name)}</b><div class="chips">
   <span class="chip ${o.carriedN?"ok":""}">${o.carriedN} course${o.carriedN===1?"":"s"} carry over</span><span class="chip">${o.left} course${o.left===1?"":"s"} to go</span>${extra}</div>
@@ -745,10 +753,17 @@ function drawRoadblock(){const el=$("rbBox");if(!el)return;const c=comp();
       ${isMajorPath(p)?`<div class="rung"><h3>2 · Similar degree</h3>${L.r2.length?L.r2.map(o=>optCard(o,`data-grow="similar|${o.prog}"`,"Grow this path",`<span class="chip">${o.needs?`Still includes ${code}`:`No ${code}`}</span>`)).join(""):`<p class="small muted">No similar degree in the database.</p>`}</div>
       <div class="rung"><h3>3 · Another major</h3>${L.r3.length?L.r3.map(o=>optCard(o,`data-grow="altmajor|${o.prog}"`,"Grow this path",`<span class="chip">${o.needs?`Still includes ${code}`:`No ${code}`}</span>`)).join(""):`<p class="small muted">No other majors in the database lead here.</p>`}</div>`:""}</div>
       <p class="tiny muted">These are options to look into, not recommendations. Programs and courses are illustrative sample data.</p>`}}
-  else if(RB.type==="B"){const G=GOALS[RB.goal];const fy=p?fromYearAt(forkBefore(p,currentIdx(p))):yrNum(S.student.year);
-    body=`<label class="small">New goal <select id="rbGoal" style="width:100%;margin-top:4px">${Object.entries(GOALS).map(([k,g])=>`<option value="${k}" ${k===RB.goal?"selected":""}>${esc(g.title)}</option>`).join("")}</select></label>
+  else if(RB.type==="B"){const fy=p?fromYearAt(forkBefore(p,currentIdx(p))):yrNum(S.student.year);const cur=isMajorPath(p)?p.prog:null;const sims=simGoals(p);
+    const goalSel=lbl=>`<label class="small">${lbl} <select id="rbGoal" style="width:100%;margin-top:4px">${RB.goal?"":`<option value="">Choose a goal</option>`}${Object.entries(GOALS).map(([k,g])=>`<option value="${k}" ${k===RB.goal?"selected":""}>${esc(g.title)}</option>`).join("")}</select></label>`;
+    const short=pid=>PROGRAMS[pid].name.replace(/^(BHSc|BSc|BA|BBA) /,"");
+    if(!RB.goal&&sims.length){
+      body=`<div class="bubble">You don't have to start over. These careers use the path you're already on, so your courses keep counting. You choose.</div>
+       <div class="rung"><h3>Careers your path already leads to</h3>${sims.map(k=>{const g=GOALS[k],o=preview(k,cur,fy);return`<div class="opt"><b>${esc(g.title)}</b><div class="chips"><span class="chip ok">Keeps your ${esc(short(cur))} path</span><span class="chip ok">${o.carriedN} course${o.carriedN===1?"":"s"} carry over</span><span class="chip">${o.left} to go</span></div><div class="row" style="justify-content:space-between"><span class="tiny muted">${esc(FIELDS[g.field].label)}</span><button class="btn small primary" data-sim="${k}">Explore this goal</button></div></div>`}).join("")}</div>
+       ${goalSel("Or something else")}`}
+    else{const G=GOALS[RB.goal];const progs=[...G.programs].sort((a,b)=>(b===cur)-(a===cur));
+      body=`${goalSel("New goal")}
      <div class="bubble">Here are programs that lead to ${esc(G.title.toLowerCase())}. Courses you've passed come with you. You choose.</div>
-     <div class="ladder">${G.programs.map(pid=>{const o={...preview(RB.goal,pid,fy),exists:S.paths.some(q=>q.goal===RB.goal&&q.prog===pid&&q.status==="active")};return optCard(o,`data-grow="newgoal|${pid}"`,"Grow this path",pid===S.student.prog?`<span class="chip ok">Your program</span>`:"")}).join("")}</div>`}
+     <div class="ladder">${progs.map(pid=>{const o={...preview(RB.goal,pid,fy),exists:S.paths.some(q=>q.goal===RB.goal&&q.prog===pid&&q.status==="active")};return optCard(o,`data-grow="newgoal|${pid}"`,"Grow this path",pid===cur?`<span class="chip ok">Keeps your current path</span>`:pid===S.student.prog?`<span class="chip ok">Your program</span>`:"")}).join("")}</div>`}}
   else{const kind=RB.type==="C"?"minor":"cert";const mp=RB.type==="D"?majorPathFor(p):p;const fy=RB.type==="D"?5:p?fromYearAt(forkBefore(p,currentIdx(p))):yrNum(S.student.year);
     if(RB.type==="D"&&!mp)body=`<p class="note small">Continuing studies branch off after a degree. Grow a degree path first.</p>`;
     else body=`<div class="bubble">${esc(voice(RB.type))} ${RB.type==="D"?`It branches off after ${esc(pathEnd(mp).title.toLowerCase())}.`:"It grows alongside your degree."}</div><div class="ladder">${Object.entries(PROGRAMS).filter(([,P])=>P.kind===kind).sort(([a],[b])=>(b===RB.pick)-(a===RB.pick)).map(([pid,P])=>{
@@ -756,7 +771,8 @@ function drawRoadblock(){const el=$("rbBox");if(!el)return;const c=comp();
   el.innerHTML=`${head(CHOICES[RB.type][0])}${pathSel}${body}${back}`;
   const ps=$("rbPath");if(ps)ps.onchange=()=>{RB.path=ps.value;initPick(RB.type);drawRoadblock()};
   const cs=$("rbCourse");if(cs)cs.onchange=()=>{RB.course=cs.value;drawRoadblock()};
-  const gs=$("rbGoal");if(gs)gs.onchange=()=>{RB.goal=gs.value;drawRoadblock()};
+  const gs=$("rbGoal");if(gs)gs.onchange=()=>{RB.goal=gs.value||null;drawRoadblock()};
+  el.querySelectorAll("[data-sim]").forEach(b=>b.onclick=()=>{RB.goal=b.dataset.sim;drawRoadblock()});
   $("rbBack").onclick=()=>{RB.step="confirm";drawRoadblock()};$("rbCancel").onclick=()=>{rbReset();renderAll()};
   el.querySelectorAll("[data-grow]").forEach(b=>b.onclick=()=>{const[k,a]=b.dataset.grow.split("|");grow(k,a)})}
 function submitRB(){const t=RB.text.trim();if(t.length<8){RB.msg="Tell me a little more, even one sentence helps.";return drawRoadblock()}
