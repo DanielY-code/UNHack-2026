@@ -3,75 +3,1039 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Edventure</title>
-<meta name="description" content="Career skill trees for senior high school and first-year university students: preview, compare and switch paths before committing to a degree.">
-<meta name="theme-color" content="#0d1322">
+<title>Pathway Lens Quest</title>
+<meta name="description" content="Pathway Lens, Edventure edition: turn a roadblock into a growing pathway tree, with a companion, treasure and real graduate outcomes. You choose.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500;700&family=Press+Start+2P&display=swap">
-<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: game HUD on top; pathway tree (~70%) with foundation + journey under it; companion roadblock box and details (~30%) on the right; stacks under 980px. Single deliberate night-sky world with purchasable skins. */
+:root{
+  --void:#0d1322; --panel:#151d33; --panel-2:#1c2642; --line:#2f3d62; --ink:#e9edf8; --muted:#a3aecb;
+  --accent:#6fe3d6; --accent-ink:#06201d; --gold:#f4c252; --gold-ink:#2a1d00; --rose:#ff9aa8;
+  --t-academic:#86b6ff; --t-network:#d0a2f5; --t-hands:#f5ab6a; --on-tier:#0d1322;
+  --orb:#bfe9ff; --orb-2:#7fb8ff;
+  --f-display:"Chakra Petch","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+body[data-skin="ember"]{--accent:#ff9c5e;--accent-ink:#2a1100}
+body[data-skin="sakura"]{--accent:#ff9fcf;--accent-ink:#2b0a1c}
+body[data-skin="verdant"]{--accent:#a9df86;--accent-ink:#112006}
+body[data-skin="starfall"]{--accent:#9fc4ff;--accent-ink:#06122a;--void:#0a1026;--panel:#121a38;--panel-2:#1a2448;--line:#2c3a6a}
+body[data-skin="aurora"]{--accent:#7dffc4;--accent-ink:#022016;--void:#08131c;--panel:#0f1e2a;--panel-2:#152a38;--line:#24445a}
+body[data-skin="forge"]{--accent:#ff8a4c;--accent-ink:#2a0d00;--void:#140c0a;--panel:#1f1410;--panel-2:#2a1b15;--line:#4a2e22}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--void);color:var(--ink);font:16px/1.55 var(--f-body)}
+[hidden]{display:none!important}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--f-display);margin:0;letter-spacing:.01em;text-wrap:balance}
+p{margin:0}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.wrap{position:relative;z-index:1;max-width:1440px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* HUD */
+.hud{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:color-mix(in oklab,var(--void) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:11;background:var(--void)}
+.hud .wrap{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding-block:10px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand h1{font-size:20px;line-height:1.1}
+.brand small{display:block;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.lens{width:26px;height:26px;border-radius:50%;border:3px solid var(--accent);position:relative;flex:none;box-shadow:0 0 12px color-mix(in oklab,var(--accent) 50%,transparent)}
+.lens::after{content:"";position:absolute;width:9px;height:3px;background:var(--accent);right:-8px;bottom:-3px;transform:rotate(45deg);border-radius:2px}
+.root-edit{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.root-edit label{font-size:12.5px;color:var(--muted);display:flex;gap:6px;align-items:center}
+input[type=text],select,textarea{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:7px 10px;min-width:0}
+textarea{width:100%;resize:vertical;min-height:84px;line-height:1.45}
+.root-edit input{width:150px}.root-edit input.name{width:92px}
+.meters{display:flex;gap:12px;align-items:center;margin-left:auto;flex-wrap:wrap}
+.lv{font-family:var(--f-mono);font-size:13px;display:flex;align-items:center;gap:8px}
+.xp{width:96px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.xp i{display:block;height:100%;background:linear-gradient(90deg,var(--accent) 0 40%,#ffffffaa 50%,var(--accent) 60%);background-size:250% 100%;animation:shimmer 2.4s linear infinite}
+@keyframes shimmer{from{background-position:150% 0}to{background-position:-100% 0}}
+.gems{font-family:var(--f-mono);font-size:14px;display:flex;align-items:center;gap:7px}
+.gem{width:12px;height:12px;background:var(--gold);transform:rotate(45deg);border-radius:2px;display:inline-block;animation:glow 2.6s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 4px var(--gold)}50%{box-shadow:0 0 12px var(--gold),0 0 22px color-mix(in oklab,var(--gold) 50%,transparent)}}
+#hudGems{display:inline-block;min-width:3ch}
+#hudGems.bump{animation:bump .45s ease-out}
+@keyframes bump{40%{transform:scale(1.5);color:var(--gold)}}
+.btn{border:1px solid var(--line);background:var(--panel-2);border-radius:999px;padding:8px 14px;font-weight:700;font-size:14px;cursor:pointer;line-height:1.2;font-family:var(--f-display);letter-spacing:.02em;transition:transform .08s,border-color .15s}
+.btn:hover{border-color:var(--accent)}
+.btn:active:not(:disabled){transform:translateY(2px)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--gold-ink)}
+.btn.ghost{background:none}
+.btn.danger{color:var(--rose);border-color:color-mix(in oklab,var(--rose) 45%,var(--line))}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.small{padding:6px 11px;font-size:13px}
+
+/* layout */
+.layout{display:grid;grid-template-columns:minmax(0,7fr) minmax(330px,3fr);gap:18px;padding-block:18px 48px;align-items:start}
+@media (max-width:980px){.layout{grid-template-columns:1fr}}
+.col{display:grid;gap:18px;min-width:0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px}
+.canvas{padding:16px 16px 12px;display:grid;gap:12px;min-width:0}
+.canvas-head{display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between}
+.canvas-head h2{font-size:20px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted);align-items:center}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend svg{width:18px;height:18px;flex:none}
+.tree-scroll{overflow-x:auto;border-radius:10px;background:radial-gradient(ellipse at 10% 50%,color-mix(in oklab,var(--accent) 8%,var(--panel-2)),var(--panel-2) 60%);scrollbar-width:thin;scrollbar-color:color-mix(in oklab,var(--accent) 45%,var(--line)) transparent}
+
+.foot{font-size:12.5px;color:var(--muted)}
+.n{cursor:pointer}
+.n:focus{outline:none}
+.n:focus-visible .focus,.n.sel .focus{opacity:1}
+.focus{opacity:0;fill:none;stroke:var(--accent);stroke-width:3;stroke-dasharray:4 4;transition:opacity .15s}
+.n:hover .shape{filter:drop-shadow(0 0 8px color-mix(in oklab,var(--accent) 45%,transparent))}
+.lbl{font-family:var(--f-body);font-size:12.5px;fill:var(--ink)}
+.lbl.b{font-weight:700}
+.halo{paint-order:stroke;stroke:var(--panel-2);stroke-width:6px;stroke-linejoin:round}
+.st{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;fill:var(--muted);text-transform:uppercase}
+.eyebrow-t{font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.aside{opacity:.42}
+.aside:hover,.aside:focus-within{opacity:.72}
+.ring{fill:none;stroke-width:2;transform-box:fill-box;transform-origin:center;animation:pulse 2.4s ease-out infinite}
+@keyframes pulse{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.5);opacity:0}}
+.grow{transform-box:fill-box;transform-origin:left center;animation:grow .9s cubic-bezier(.2,.8,.2,1) both}
+.pop{transform-box:fill-box;transform-origin:center;animation:pop .45s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes grow{from{transform:scaleX(.02);opacity:0}to{transform:none;opacity:1}}
+@keyframes pop{from{transform:scale(.3);opacity:0}}
+
+/* panel */
+.panel{display:grid;gap:18px;position:sticky;top:76px}
+@media (max-width:760px){.hud{position:static}.root-edit input{width:120px}}
+@media (max-width:980px){.panel{position:static}}
+.box{padding:18px;display:grid;gap:12px;align-content:start}
+.box h2{font-size:19px}
+.box h3{font-size:16px}
+.eyebrow{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.muted{color:var(--muted)}.small{font-size:14px}.tiny{font-size:12.5px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.who{display:flex;gap:12px;align-items:center}
+.face{width:58px;height:58px;flex:none;display:grid;place-items:center;animation:bob 3.2s ease-in-out infinite;filter:drop-shadow(0 0 10px color-mix(in oklab,var(--accent) 40%,transparent))}
+.face svg{width:100%;height:100%;overflow:visible}
+.face .orbball{width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0 10%,var(--orb) 30%,var(--orb-2) 70%,transparent 72%);box-shadow:0 0 20px var(--orb-2)}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.bubble{position:relative;background:var(--panel-2);border:1px solid color-mix(in oklab,var(--orb-2) 45%,var(--line));border-radius:12px;padding:10px 12px;font-size:14.5px}
+.who b{font-family:var(--f-display)}
+.choice{display:grid;gap:4px;text-align:left;padding:12px 14px;border:2px solid var(--line);border-radius:12px;background:var(--panel-2);cursor:pointer;width:100%}
+.choice b{font-family:var(--f-display);font-size:16px}
+.choice span{font-size:14px;color:var(--muted)}
+.choice:hover{border-color:var(--accent)}
+.choice.suggested{border-color:var(--accent);box-shadow:0 0 14px color-mix(in oklab,var(--accent) 22%,transparent)}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.tag.on{border-color:var(--accent);color:var(--accent)}
+.tag.goldtag{border-color:var(--gold);color:var(--gold)}
+.choice .tag{justify-self:start}
+.note{padding:10px 12px;border-radius:10px;background:color-mix(in oklab,var(--accent) 10%,var(--panel-2));font-size:14px}
+.note.warn{background:color-mix(in oklab,var(--rose) 12%,var(--panel-2))}
+.tierbadge{display:inline-flex;gap:8px;align-items:center;font-weight:700;font-size:14px}
+.tierbadge svg{width:20px;height:20px}
+.status{display:inline-flex;gap:6px;align-items:center;font-family:var(--f-mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:999px;border:1px solid var(--line)}
+.status.done{border-color:var(--gold);color:var(--gold)}
+.status.progress{border-style:dashed}
+.checks{display:grid;gap:8px;list-style:none;margin:0;padding:0}
+.checks label{display:flex;gap:10px;align-items:flex-start;padding:9px 11px;border:1px solid var(--line);border-radius:10px;cursor:pointer;font-size:15px;background:var(--panel-2)}
+.checks input{width:18px;height:18px;margin-top:2px;accent-color:var(--accent);flex:none}
+.checks .num{font-family:var(--f-mono);font-size:12px;color:var(--muted);min-width:16px;margin-top:2px}
+.checks label:has(input:checked){border-color:color-mix(in oklab,var(--accent) 60%,var(--line));background:color-mix(in oklab,var(--accent) 10%,var(--panel-2))}
+.reward{font-family:var(--f-mono);font-size:12px;color:var(--gold);display:inline-flex;gap:6px;align-items:center}
+.reward .gem{width:8px;height:8px;animation:none}
+.why{border-left:3px solid var(--accent);padding:10px 12px;background:var(--panel-2);border-radius:0 10px 10px 0;display:grid;gap:6px;font-size:14.5px}
+.src{font-size:12px;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.bar{display:grid;gap:4px}
+.bar-top{display:flex;justify-content:space-between;gap:8px;font-size:14px}
+.bar-top b{font-family:var(--f-mono)}
+.track{height:10px;border-radius:5px;background:var(--void);overflow:hidden;border:1px solid var(--line)}
+.fill{height:100%;background:var(--accent);border-radius:5px}
+.fill.alt{background:var(--muted)}
+.ctrls{display:flex;gap:8px;flex-wrap:wrap}
+.hs{display:grid;gap:6px;justify-items:start;padding:10px 12px;border:1px solid color-mix(in oklab,var(--gold) 55%,var(--line));border-radius:10px;background:color-mix(in oklab,var(--gold) 8%,var(--panel))}
+.hs b.lbl2{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+.list{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.list button{width:100%;text-align:left;display:flex;gap:8px;align-items:center;justify-content:space-between;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2);cursor:pointer;font-size:14px}
+.list button:hover{border-color:var(--accent)}
+
+/* under the tree */
+.lower{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:760px){.lower{grid-template-columns:1fr}}
+.roots{display:flex;flex-wrap:wrap;gap:8px}
+.rootchip{display:grid;gap:1px;padding:7px 11px;border-radius:10px;border:1px solid var(--gold);background:color-mix(in oklab,var(--gold) 9%,var(--panel-2));font-size:13px;box-shadow:0 0 12px color-mix(in oklab,var(--gold) 15%,transparent)}
+.rootchip b{font-family:var(--f-display);font-size:13px}
+.rootchip small{color:color-mix(in oklab,var(--gold) 70%,var(--muted));font-size:11.5px}
+.log{display:grid;gap:8px;list-style:none;margin:0;padding:0}
+.log li{display:grid;gap:2px;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2);font-size:14px}
+.log time{font-family:var(--f-mono);font-size:11.5px;color:var(--muted)}
+.compass{display:flex;gap:14px;align-items:flex-start}
+.needle{flex:none;width:34px;height:34px;border-radius:50%;border:2px solid var(--orb);position:relative;margin-top:2px}
+.needle::before{content:"";position:absolute;left:50%;top:4px;margin-left:-4px;border:4px solid transparent;border-bottom:11px solid var(--rose);transform-origin:50% 12px;animation:needle 4s ease-in-out infinite}
+.needle::after{content:"";position:absolute;left:50%;top:15px;margin-left:-4px;border:4px solid transparent;border-top:11px solid var(--orb);transform-origin:50% -1px;animation:needle 4s ease-in-out infinite}
+@keyframes needle{0%,100%{transform:rotate(-14deg)}50%{transform:rotate(16deg)}}
+#compassText{transition:opacity .45s}
+
+/* overlays */
+.overlay{position:fixed;inset:0;z-index:40;display:grid;place-items:center;background:color-mix(in oklab,var(--void) 85%,transparent);backdrop-filter:blur(6px);padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));animation:fade .25s ease-out}
+@keyframes fade{from{opacity:0}}
+.sheet{width:min(760px,100%);max-height:100%;overflow-y:auto;background:var(--panel);border:1px solid var(--accent);border-radius:16px;box-shadow:0 20px 60px #000c,0 0 40px color-mix(in oklab,var(--accent) 16%,transparent);display:grid;gap:16px;padding:22px;scrollbar-width:thin}
+.sheet h2{font-size:26px}
+.sheet-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.shop{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.item{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:8px;grid-template-rows:auto auto 1fr auto}
+.swatch{height:64px;border-radius:8px;border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;position:relative}
+.swatch svg{width:52px;height:52px;overflow:visible;animation:bob 3s ease-in-out infinite}
+.price{font-family:var(--f-mono);display:flex;align-items:center;gap:6px;font-size:14px}
+.price .gem{width:9px;height:9px;animation:none}
+.sw-starfall{background:radial-gradient(1px 1px at 20% 30%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 70% 60%,#fff 50%,transparent 51%),#0b1430}
+.sw-starfall::after{content:"";position:absolute;width:46px;height:2px;background:linear-gradient(90deg,#fff,transparent);top:4px;left:105%;transform:rotate(-28deg);animation:meteor 1.7s linear infinite}
+@keyframes meteor{to{left:-35%;top:46px}}
+.sw-aurora{background:linear-gradient(120deg,#08131c,#7dffc4,#6fb8ff,#c08bff,#08131c);background-size:300% 100%;animation:slide 5s linear infinite}
+@keyframes slide{to{background-position:-300% 0}}
+.sw-forge{background:radial-gradient(circle at 30% 125%,#ff7a3d 0,transparent 58%),radial-gradient(circle at 75% 135%,#ffcf5a 0,transparent 52%),#1a0e0a;animation:flick 1.3s ease-in-out infinite alternate}
+@keyframes flick{to{filter:brightness(1.45)}}
+.testbox{border:1px dashed var(--line);border-radius:12px;padding:12px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.qopt{display:grid;gap:3px;text-align:left;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2);cursor:pointer}
+.qopt[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in oklab,var(--accent) 14%,var(--panel-2))}
+.qgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.flygem{position:fixed;left:0;top:0;width:11px;height:11px;background:var(--gold);box-shadow:0 0 10px var(--gold);border-radius:2px;z-index:60;pointer-events:none}
+.spark{position:fixed;left:0;top:0;width:7px;height:7px;border-radius:1px;z-index:60;pointer-events:none}
+#banner{position:fixed;inset:0;display:grid;place-items:center;z-index:55;pointer-events:none;text-align:center}
+#banner .rays{position:absolute;left:50%;top:50%;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;background:repeating-conic-gradient(color-mix(in oklab,var(--burst,var(--gold)) 40%,transparent) 0 7deg,transparent 7deg 22deg);-webkit-mask:radial-gradient(circle,#000 15%,transparent 66%);mask:radial-gradient(circle,#000 15%,transparent 66%);animation:spin 7s linear infinite,raysfade 2.2s ease-out forwards}
+#banner .txt{position:relative;display:grid;gap:6px;animation:pop2 2.2s ease-out forwards}
+#banner b{font-family:var(--f-display);font-size:clamp(28px,7vw,54px);color:var(--burst,var(--gold));text-shadow:0 0 18px var(--burst,var(--gold)),0 4px 0 #0009}
+#banner small{font-family:var(--f-display);font-size:clamp(13px,2.5vw,18px);text-shadow:0 2px 0 #000}
+@keyframes pop2{0%{transform:scale(.3);opacity:0}14%{transform:scale(1.15);opacity:1}24%{transform:scale(1)}78%{opacity:1}100%{opacity:0;transform:translateY(-24px)}}
+@keyframes raysfade{0%{opacity:0}15%,75%{opacity:1}100%{opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--gold);color:var(--gold-ink);padding:10px 16px;border-radius:999px;font-weight:700;font-family:var(--f-display);font-size:14px;z-index:58;max-width:calc(100vw - 32px);text-align:center;box-shadow:0 0 24px color-mix(in oklab,var(--gold) 50%,transparent)}
+/* companion animations (shared with Edventure art) */
+.c-slime{transform-box:fill-box;transform-origin:50% 100%;animation:squish 1.6s ease-in-out infinite}
+@keyframes squish{0%,100%{transform:scale(1,1)}30%{transform:scale(1.1,.88)}60%{transform:scale(.93,1.08)}}
+.c-sway{transform-box:fill-box;transform-origin:50% 100%;animation:sway 3s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+.c-blink{animation:cblink 4s steps(1) infinite}
+@keyframes cblink{0%,92%,100%{opacity:1}94%{opacity:0}}
+.c-plume{transform-box:fill-box;transform-origin:0% 100%;animation:sway 1.4s ease-in-out infinite}
+.c-gem{animation:gemglow2 1.8s ease-in-out infinite}
+@keyframes gemglow2{0%,100%{filter:drop-shadow(0 0 2px #7fe8ff)}50%{filter:drop-shadow(0 0 9px #7fe8ff)}}
+.c-hat{transform-box:fill-box;transform-origin:50% 100%;animation:sway 2.6s ease-in-out infinite}
+.c-wingL{transform-box:fill-box;transform-origin:100% 60%;animation:flapL .5s ease-in-out infinite alternate}
+.c-wingR{transform-box:fill-box;transform-origin:0% 60%;animation:flapR .5s ease-in-out infinite alternate}
+@keyframes flapL{to{transform:rotate(-24deg)}}
+@keyframes flapR{to{transform:rotate(24deg)}}
+.c-spark{animation:cblink 1.2s steps(2) infinite}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.tree-scroll{max-height:min(76vh,900px);overflow:auto;overscroll-behavior:contain}
+.tree-scroll>svg{display:block;width:auto;min-width:0;height:auto;max-width:none}
+.band-lbl{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;fill:var(--muted);text-transform:uppercase}
+.band-now{fill:color-mix(in oklab,var(--accent) 7%,transparent)}
+.fadein{animation:fade .8s ease-out both}
+.ladder{display:grid;gap:12px}
+.rung{display:grid;gap:8px}
+.rung h3{font-size:12px;font-family:var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.opt{display:grid;gap:6px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2)}
+.opt b{font-family:var(--f-display);font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12.5px;padding:2px 9px;border-radius:999px;border:1px solid var(--line);background:none;line-height:1.5}
+button.chip{cursor:pointer}button.chip:hover{border-color:var(--accent)}
+.chip.ok{border-color:var(--gold);color:var(--gold)}
+.dblist{display:grid;gap:10px}
+.course{display:grid;gap:5px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2)}
+.course .code{font-family:var(--f-mono);font-size:12px;color:var(--accent);font-weight:700}
+.status.below{border-color:var(--rose);color:var(--rose)}
+.addform{display:grid;gap:10px;padding:12px;border:1px dashed var(--line);border-radius:12px}
+button.rootchip{text-align:left;cursor:pointer;color:var(--ink)}
+.rootchip.dimchip{border-color:var(--line);background:var(--panel-2);box-shadow:none;opacity:.7}
+.rootchip.dimchip small{color:var(--muted)}
+.root-edit select#sProg{max-width:210px}
+
+.layout{grid-template-columns:minmax(0,1fr)}
+.tree-scroll{position:relative;max-height:min(82vh,1000px)}
+.nodecard{position:absolute;z-index:3;background:var(--panel);border:1.5px solid var(--accent);border-radius:14px;padding:16px;box-shadow:0 14px 40px #000a,0 0 26px color-mix(in oklab,var(--accent) 16%,transparent);animation:cardin .28s cubic-bezier(.2,.9,.3,1.2)}
+.nodecard{scroll-margin:110px 16px 24px 24px}
+.nodecard::before{content:"";position:absolute;left:10px;top:-9px;width:16px;height:16px;background:var(--panel);border-left:1.5px solid var(--accent);border-top:1.5px solid var(--accent);transform:rotate(45deg)}
+.nodecard:focus{outline:none}.nodecard:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+@keyframes cardin{from{opacity:0;transform:translateY(-8px) scale(.97)}}
+#details{display:grid;gap:12px}
+#details h2{font-size:18px;padding-right:30px}
+.cardx{position:absolute;right:8px;top:8px;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--panel-2);font-size:20px;line-height:1;cursor:pointer;z-index:1}
+.cardx:hover{border-color:var(--accent)}
+.rbin{display:grid;gap:12px;padding:14px;border-radius:12px;background:color-mix(in oklab,var(--accent) 6%,var(--panel-2));border:1px solid color-mix(in oklab,var(--accent) 35%,var(--line))}
+.rbin h2{font-size:17px}
+.fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:30;display:flex;align-items:center;gap:8px;padding:6px 16px 6px 6px;border-radius:999px;border:1.5px solid var(--accent);background:var(--panel);cursor:pointer;box-shadow:0 8px 26px #0009,0 0 18px color-mix(in oklab,var(--accent) 22%,transparent);font-family:var(--f-display);font-weight:700;font-size:14px}
+.fab #fabFace{width:40px;height:40px;display:grid;place-items:center;animation:bob 3.2s ease-in-out infinite}
+.fab #fabFace svg{width:100%;height:100%;overflow:visible}.fab .orbball{width:32px;height:32px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0 10%,var(--orb) 30%,var(--orb-2) 70%,transparent 72%);box-shadow:0 0 14px var(--orb-2)}
+.toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+@media (max-width:760px){.fab .fab-t{display:none}.fab{padding:6px}.hud{position:static}.root-edit input{width:120px}.tree-scroll{max-height:none;overflow-y:visible}}
+</style>
 </head>
-<body>
-<header class="hud">
-  <div class="hud-in">
-    <div class="brand"><i></i>Edventure</div>
-    <div class="who"><b id="hudName">Adventurer</b><span id="hudTitle">Novice</span></div>
-    <div class="meters">
-      <div class="chip-stat" title="Level">LV <b id="hudLv">1</b><div class="xpbar"><i id="hudXp" style="width:0%"></i></div></div>
-      <div class="chip-stat" title="Treasure"><span class="gem"></span><b id="hudGems">0</b></div>
-      <button type="button" class="btn small hud-reset" id="startOver" title="Start over from the quiz">↺ Start over</button>
+<body data-skin="classic">
+<canvas id="fx" aria-hidden="true"></canvas>
+<header class="hud"><div class="wrap">
+  <div class="brand"><span class="lens" aria-hidden="true"></span><div><h1>Pathway Lens</h1><small>Edventure edition</small></div></div>
+  <div class="root-edit" aria-label="Where you are now">
+    <label for="sName">Name <input type="text" class="name" id="sName" maxlength="30"></label>
+    <label for="sProg">Program <select id="sProg"></select></label>
+    <label for="sYear">Year <select id="sYear"><option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option></select></label>
+  </div>
+  <div class="meters">
+    <div class="lv" title="Level">LV <b id="hudLv">1</b><div class="xp"><i id="hudXp" style="width:0%"></i></div></div>
+    <div class="gems" title="Treasure"><span class="gem"></span><b id="hudGems">0</b></div>
+    <button class="btn small" id="dbBtn">Courses</button>
+    <button class="btn small gold" id="shopBtn">Treasury</button>
+    <button class="btn small ghost" id="overBtn">↺ Start over</button>
+  </div>
+</div></header>
+
+<main class="wrap layout">
+  <div class="col">
+    <section class="card canvas" aria-labelledby="treeTitle">
+      <div class="canvas-head">
+        <div><h2 id="treeTitle">Your pathway tree</h2><p class="small muted" style="margin-top:2px">Tap any node to open it right here. Tap your name to talk to your companion.</p></div>
+        <div class="legend" aria-label="Legend">
+          <span><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7" fill="none" stroke="var(--t-academic)" stroke-width="2.5"/></svg>Course</span>
+          <span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5 17.5 10 10 17.5 2.5 10Z" fill="none" stroke="var(--t-network)" stroke-width="2.5"/></svg>Networking</span>
+          <span><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="14" height="14" rx="3" fill="none" stroke="var(--t-hands)" stroke-width="2.5"/></svg>Hands-on</span>
+          <span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2 Q11 9 18 10 Q11 11 10 18 Q9 11 2 10 Q9 9 10 2Z" fill="none" stroke="var(--orb)" stroke-width="2"/></svg>Side quest (optional)</span>
+          <span><svg viewBox="0 0 20 20" aria-hidden="true"><defs><linearGradient id="lgHalf" x1="0" y1="1" x2="0" y2="0"><stop offset=".5" style="stop-color:var(--muted)"/><stop offset=".5" style="stop-color:transparent"/></linearGradient></defs><circle cx="10" cy="10" r="7" fill="url(#lgHalf)" stroke="var(--muted)" stroke-width="2"/></svg>In progress</span>
+          <span><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="var(--gold)"/><path d="M6.5 10.2 9 12.6 13.6 7.6" fill="none" stroke="var(--gold-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Done</span>
+          <span><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7" fill="none" stroke="var(--rose)" stroke-width="2.5"/><text x="10" y="14" text-anchor="middle" font-size="11" font-weight="700" fill="var(--rose)">!</text></svg>Below B</span>
+          <span><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="var(--gold)"/><path d="M6.5 7 h5 a3 3 0 0 1 0 6 h-4 M8.5 11 l-2.5 2 l2.5 2" fill="none" stroke="var(--gold-ink)" stroke-width="1.8" stroke-linecap="round"/></svg>Credits carried</span>
+          <span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2 10H18" stroke="var(--muted)" stroke-width="2.5" stroke-dasharray="3 3"/></svg>Branch / set aside</span>
+        </div>
+      </div>
+      <div class="tree-scroll" id="treeScroll" tabindex="-1"></div>
+      <p class="foot">Each column is a path, read top to bottom by year. Paths grow and change as you do: share a roadblock, change goals, add a minor, or add courses yourself. Courses, programs and requirements are <b>illustrative sample data</b>.</p>
+    </section>
+    <div class="lower">
+      <section class="card box" id="foundation" aria-labelledby="fTitle"></section>
+      <div class="col" style="gap:18px">
+        <section class="card box" id="journey" aria-labelledby="jTitle"></section>
+        <section class="card box compass" aria-label="Explorer's compass"><span class="needle" aria-hidden="true"></span><div style="min-width:0;flex:1;display:grid;gap:4px"><span class="eyebrow" style="color:var(--orb)">Explorer's compass</span><p id="compassText" class="small"></p></div></section>
+      </div>
     </div>
-    <nav class="tabs" role="tablist">
-      <button role="tab" data-view="profile" id="tab-profile">Character</button>
-      <button role="tab" data-view="paths" id="tab-paths">Career paths</button>
-      <button role="tab" data-view="world" id="tab-world">World tree</button>
-      <button role="tab" data-view="tree" id="tab-tree">Skill tree</button>
-      <button role="tab" data-view="compare" id="tab-compare">Compare</button>
-      <button role="tab" data-view="shop" id="tab-shop">Treasury</button>
-    </nav>
   </div>
-</header>
+</main>
+<div id="overlay" class="overlay" hidden role="dialog" aria-modal="true"></div>
+<div id="banner" hidden></div>
+<div class="toast" id="toast" role="status" hidden></div>
+<button class="fab" id="fab" aria-label="Talk to your companion"><span id="fabFace"></span><span class="fab-t">Hit a roadblock?</span></button>
+<script>
+/* ===================== content: NGS figures are real; courses, programs and requirements are illustrative sample data ===================== */
+const KEY="pathway-quest-v2";
+const SRC="Statistics Canada, NGS Class of 2020 (2023)";
+const FIELDS={
+  mathcs:{label:"Math & computer science",out:{employed:88,high:51,related:67},place:[82,45]},
+  business:{label:"Business & administration",out:{employed:93,high:39,related:63},place:[64,50]},
+  health:{label:"Health",out:{employed:89,high:49,related:77},place:[83,55]},
+  physlife:{label:"Physical & life sciences",out:{employed:65,high:15,related:36},place:[48,39]},
+  social:{label:"Social sciences & law",out:null,place:[66,39]},
+  arts:{label:"Arts & humanities",out:null,place:[57,32]}};
+/* code|title|year|term|subject|prerequisites|can be replaced by|description */
+const C_RAW=`
+BIOL1000|Cells, Molecules & Genetics|1|F|Biology|||How cells work, DNA, and how traits are inherited.
+BIOL1010|Organisms, Ecology & Evolution|1|W|Biology|||How living things interact and change over time.
+BIOL2020|Biochemistry|2|F|Biology|BIOL1000,CHEM1000|BCHM2020|The chemistry of proteins, enzymes and metabolism.
+BCHM2020|Biochemistry for Life Sciences|2|W|Biology|BIOL1000,CHEM1000|BIOL2020|A biochemistry option built for health and life-science programs.
+BIOL2040|Genetics|2|W|Biology|BIOL1000||Genes, inheritance and genetic disease.
+BIOL3060|Human Physiology|3|F|Biology|BIOL1000||How the body's organ systems work together.
+BIOL3110|Molecular Biology|3|W|Biology|BIOL2020||DNA, RNA and the lab techniques used in research.
+BIOL4100|Biology Thesis Project|4|Y|Biology|BIOL2040||A for-credit research project with a faculty supervisor.
+CHEM1000|General Chemistry I|1|F|Chemistry||CHEM1000S|Atoms, bonding and chemical reactions.
+CHEM1000S|General Chemistry I (summer section)|1|S|Chemistry|||The same course, taught in the summer term.
+CHEM1001|General Chemistry II|1|W|Chemistry|CHEM1000||Equilibrium, energy and reaction rates.
+CHEM2020|Organic Chemistry I|1|W|Chemistry|CHEM1000|CHEM2020S,CHEM2050|Carbon compounds and how they react.
+CHEM2020S|Organic Chemistry I (summer section)|1|S|Chemistry|CHEM1000||The same course in a smaller summer class.
+CHEM2050|Organic Chemistry for Life Sciences|2|F|Chemistry|CHEM1000|CHEM2020|Organic chemistry focused on the body and medicine.
+PHYS1010|Physics I|1|F|Physics|||Motion, forces and energy.
+PHYS1410|Physics for Life Sciences|2|F|Physics||PHYS1010|Physics ideas used in health and biology.
+MATH1300|Calculus I|1|F|Mathematics|||Limits, derivatives and how they are used.
+MATH1505|Mathematics for the Life Sciences|1|F|Mathematics||MATH1300|Calculus and models for biology and health.
+MATH1019|Discrete Math for Computer Science|1|W|Mathematics|||Logic, sets and proofs used in computing.
+MATH1021|Linear Algebra I|1|W|Mathematics|||Vectors, matrices and systems of equations.
+MATH2030|Elementary Probability|2|F|Mathematics|MATH1300||Chance, random variables and distributions.
+MATH4000|Mathematics Honours Project|4|Y|Mathematics|MATH2030||An independent project with a faculty supervisor.
+STAT2570|Applied Statistics|2|W|Statistics||ADMS2320,PSYC2020|Collecting, summarizing and testing data.
+HLST1010|Foundations of Health Studies|1|F|Health|||What keeps people and communities healthy.
+HLST2020|Health Research Methods|2|W|Health||PSYC2030|How health studies are designed and read.
+HLST3010|Health Policy in Canada|3|F|Health|||How health care decisions get made.
+HLST4200|Health Sciences Capstone|4|Y|Health|HLST2020||A for-credit project with a community partner.
+KINE1000|Introduction to Kinesiology|1|F|Kinesiology|||The science of human movement.
+KINE2011|Human Anatomy|2|F|Kinesiology|BIOL1000||The structure of the human body.
+KINE2031|Human Development|2|W|Kinesiology|||How people grow and change across life.
+KINE3012|Exercise Physiology|3|F|Kinesiology|KINE2011||How the body responds to exercise.
+KINE4010|Kinesiology Research Project|4|Y|Kinesiology|KINE3012||A for-credit research or placement project.
+PSYC1010|Introduction to Psychology|1|Y|Psychology|||How people think, feel and behave.
+PSYC2020|Statistics for Psychology|2|F|Psychology||STAT2570|Statistics with psychology examples.
+PSYC2030|Research Methods in Psychology|2|W|Psychology||HLST2020|How psychology studies are designed.
+PSYC2240|Biological Psychology|2|W|Psychology|PSYC1010||The brain and behaviour.
+PSYC3170|Health Psychology|3|F|Psychology|PSYC1010||How thoughts and habits affect health.
+PSYC4170|Psychology Honours Thesis|4|Y|Psychology|PSYC2030||A for-credit research project.
+SOCI1010|Introduction to Sociology|1|Y|Sociology|||How society shapes our lives.
+EECS1015|Introduction to Programming|1|F|Computer Science||EECS1015S,ITEC1620|Your first programs, written in Python.
+EECS1015S|Introduction to Programming (summer section)|1|S|Computer Science|||The same course in the summer term.
+EECS1022|Programming for Mobile Computing|1|W|Computer Science|EECS1015|ITEC2610|Object-oriented programming by building apps.
+EECS2030|Advanced Object-Oriented Programming|2|F|Computer Science|EECS1022||Designing larger, cleaner programs.
+EECS2011|Data Structures|2|W|Computer Science|EECS2030|ITEC2620|Lists, trees and graphs, and when to use each.
+EECS2021|Computer Organization|2|W|Computer Science|EECS1022||How hardware runs your code.
+EECS3101|Design and Analysis of Algorithms|3|F|Computer Science|EECS2011,MATH1019||Making programs fast and correct.
+EECS3311|Software Design|3|W|Computer Science|EECS2030||Building software in teams.
+EECS3482|Introduction to Computer Security|3|W|Computer Science|EECS2030|CYBR1010|How systems are attacked and defended.
+EECS4088|Software Engineering Capstone|4|Y|Computer Science|EECS3311||A for-credit team project with an industry partner.
+ITEC1000|Introduction to Information Technologies|1|F|Information Technology|||How computers, networks and the web fit together.
+ITEC1620|Object-Based Programming|1|W|Information Technology||EECS1015|Programming basics for IT.
+ITEC2610|Object-Oriented Programming|2|F|Information Technology|ITEC1620|EECS1022|Classes, objects and design.
+ITEC2620|Introduction to Data Structures|2|W|Information Technology|ITEC2610|EECS2011|Organizing data in programs.
+ITEC3210|Applied Data Communications & Networks|3|F|Information Technology|ITEC1000||How networks move data securely.
+ITEC4010|Systems Analysis & Design|4|F|Information Technology|ITEC2610||Planning systems with real users.
+ADMS1000|Introduction to Business|1|F|Business|||How organizations work.
+ADMS1010|Business Management|1|W|Business|||Leading teams and making decisions.
+ADMS2500|Financial Accounting|2|F|Business|||Reading and building financial statements.
+ADMS2320|Quantitative Methods for Business|2|W|Business||STAT2570|Statistics for business decisions.
+ADMS3300|Management Information Systems|3|F|Business|||How companies use information technology.
+ADMS3330|Business Analytics|3|W|Business|ADMS2320|ECON3210|Turning data into business decisions.
+ADMS4900|Strategy Capstone|4|Y|Business|ADMS2500||A for-credit consulting project.
+ECON1000|Introductory Microeconomics|1|F|Economics|||How people and firms make choices.
+ECON1010|Introductory Macroeconomics|1|W|Economics|||Growth, jobs and inflation.
+ECON2300|Intermediate Microeconomics|2|F|Economics|ECON1000||Markets and incentives in more depth.
+ECON3210|Econometrics|3|W|Economics|STAT2570|ADMS3330|Using data to test economic ideas.
+ECON4900|Economics Research Seminar|4|Y|Economics|ECON3210||A for-credit research paper.
+POLS1000|Introduction to Politics|1|Y|Political Science|||Power, government and citizenship.
+POLS2900|Canadian Politics|2|F|Political Science|POLS1000||How Canada is governed.
+POLS3200|Public Policy|3|W|Political Science|POLS1000|HLST3010|How governments choose and test policies.
+POLS4900|Policy Capstone|4|Y|Political Science|POLS3200||A for-credit policy project with a partner.
+CYBR1010|Network Security Fundamentals|5|F|Cybersecurity||EECS3482|Firewalls, encryption and safe networks.
+CYBR1020|Ethical Hacking & Defence|5|W|Cybersecurity|CYBR1010||Testing systems the way attackers would.
+CYBR1030|Security Operations Lab|5|S|Cybersecurity|CYBR1020||Hands-on incident response practice.
+DATA1010|Python for Data Analysis|5|F|Data Science||EECS1015|Cleaning and exploring data with code.
+DATA1020|Data Visualization|5|W|Data Science|||Charts and dashboards people can read.
+DATA1030|Machine Learning Basics|5|S|Data Science|DATA1010||Models that learn from data.
+HINF1010|Health Informatics Foundations|5|F|Health Informatics|||How health data is stored and shared.
+HINF1020|Health Data Systems|5|W|Health Informatics|HINF1010||Electronic records and privacy.`;
+const COURSES={};
+C_RAW.trim().split("\n").forEach(l=>{const[code,title,yr,term,subj,pre,eq,desc]=l.split("|");COURSES[code]={code,title,yr:+yr,term,subj,pre:pre?pre.split(","):[],eq:eq?eq.split(","):[],desc}});
+const TERM={F:"Fall",W:"Winter",S:"Summer",Y:"Full year"};
+const credits=c=>COURSES[c]?.term==="Y"?6:3;
+const showCode=c=>String(c).replace(/^([A-Z]+)(\d+)(\w*)$/,"$1 $2$3");
+/* programs: majors list required courses by year (separated by |); minors and certificates use each course's own year */
+const PROGRAMS={
+  hlth:{name:"BHSc Health Sciences",kind:"major",field:"health",req:"BIOL1000 CHEM1000 CHEM2020|BIOL2020 PHYS1410 HLST2020|BIOL3060 HLST3010|HLST4200",similar:["bio","biomed"]},
+  bio:{name:"BSc Biology",kind:"major",field:"physlife",req:"BIOL1000 BIOL1010 CHEM1000|CHEM2020 BIOL2020 BIOL2040|BIOL3060 BIOL3110|BIOL4100",similar:["biomed","hlth"]},
+  biomed:{name:"BSc Biomedical Science",kind:"major",field:"health",req:"BIOL1000 CHEM1000 CHEM1001|CHEM2050 BCHM2020 PHYS1410|BIOL3060 BIOL3110|BIOL4100",similar:["bio","hlth"]},
+  kine:{name:"BSc Kinesiology",kind:"major",field:"health",req:"BIOL1000 KINE1000 PSYC1010|KINE2011 KINE2031 STAT2570|KINE3012 BIOL3060|KINE4010",similar:["hlth"]},
+  psych:{name:"BA Psychology",kind:"major",field:"social",req:"PSYC1010 BIOL1000 SOCI1010|PSYC2020 PSYC2030 PSYC2240|PSYC3170|PSYC4170",similar:["kine"]},
+  cs:{name:"BSc Computer Science",kind:"major",field:"mathcs",req:"EECS1015 EECS1022 MATH1300 MATH1019|EECS2030 EECS2011 EECS2021|EECS3101 EECS3311|EECS4088",similar:["it","math"]},
+  it:{name:"BA Information Technology",kind:"major",field:"mathcs",req:"ITEC1000 ITEC1620 MATH1019|ITEC2610 ITEC2620 STAT2570|ITEC3210 ADMS3300|ITEC4010",similar:["cs"]},
+  math:{name:"BSc Mathematics",kind:"major",field:"mathcs",req:"MATH1300 MATH1021 MATH1019 EECS1015|MATH2030 STAT2570 EECS2030|EECS3101 ECON3210|MATH4000",similar:["cs","econ"]},
+  bba:{name:"BBA Business Administration",kind:"major",field:"business",req:"ADMS1000 ADMS1010 ECON1000|ADMS2500 ADMS2320 ECON1010|ADMS3300 ADMS3330|ADMS4900",similar:["econ"]},
+  econ:{name:"BA Economics",kind:"major",field:"social",req:"ECON1000 ECON1010 MATH1300|ECON2300 STAT2570|ECON3210 ADMS3330|ECON4900",similar:["bba","math"]},
+  pols:{name:"BA Political Science",kind:"major",field:"social",req:"POLS1000 SOCI1010 ECON1000|POLS2900 STAT2570|POLS3200 HLST3010|POLS4900",similar:["econ"]},
+  mcs:{name:"Minor in Computer Science",kind:"minor",req:"EECS1015 EECS1022 EECS2030 EECS2011",kw:["computer","programming","coding","software","cs"]},
+  mpsy:{name:"Minor in Psychology",kind:"minor",req:"PSYC1010 PSYC2240 PSYC3170",kw:["psychology","psych","brain","mental"]},
+  mbus:{name:"Minor in Business",kind:"minor",req:"ADMS1000 ADMS2500 ADMS3300",kw:["business","management","finance"]},
+  mdata:{name:"Minor in Data Science",kind:"minor",req:"EECS1015 STAT2570 ADMS3330",kw:["data","statistics","analytics"]},
+  mpol:{name:"Minor in Political Science",kind:"minor",req:"POLS1000 POLS2900 POLS3200",kw:["politics","political","policy","government","law"]},
+  ccyber:{name:"Certificate in Cybersecurity",kind:"cert",goal:"cyber",req:"CYBR1010 CYBR1020 CYBR1030",kw:["cyber","security","hacking"]},
+  cdata:{name:"Certificate in Data Analytics",kind:"cert",goal:"data",req:"DATA1010 DATA1020 DATA1030",kw:["data","analytics","machine learning"]},
+  chinf:{name:"Certificate in Health Informatics",kind:"cert",goal:"hinf",req:"HINF1010 HINF1020 DATA1020",kw:["informatics","health data","health tech"]}};
+/* career goals: which programs lead there (in order), and the networking, hands-on and side-quest nodes along the way */
+const GOALS={
+  med:{title:"Medical school",field:"health",kw:["medicine","medical","doctor","physician","med school","pre-med"],programs:["hlth","bio","biomed","kine","psych"],
+    net:[[1,"Pre-med society panel → coffee chat with a med student"],[3,"Med school info night → talk to an admissions advisor"]],
+    hands:[[2,"Hospital volunteer program (for credit)"],[3,"Research assistant in a health lab"]],
+    side:[[1,"Join the pre-med society"],[2,"Shadow a physician for a day"],[3,"MCAT prep study group"],[4,"Practise multiple mini interviews"]]},
+  soft:{title:"Software developer",field:"mathcs",kw:["software","coding","programming","developer","web development","apps","computer science"],programs:["cs","it","math"],
+    net:[[1,"Tech talk → coffee chat with a developer"],[3,"Career fair → connect with a recruiter"]],hands:[[2,"Hackathon team project"],[3,"Software co-op placement"]],
+    side:[[1,"Build a personal website"],[2,"Contribute to an open-source project"],[3,"Practise coding interviews"]]},
+  cyber:{title:"Cybersecurity analyst",field:"mathcs",kw:["cyber","cybersecurity","security","hacking"],programs:["cs","it"],
+    net:[[2,"Security meetup → coffee chat with an analyst"]],hands:[[2,"Capture-the-flag (CTF) team"],[3,"IT security co-op"]],side:[[1,"Set up a home lab"],[3,"Study for an entry-level security certification"]]},
+  biz:{title:"Business analyst",field:"business",kw:["business","analyst","finance","management","consulting","commerce"],programs:["bba","econ","it"],
+    net:[[1,"Case competition → coffee chat with an analyst"],[3,"Industry night → follow up with a manager"]],hands:[[2,"Business club exec role"],[3,"Analyst co-op placement"]],side:[[1,"Learn spreadsheet modelling"],[2,"Join an investment club"]]},
+  data:{title:"Data analyst",field:"mathcs",kw:["data","statistics","analytics"],programs:["math","econ","cs","it"],
+    net:[[2,"Data meetup → coffee chat with an analyst"]],hands:[[3,"Data co-op placement"]],side:[[2,"Enter a data challenge"],[3,"Build a dashboard portfolio"]]},
+  research:{title:"Research scientist",field:"physlife",kw:["research","lab","laboratory","scientist"],programs:["bio","biomed","psych"],
+    net:[[2,"Department seminar → chat with a grad student"]],hands:[[2,"Lab volunteer"],[3,"Summer research assistant"]],side:[[1,"Join the science student society"],[3,"Present a poster at a student conference"]]},
+  policy:{title:"Policy analyst",field:"social",kw:["policy","politics","political","government","law"],programs:["pols","econ","psych"],
+    net:[[2,"Public policy event → coffee chat with an analyst"]],hands:[[3,"Government internship (co-op)"]],side:[[1,"Join Model UN or debate"],[3,"Write a policy brief for a student journal"]]},
+  hinf:{title:"Health informatics specialist",field:"health",kw:["informatics","health data"],programs:["hlth","it"],
+    net:[[3,"Health tech meetup → coffee chat with an analyst"]],hands:[[3,"Hospital IT placement"]],side:[]}};
+const TYPES={academic:{label:"Academic",gems:40,done:"Course passed with a B or higher."},
+  network:{label:"Networking",gems:40,done:"All five steps of the networking chain are checked."},
+  hands:{label:"Hands-on",gems:60,done:"One verifiable experience is completed: a for-credit capstone, a club leadership role, or a co-op/placement."},
+  side:{label:"Side quest",gems:20,done:"Optional. Check it off when you've done it."}};
+const GRADES=["A+","A","A-","B+","B","B-","C+","C","C-","D","F"];const PASS_B=5;
+const CHAIN=["Attended an event","Wrote down what I learned","Got a contact (email)","Reached out","Got a reply or had a coffee chat"];
+const HANDS=["For-credit capstone","Club leadership role","Co-op or placement"];
+const KIND={main:"Main path",detour:"Alternative course",similar:"Similar degree",altmajor:"Alternative major",newgoal:"New goal",minor:"Minor",cont:"Continuing studies"};
+const SUBJECTS=[...new Set(Object.values(COURSES).map(c=>c.subj))].sort();
+const COMPASS=["A roadblock is a fork, not a failure. Every branch you explore teaches you something.",
+ "It's never too late to change direction. Students switch programs in second year, and people change careers at every age.",
+ "Changing majors isn't starting from zero. Courses you've passed carry over wherever they count.",
+ "Side quests are optional. Pick the ones that sound fun; they can help, but you don't need them.",
+ "Setting a path aside isn't giving up. It stays on your tree, ready when you are.",
+ "Talking to an academic advisor is free, and they've helped hundreds of students change course.",
+ "A minor is a low-risk way to try a new subject without leaving your degree."];
 
-<main class="wrap" id="main"></main>
+const COMPANIONS={
+ orb:{name:"Lumen",sub:"Your guide orb",persona:"a friendly glowing fairy-orb guide",hello:"I'm Lumen",svg:""},
+ slime:{name:"Gloop",sub:"Your slime companion",persona:"Gloop, a cheerful, bouncy slime companion who slips in the occasional gentle squishy pun",hello:"I'm Gloop! *boing*",
+  svg:`<svg viewBox="0 0 64 64" aria-hidden="true"><g class="c-slime"><path d="M7 54 C6 32 19 13 32 13 C45 13 58 32 57 54 Q32 60 7 54Z" fill="#7be08a" stroke="#2f8a48" stroke-width="2.5"/><ellipse cx="22" cy="25" rx="6" ry="3.5" fill="#fff" opacity=".5" transform="rotate(-25 22 25)"/><g class="c-blink"><circle cx="24" cy="38" r="4.2" fill="#173a22"/><circle cx="40" cy="38" r="4.2" fill="#173a22"/><circle cx="25.5" cy="36.5" r="1.4" fill="#fff"/><circle cx="41.5" cy="36.5" r="1.4" fill="#fff"/></g><circle cx="18" cy="44" r="3" fill="#ff9fb0" opacity=".55"/><circle cx="46" cy="44" r="3" fill="#ff9fb0" opacity=".55"/><path d="M28 45 q4 4 8 0" stroke="#173a22" stroke-width="2.2" fill="none" stroke-linecap="round"/></g></svg>`},
+ knight:{name:"Sir Brightwell",sub:"Your knight companion",persona:"Sir Brightwell, a loyal, chivalrous knight companion who speaks with gentle courage and calls objectives 'quests'",hello:"Sir Brightwell, at your service",
+  svg:`<svg viewBox="0 0 64 64" aria-hidden="true"><g class="c-sway"><path class="c-plume" d="M33 11 q4 -10 14 -8 q-6 3 -8 10" fill="#e8475a" stroke="#8f2233" stroke-width="1.5"/><path d="M13 31 C13 16 21 9 32 9 C43 9 51 16 51 31 V45 Q32 56 13 45Z" fill="#c9d3e6" stroke="#5d6b86" stroke-width="2.5"/><path d="M32 10 V26" stroke="#5d6b86" stroke-width="2"/><rect x="17" y="27" width="30" height="6" rx="2.5" fill="#1b2235"/><g class="c-blink"><circle cx="25" cy="30" r="1.8" fill="#7fe8ff"/><circle cx="39" cy="30" r="1.8" fill="#7fe8ff"/></g><path d="M24 39 h3 M30.5 39 h3 M37 39 h3 M27 43 h3 M33.5 43 h3" stroke="#5d6b86" stroke-width="1.6" stroke-linecap="round"/><path d="M42 40 h16 v8 q0 10 -8 13 q-8 -3 -8 -13z" fill="#2f5fb8" stroke="#f4c252" stroke-width="2"/><path d="M50 43 v15 M45 49 h10" stroke="#f4c252" stroke-width="2"/></g></svg>`},
+ wizard:{name:"Merla",sub:"Your wizard companion",persona:"Merla, a wise, playful wizard companion who describes learning as spellcraft",hello:"Merla here, apprentice",
+  svg:`<svg viewBox="0 0 64 64" aria-hidden="true"><line x1="53" y1="62" x2="53" y2="24" stroke="#8a5a2b" stroke-width="3.2" stroke-linecap="round"/><circle class="c-gem" cx="53" cy="20" r="5" fill="#7fe8ff" stroke="#2e7a8f" stroke-width="1.5"/><path class="c-spark" d="M60 12 l1 2 2 1 -2 1 -1 2 -1 -2 -2 -1 2 -1z" fill="#fff"/><g class="c-hat"><path d="M9 31 L33 2 Q37 1 36 6 L47 31 Z" fill="#5b3fb5" stroke="#2e1d6b" stroke-width="2.2" stroke-linejoin="round"/><path d="M27 17 l1.5 3 3.2 .4 -2.3 2.2 .6 3.1 -3-1.6 -3 1.6 .6-3.1 -2.3-2.2 3.2-.4z" fill="#f4c252"/><circle cx="37" cy="24" r="1.4" fill="#f4c252"/><circle cx="22" cy="27" r="1.1" fill="#f4c252"/></g><ellipse cx="28" cy="31" rx="24" ry="5" fill="#4a2f9c" stroke="#2e1d6b" stroke-width="2"/><circle cx="28" cy="42" r="10" fill="#f3d2b4" stroke="#b98d6b" stroke-width="1.5"/><g class="c-blink"><circle cx="24" cy="41" r="1.7" fill="#2b1d12"/><circle cx="32" cy="41" r="1.7" fill="#2b1d12"/></g><path d="M17 44 Q20 63 28 62 Q36 63 39 44 Q34 49 28 49 Q22 49 17 44z" fill="#eef1f8" stroke="#b9c0d0" stroke-width="1.5"/><path d="M25 47 q3 2 6 0" stroke="#b98d6b" stroke-width="1.5" fill="none"/></svg>`},
+ dragon:{name:"Pip",sub:"Your dragon companion",persona:"Pip, a small, enthusiastic dragon hatchling companion who loves collecting knowledge like treasure",hello:"Rawr! I'm Pip",
+  svg:`<svg viewBox="0 0 64 64" aria-hidden="true"><path class="c-wingL" d="M18 38 Q1 24 4 46 Q11 41 19 46z" fill="#ffb07a" stroke="#a8432a" stroke-width="2" stroke-linejoin="round"/><path class="c-wingR" d="M46 38 Q63 24 60 46 Q53 41 45 46z" fill="#ffb07a" stroke="#a8432a" stroke-width="2" stroke-linejoin="round"/><path d="M45 54 q12 2 12 -8" stroke="#a8432a" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M45 54 q12 2 12 -8" stroke="#ff8a5c" stroke-width="2.6" fill="none" stroke-linecap="round"/><ellipse cx="32" cy="45" rx="15" ry="14" fill="#ff8a5c" stroke="#a8432a" stroke-width="2"/><ellipse cx="32" cy="49" rx="8.5" ry="8" fill="#ffd9a0"/><path d="M23 16 l-5 -10 l10 6z M41 16 l5 -10 l-10 6z" fill="#ffd9a0" stroke="#a8432a" stroke-width="1.5" stroke-linejoin="round"/><circle cx="32" cy="25" r="12.5" fill="#ff8a5c" stroke="#a8432a" stroke-width="2"/><g class="c-blink"><circle cx="27" cy="24" r="2.8" fill="#2b1d12"/><circle cx="37" cy="24" r="2.8" fill="#2b1d12"/><circle cx="28" cy="23" r="1" fill="#fff"/><circle cx="38" cy="23" r="1" fill="#fff"/></g><path d="M28 30 q4 3 8 0" stroke="#a8432a" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="29" cy="32.5" r=".9" fill="#a8432a"/><circle cx="35" cy="32.5" r=".9" fill="#a8432a"/></svg>`}
+};
+const VOICE={
+ orb:{intro:"Hi {name}. Tell me what happened, or what you're curious about. A roadblock is a fork, not a failure.",A:"It sounds like you want to keep your goal and find another way there.",B:"It sounds like you're thinking about a new goal or major.",C:"A minor sounds like a great way to explore.",D:"Continuing studies can open a new specialty after your degree.",unsure:"I'm not sure yet, and that's okay. You choose.",routes:"Smallest change first. You choose.",grow:"Your tree grew a new path. It's a what-if, not a commitment.",done:"You did it! That node glows now."},
+ slime:{intro:"Boing! Hi {name}. Bumps happen to everyone. What's up?",A:"Same goal, new route. Let's squish around the bump!",B:"Ooh, a new goal or major is calling you!",C:"A minor? Extra flavour!",D:"More learning after graduation? Squishy and smart!",unsure:"I'm a bit wobbly on this one. You pick!",routes:"Smallest change first. You choose. *boing*",grow:"A brand-new path! Just a what-if, no pressure.",done:"Squishy high five! That one's done."},
+ knight:{intro:"Hail, {name}. Every quest has more than one road. Tell me what's in your way.",A:"You still seek the same goal. Let us find another road.",B:"A new quest calls to you, it seems.",C:"A minor is a worthy side campaign.",D:"A new order of study awaits after your degree.",unsure:"The path is unclear, and the choice is yours.",routes:"Smallest change first. You choose your road.",grow:"A new road appears. It is a what-if, not an oath.",done:"Well fought! Another node conquered."},
+ wizard:{intro:"Ah, {name}. Even master wizards miscast a spell or two. What happened?",A:"Same goal, different spell. Let's find another route.",B:"I sense a new goal stirring in you.",C:"A minor: a second school of magic.",D:"Advanced studies, the next spellbook.",unsure:"The crystal ball is cloudy. You decide.",routes:"Smallest change first. You choose your spell.",grow:"A new path appears. Only a what-if, not a vow.",done:"Splendid spellwork! That node is done."},
+ dragon:{intro:"Rawr! Hi {name}. Detours still lead to treasure. What's going on?",A:"You still want the same treasure. Let's find another way!",B:"Ooh, a new treasure to chase!",C:"A minor! More treasure to collect.",D:"More hoard after graduation!",unsure:"Hmm, not sure! You choose, friend.",routes:"Smallest change first. You choose!",grow:"A new path to explore. Just a what-if!",done:"Rawr! Another shiny node!"}};
+const SHOP=[
+ {id:"skin-classic",kind:"skin",val:"classic",name:"Night sky",desc:"The original teal glow.",cost:0,sw:"#6fe3d6"},
+ {id:"skin-ember",kind:"skin",val:"ember",name:"Ember",desc:"Warm forge-orange accents.",cost:80,sw:"#ff9c5e"},
+ {id:"skin-sakura",kind:"skin",val:"sakura",name:"Sakura",desc:"Cherry-blossom pink.",cost:120,sw:"#ff9fcf"},
+ {id:"skin-verdant",kind:"skin",val:"verdant",name:"Verdant",desc:"Spring-leaf green.",cost:120,sw:"#a9df86"},
+ {id:"skin-starfall",kind:"skin",val:"starfall",anim:true,name:"Starfall",desc:"Shooting stars streak past.",cost:450},
+ {id:"skin-aurora",kind:"skin",val:"aurora",anim:true,name:"Living Aurora",desc:"Northern lights ripple behind your tree.",cost:600},
+ {id:"skin-forge",kind:"skin",val:"forge",anim:true,name:"Molten Forge",desc:"Embers drift up from a glowing forge.",cost:750},
+ {id:"comp-orb",kind:"comp",val:"orb",name:"Lumen the orb",desc:"The original glowing guide.",cost:0},
+ {id:"comp-slime",kind:"comp",val:"slime",name:"Gloop the slime",desc:"Bouncy, squishy and full of puns.",cost:800},
+ {id:"comp-knight",kind:"comp",val:"knight",name:"Sir Brightwell",desc:"Treats every step as a noble quest.",cost:1400},
+ {id:"comp-wizard",kind:"comp",val:"wizard",name:"Merla the wizard",desc:"Teaches learning as spellcraft.",cost:1800},
+ {id:"comp-dragon",kind:"comp",val:"dragon",name:"Pip the dragon",desc:"Hoards knowledge like treasure.",cost:2400},
+ {id:"gift-5",kind:"gift",name:"$5 bookstore card",desc:"A request an adult approves.",cost:800},
+ {id:"gift-10",kind:"gift",name:"$10 online store card",desc:"A request an adult approves.",cost:1500}];
 
-<button class="orb" id="orbBtn" aria-label="Ask your companion"></button>
-<section class="orbpanel" id="orbPanel" hidden aria-label="Companion guide">
-  <header><div><b id="compName">Lumen</b><div class="muted" style="font-size:12px" id="compSub">Your guide orb · powered by Claude</div></div><button class="btn small" id="orbClose">Close</button></header>
-  <div class="log" id="orbLog"></div>
-  <div class="quick" id="orbQuick">
-    <button class="chip" id="orbUpdate">Something changed?</button>
-    <button class="chip" data-q="Which path fits me best right now, and why?">Which path fits me?</button>
-    <button class="chip" data-q="What should I do this month to make progress?">Plan my month</button>
-    <button class="chip" data-q="I'm curious about a career that isn't on my map yet. Ask me a question to figure out which one.">Explore something new</button>
-  </div>
-  <form id="orbForm"><input type="text" id="orbInput" placeholder="Ask anything…" autocomplete="off"><button class="btn primary" id="orbSend">Ask</button></form>
-  <div class="grow">
-    <label class="fl" for="growInput">Grow a new path (e.g. Marine biology, Game design)</label>
-    <div style="display:flex;gap:8px"><input type="text" id="growInput" placeholder="Career or field"><button class="btn gold" id="growBtn">Grow</button></div>
-    <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="growBranch" checked> <span id="growBranchLbl">Branch it from the tree I'm viewing</span></label>
-  </div>
-</section>
-<canvas id="fxCanvas" aria-hidden="true"></canvas>
-<div id="lvlup" hidden aria-live="polite"></div>
-<div class="toast" id="toast" hidden></div>
-<div id="tipBubble" role="tooltip" hidden></div>
-<div class="hcard" id="hcard" hidden role="dialog" aria-label="Objective preview"></div>
-<noscript><p style="padding:24px">Edventure needs JavaScript to run.</p></noscript>
-<script src="js/content.js" defer></script>
-<script src="js/companions.js" defer></script>
-<script src="js/guidance.js" defer></script>
-<script src="js/game.js" defer></script>
-<script src="js/views.js" defer></script>
-<script src="js/world.js" defer></script>
-<script src="js/interactions.js" defer></script>
-<script src="js/hovercard.js" defer></script>
-<script src="js/companion-chat.js" defer></script>
-<script src="js/quiz.js" defer></script>
-<script src="js/update.js" defer></script>
-<script src="js/foundation.js" defer></script>
-<script src="js/simple.js" defer></script>
-<script src="js/destination.js" defer></script>
-<script src="js/tooltips.js" defer></script>
-<script src="js/fx.js" defer></script>
-<script src="js/main.js" defer></script>
+/* ===================== state ===================== */
+const TEST_MODE=!!window.claude||location.protocol==="file:"||/^(localhost|127\.0\.0\.1)$/.test(location.hostname)||location.hash==="#test";
+const uid=p=>p+"-"+Math.random().toString(36).slice(2,8);
+const today=()=>new Date().toISOString().slice(0,10);
+const yrNum=y=>parseInt(y)||1;
+function base(){return{v:2,setup:true,student:{name:"",prog:"hlth",year:"1"},tx:{},paths:[],sel:null,gems:0,earned:0,awarded:{},owned:["skin-classic","comp-orb"],equip:{skin:"classic",comp:"orb"},requests:[],log:[]}}
+let S=null,fresh=new Set(),scrollTarget=null;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function log(text){S.log=[{date:today(),text},...(S.log||[])].slice(0,30)}
+const level=()=>1+Math.floor(S.earned/150);
+const comp=()=>COMPANIONS[S.equip.comp]||COMPANIONS.orb;
+const voice=k=>(VOICE[S.equip.comp]||VOICE.orb)[k].replace("{name}",S.student.name||"there");
+function wrap(t,max,lines=2){const w=String(t).split(/\s+/);const out=[""];for(const x of w){const cur=out[out.length-1];if((cur+" "+x).trim().length>max&&cur){if(out.length===lines){out[lines-1]=cur.slice(0,max-1).trimEnd()+"…";return out}out.push(x)}else out[out.length-1]=(cur+" "+x).trim()}if(out[out.length-1].length>max)out[out.length-1]=out[out.length-1].slice(0,max-1)+"…";return out}
+
+/* ===================== status: one transcript, shared by every path ===================== */
+function ownSt(c){const t=S.tx[c]||{};const gi=GRADES.indexOf(t.grade);return gi>-1&&gi<PASS_B?"done":gi>-1?"below":t.enrolled?"progress":"none"}
+const viaEq=c=>(COURSES[c]?.eq||[]).find(e=>ownSt(e)==="done");
+function courseSt(c){const o=ownSt(c);return o==="done"||viaEq(c)?"done":o}
+function R(n){if(n.ref){const f=findNode(n.ref);if(f&&!f.n.ref)return f.n}return n}
+function nodeSt(n){if(n.type==="academic")return courseSt(n.course);n=R(n);
+  if(n.type==="network"){const k=n.steps.filter(Boolean).length;return k===5?"done":k?"progress":"none"}
+  if(n.type==="hands")return n.kind&&n.verified?"done":n.kind||n.verified?"progress":"none";return n.done?"done":"none"}
+const STATUS_TXT={none:"Not started",progress:"In progress",done:"Done",below:"Below B"};
+const nodeTitle=n=>n.type==="academic"?COURSES[n.course]?.title||n.course:n.title;
+const expDone=(type,title)=>S.paths.some(p=>p.nodes.some(n=>n.type===type&&n.title===title&&nodeSt(n)==="done"));
+
+/* ===================== path engine ===================== */
+function reqList(pid){const P=PROGRAMS[pid];return P.req.split("|").flatMap((g,i)=>g.trim().split(/\s+/).filter(Boolean).map(c=>({c,yr:P.kind==="major"?i+1:COURSES[c].yr})))}
+const ORD={academic:0,network:1,hands:2,side:3};
+const sortNodes=a=>a.sort((x,y)=>x.yr-y.yr||ORD[x.type]-ORD[y.type]);
+/* builds the nodes for a program toward a goal. Courses already passed (or passed through an equivalent) and experiences already done become "carried" instead of new nodes. */
+function genNodes(goalId,pid,o={}){const G=GOALS[goalId],P=PROGRAMS[pid];const nodes=[],carried=[];const from=Math.min(o.fromYear||1,4);
+  const fy=y=>P.kind==="cert"||y>=5?5:o.keepDone?y:Math.max(y,from);
+  for(const{c,yr}of reqList(pid)){if(!o.keepDone&&courseSt(c)==="done"){carried.push(c);continue}nodes.push({id:uid("n"),type:"academic",course:c,yr:fy(yr)})}
+  if(G&&P.kind!=="minor"){const add=(arr,type)=>arr.forEach(([y,t])=>{if(!o.keepDone&&expDone(type,t)){carried.push(type+":"+t);return}
+      const n={id:uid("n"),type,title:t,yr:fy(y)};const twin=S.paths.flatMap(q=>q.nodes).find(m=>m.type===type&&m.title===t&&!m.ref);if(twin&&!o.keepDone)n.ref=twin.id;if(type==="network")n.steps=[false,false,false,false,false];if(type==="hands"){n.kind="";n.verified=false}if(type==="side")n.done=false;nodes.push(n)});
+    if(P.kind==="cert"){add(G.net.slice(0,1),"network");add(G.hands.slice(0,1),"hands")}else{add(G.net,"network");add(G.hands,"hands");if(o.withSide!==false)add(G.side,"side")}}
+  sortNodes(nodes);return{nodes,carried}}
+function makePath(o){let nodes=o.nodes,carried=[];if(!nodes){const g=genNodes(o.goal,o.prog,o);nodes=g.nodes;carried=g.carried}
+  const p={id:uid("p"),kind:o.kind,goal:o.goal||null,prog:o.prog||null,parent:o.parent||null,forkAt:o.forkAt||"root",rejoin:o.rejoin||null,status:"active",nodes,carried,created:Date.now()+S.paths.length,why:o.why||""};
+  S.paths.push(p);nodes.forEach(n=>fresh.add(n.id));fresh.add("goal:"+p.id);fresh.add("carried:"+p.id);fresh.add("lane:"+p.id);return p}
+const pathById=id=>S.paths.find(p=>p.id===id);
+function findNode(id){for(const p of S.paths){const n=p.nodes.find(x=>x.id===id);if(n)return{p,n}}return null}
+function pathEnd(p){if(p.kind==="detour")return null;const P=PROGRAMS[p.prog];
+  if(p.kind==="minor")return{title:P.name,sub:`${P.req.split(/\s+/).length} courses, alongside your degree`};return{title:GOALS[p.goal]?.title||P.name,sub:"via "+P.name}}
+function pathName(p){const e=pathEnd(p);return e?(p.kind==="minor"?e.title:`${e.title} ${e.sub}`):`${KIND.detour}: ${showCode(p.nodes[0]?.course||"")}`}
+const isRoutable=p=>p.status==="active"&&p.kind!=="detour";
+const isMajorPath=p=>p&&["main","similar","altmajor","newgoal"].includes(p.kind);
+function descendants(id){const out=[];const walk=i=>S.paths.filter(q=>q.parent===i).forEach(q=>{out.push(q.id);walk(q.id)});walk(id);return out}
+const currentIdx=p=>{const i=p.nodes.findIndex(n=>n.type!=="side"&&nodeSt(n)!=="done");return i<0?p.nodes.length:i};
+/* the node a new path branches from: the last primary node before idx, else wherever this path itself branched from */
+function forkBefore(p,idx){for(let i=idx-1;i>=0;i--)if(p.nodes[i].type!=="side")return{parent:p.id,forkAt:p.nodes[i].id};
+  return p.parent?{parent:p.parent,forkAt:p.forkAt}:{parent:null,forkAt:"root"}}
+function fromYearAt(f){const fn=f.forkAt!=="root"&&f.forkAt!=="goal"?findNode(f.forkAt)?.n:null;return Math.max(yrNum(S.student.year),fn?.yr||1)}
+function growDetour(p,n,e,why){const i=p.nodes.indexOf(n);let rejoin="goal";for(let j=i+1;j<p.nodes.length;j++)if(p.nodes[j].type!=="side"){rejoin=p.nodes[j].id;break}
+  return makePath({kind:"detour",goal:p.goal,prog:p.prog,parent:p.id,forkAt:n.id,rejoin,nodes:[{id:uid("n"),type:"academic",course:e,yr:n.yr}],why})}
+function growProgram(kind,p,n,pid,goal,why){const f=p?forkBefore(p,n?p.nodes.indexOf(n):currentIdx(p)):{parent:null,forkAt:"root"};
+  return makePath({kind,goal,prog:pid,parent:f.parent,forkAt:f.forkAt,fromYear:fromYearAt(f),withSide:kind==="newgoal",why})}
+function growMinor(p,pid,why){const f=p?forkBefore(p,currentIdx(p)):{parent:null,forkAt:"root"};return makePath({kind:"minor",prog:pid,parent:f.parent,forkAt:f.forkAt,fromYear:fromYearAt(f),why})}
+function growCont(p,pid,why){return makePath({kind:"cont",goal:PROGRAMS[pid].goal,prog:pid,parent:p.id,forkAt:"goal",fromYear:5,why})}
+/* what a program would look like from here: credits that carry over and courses still to go */
+function preview(goal,pid,fromYear){const{nodes,carried}=genNodes(goal,pid,{fromYear,withSide:false});return{prog:pid,carriedN:carried.filter(x=>COURSES[x]).length,carried:carried.filter(x=>COURSES[x]),left:nodes.filter(n=>n.type==="academic").length}}
+/* the escalation ladder for a roadblock on one course: 1 alternative courses, 2 similar degrees, 3 other majors */
+function ladder(p,n){const c=n.course,G=GOALS[p.goal];const f=forkBefore(p,p.nodes.indexOf(n));const fy=fromYearAt(f);
+  const r1=(COURSES[c]?.eq||[]).filter(e=>!S.paths.some(q=>q.kind==="detour"&&q.forkAt===n.id&&q.nodes[0]?.course===e));
+  if(!isMajorPath(p)||!G)return{r1,r2:[],r3:[]};
+  const sim=(PROGRAMS[p.prog].similar||[]).filter(x=>x!==p.prog&&G.programs.includes(x));
+  const alt=G.programs.filter(x=>x!==p.prog&&!sim.includes(x));
+  const opt=pid=>({...preview(p.goal,pid,fy),needs:reqList(pid).some(r=>r.c===c),exists:S.paths.some(q=>q.goal===p.goal&&q.prog===pid&&q.kind!=="detour")});
+  return{r1,r2:sim.map(opt),r3:alt.map(opt)}}
+function removeNode(p,n){const idx=p.nodes.indexOf(n);
+  S.paths.filter(q=>q.kind==="detour"&&q.forkAt===n.id).forEach(q=>removePath(q.id,true));
+  S.paths.forEach(q=>{if(q.forkAt===n.id){const f=forkBefore(p,idx);q.parent=f.parent;q.forkAt=f.forkAt}
+    if(q.rejoin===n.id){let r="goal";for(let j=idx+1;j<p.nodes.length;j++)if(p.nodes[j].type!=="side"){r=p.nodes[j].id;break}q.rejoin=r}});
+  p.nodes.splice(idx,1);if(p.kind==="detour"&&!p.nodes.length)removePath(p.id,true)}
+function removePath(id,quiet){const p=pathById(id);const ids=[id,...descendants(id)];S.paths=S.paths.filter(q=>!ids.includes(q.id));if(p&&!quiet)log(`Removed ${pathName(p)}`)}
+
+/* ===================== rewards ===================== */
+let lastPt={x:innerWidth/2,y:innerHeight/2};
+addEventListener("pointerdown",e=>lastPt={x:e.clientX,y:e.clientY},{capture:true});
+function award(key,gems){if(S.awarded[key])return 0;S.awarded[key]=1;const lv=level();S.gems+=gems;S.earned+=gems;flyGems(lastPt,gems);
+  if(level()>lv)setTimeout(()=>banner(`LEVEL ${level()}`,"Level up!","var(--gold)"),400);return gems}
+
+/* ===================== reading the roadblock ===================== */
+const A_WORDS=["fail","failed","failing","grade","can't pass","cant pass","cannot pass","dropped","drop the","withdrew","withdraw","low mark","didn't pass","didnt pass","struggling","too hard"];
+const B_WORDS=["interested in","don't want","dont want","do not want","switch to","passionate about","want to become","want to be a","rather do","curious about","love","change my major","change majors","switch majors","switch programs","new career"];
+function classify(t){const s=t.toLowerCase();if(/\bminor\b/.test(s))return"C";
+  if(/certificate|continuing|after (i )?grad|post-?degree|post-?grad|diploma|part-time studies/.test(s))return"D";
+  const a=A_WORDS.filter(k=>s.includes(k)).length,b=B_WORDS.filter(k=>s.includes(k)).length;return a>b?"A":b>a?"B":null}
+const kwHit=(s,w)=>{const m=new RegExp("\\b"+w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"\\b").exec(s);if(!m)return 0;return/don'?t want|do not want|no longer|not into|quit|hate/.test(s.slice(Math.max(0,m.index-28),m.index))?-2:1};
+function guessGoal(t){const s=t.toLowerCase();let best=null,sc=0;for(const[k,g]of Object.entries(GOALS)){const v=g.kw.reduce((a,w)=>a+kwHit(s,w),0);if(v>sc){sc=v;best=k}}return best}
+function guessProg(kind,t){const s=t.toLowerCase();let best=null,sc=0;for(const[k,P]of Object.entries(PROGRAMS)){if(P.kind!==kind)continue;const v=(P.kw||[]).reduce((a,w)=>a+kwHit(s,w),0);if(v>sc){sc=v;best=k}}return best}
+const ALIAS={orgo:"organic",ochem:"organic",calc:"calculus",stats:"statistics",chem:"chemistry",bio:"biology",physio:"physiology",psych:"psychology",econ:"economics",programming:"programming"};
+function guessCourse(p,t){const s=t.toLowerCase().replace(/\b(\w+)\b/g,w=>ALIAS[w]?w+" "+ALIAS[w]:w);const cands=p.nodes.filter(n=>n.type==="academic"&&courseSt(n.course)!=="done");if(!cands.length)return null;
+  let best=null,sc=0;for(const n of cands){const c=COURSES[n.course];let v=0;if(s.replace(/\s/g,"").includes(n.course.toLowerCase()))v+=5;
+    c.title.toLowerCase().split(/[^a-z]+/).filter(w=>w.length>3).forEach(w=>{if(s.includes(w))v+=1});if(v>sc){sc=v;best=n}}
+  return(best||cands.find(n=>["below","progress"].includes(courseSt(n.course)))||cands[0]).id}
+
+/* ===================== tree layout: year bands top to bottom, one column per path ===================== */
+const COLW=252,X0=122,TOP=112,HT={academic:72,network:72,hands:72,side:50,carried:54,goal:96};
+function laneOrder(){const out=[];const kids=id=>S.paths.filter(p=>p.parent===id).sort((a,b)=>a.created-b.created);const walk=p=>{out.push(p);kids(p.id).forEach(walk)};kids(null).forEach(walk);S.paths.forEach(p=>{if(!out.includes(p))out.push(p)});return out}
+/* the open node's card sits inside the tree, right under its node: the tree makes room for it (taller row, wider column) */
+let CARD={w:380,h:320};
+function selItemId(){const s=S.sel;if(!s)return null;return s.kind==="node"?s.id:s.kind==="path"?"goal:"+s.id:s.kind==="carried"?"carried:"+s.id:s.kind==="root"?"root":null}
+function layout(){const lanes=laneOrder();const cur=yrNum(S.student.year);const open=selItemId();const root={x:X0,y:54};
+  const top=open==="root"?root.y+44+CARD.h+44:TOP;
+  const bands=[1,2,3,4].map(y=>({key:"y"+y,label:"Year "+y,now:y===cur&&!/\+/.test(S.student.year)}));bands.push({key:"goal",label:"Goal"});
+  if(lanes.some(p=>p.kind==="cont"))bands.push({key:"after",label:"After grad",now:/\+/.test(S.student.year)});
+  const bandOf=(n,p)=>p.kind==="cont"?"after":"y"+Math.min(Math.max(n.yr,1),4);
+  const pos={},items=new Map(),bandMax={};bands.forEach(b=>bandMax[b.key]=0);let x=X0,W=X0-18+CARD.w+24;
+  lanes.forEach(p=>{const list=[];
+    const firstBand=p.nodes[0]?bandOf(p.nodes[0],p):p.kind==="cont"?"after":"goal";
+    if(p.carried.length)list.push({kind:"carried",id:"carried:"+p.id,band:firstBand,bh:HT.carried});
+    p.nodes.forEach(n=>list.push({kind:"node",id:n.id,n,band:bandOf(n,p),bh:HT[n.type]}));
+    if(p.kind!=="detour")list.push({kind:"goal",id:"goal:"+p.id,band:p.kind==="cont"?"after":"goal",bh:HT.goal});
+    list.forEach(it=>it.h=it.bh+(it.id===open?CARD.h+26:0));
+    const fk=p.parent&&p.forkAt!=="root"?pos[p.forkAt==="goal"?"goal:"+p.parent:p.forkAt]:null;const o={};
+    if(fk)o[fk.band]=fk.off+(p.kind==="detour"?0:fk.h+(p.forkAt==="goal"?0:20));
+    list.forEach(it=>{const b=it.band;o[b]=o[b]||0;it.off=o[b];o[b]+=it.h;bandMax[b]=Math.max(bandMax[b],o[b]);it.x=x;pos[it.id]={x,band:b,off:it.off,h:it.h,bh:it.bh}});
+    items.set(p.id,{x,list});const wide=list.some(it=>it.id===open);W=Math.max(W,x+(wide?CARD.w+10:250));x+=wide?Math.max(COLW,CARD.w+34):COLW});
+  let y=top;const bandTop={};bands.forEach(b=>{bandTop[b.key]=y;b.h=34+Math.max(bandMax[b.key],34)+10;y+=b.h});
+  const yOf=q=>bandTop[q.band]+34+q.off+q.bh/2;Object.values(pos).forEach(q=>q.y=yOf(q));items.forEach(L=>L.list.forEach(it=>it.y=yOf(it)));
+  pos.root={...root,bh:80,h:80};
+  return{lanes,items,pos,bands,bandTop,top,open,H:y+16,W,root}}
+let lastLayout=null;
+const halfFill=t=>`url(#half-${t})`;
+function shapeSVG(n,x,y,st){if(n.type==="side"){const f=st==="done"?"var(--gold)":"var(--panel)",s=st==="done"?"var(--gold)":"var(--orb)";const r=11;
+    return`<path class="shape" d="M${x} ${y-r} Q${x+2} ${y-2} ${x+r} ${y} Q${x+2} ${y+2} ${x} ${y+r} Q${x-2} ${y+2} ${x-r} ${y} Q${x-2} ${y-2} ${x} ${y-r}Z" fill="${f}" stroke="${s}" stroke-width="2"/>`}
+  const c=`var(--t-${n.type})`;const fill=st==="done"?"var(--gold)":st==="progress"?halfFill(n.type):"var(--panel)";const stroke=st==="done"?"var(--gold)":st==="below"?"var(--rose)":c;
+  const s=n.type==="academic"?`<circle class="shape" cx="${x}" cy="${y}" r="18" fill="${fill}" stroke="${stroke}" stroke-width="3"/>`
+   :n.type==="network"?`<path class="shape" d="M${x} ${y-22} L${x+22} ${y} L${x} ${y+22} L${x-22} ${y}Z" fill="${fill}" stroke="${stroke}" stroke-width="3" stroke-linejoin="round"/>`
+   :`<rect class="shape" x="${x-17}" y="${y-17}" width="34" height="34" rx="7" fill="${fill}" stroke="${stroke}" stroke-width="3"/>`;
+  const g=st==="done"?`<path d="M${x-6.5} ${y+.5} l4.5 4.5 l8.5 -9" fill="none" stroke="var(--gold-ink)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`
+   :st==="below"?`<text x="${x}" y="${y+5}" text-anchor="middle" font-family="var(--f-mono)" font-weight="700" font-size="15" fill="var(--rose)">!</text>`:"";
+  return s+g}
+function laneStyle(p){return p.kind==="main"||p.kind==="newgoal"?{col:"var(--ink)",dash:""}:p.kind==="minor"?{col:"var(--t-network)",dash:"7 6"}:p.kind==="cont"?{col:"var(--t-hands)",dash:"7 6"}:{col:"var(--accent)",dash:"7 6"}}
+function laneCaption(p){return p.kind==="detour"?`Route · ${KIND.detour}`:p.kind==="main"?"Main path":`${KIND[p.kind]} · ${PROGRAMS[p.prog].name.replace(/^(BHSc|BSc|BA|BBA) /,"")}`}
+function treeSVG(){const L=layout();lastLayout=L;const{W,H}=L;let bands="",edges="",nodes="";
+  L.bands.forEach(b=>{const t=L.bandTop[b.key];bands+=`${b.now?`<rect x="0" y="${t}" width="${W}" height="${b.h}" class="band-now"/>`:""}<path d="M0 ${t}H${W}" stroke="var(--line)"/><text x="12" y="${t+20}" class="band-lbl halo">${b.label}${b.now?" · now":""}</text>`});
+  for(const p of L.lanes){const lane=L.items.get(p.id);const it=lane.list;if(!it.length)continue;const x=lane.x;const{col,dash}=laneStyle(p);const aside=p.status!=="active";const nw=fresh.has("lane:"+p.id);
+    const stroke=`stroke="${aside?"var(--muted)":col}" stroke-width="${p.kind==="main"?3:2.5}" ${dash||aside?`stroke-dasharray="${dash||"7 7"}"`:""} fill="none" stroke-linecap="round"`;
+    let e="";const prim=it.filter(i=>!(i.kind==="node"&&i.n.type==="side"));
+    if(it.length>1)e+=`<path d="M${x} ${it[0].y} L${x} ${Math.max(prim[prim.length-1].y,it[it.length-1].y)}" ${stroke}/>`;
+    it.filter(i=>i.kind==="node"&&i.n.type==="side").forEach(i=>e+=`<path d="M${x} ${i.y} H${x+26}" stroke="var(--orb)" stroke-width="1.6" stroke-dasharray="3 3" fill="none"/>`);
+    const t=it[0];let f=null,hy,cap;
+    if(!p.parent||p.forkAt==="root"){f=L.root;hy=L.top-16}else if(p.forkAt==="goal"){f=L.pos["goal:"+p.parent];if(f)hy=f.y+58}else{f=L.pos[p.forkAt];if(f)hy=p.kind==="detour"?f.y-30:f.y+f.bh/2-2}
+    if(f){const sy=p.kind==="detour"?f.y-20:p.forkAt==="goal"?f.y+38:f===L.root?f.y+30:f.y+20;const ey=p.kind==="detour"?t.y-20:t.y-(t.kind==="node"&&t.n.type!=="side"?20:14);
+      if(Math.abs(f.x-x)<1)e+=`<path d="M${x} ${sy} L${x} ${ey}" ${stroke}/>`;
+      else{const dir=x>f.x?1:-1;e+=`<path d="M${f.x} ${sy} L${f.x} ${hy+(sy<hy?-10:10)} Q${f.x} ${hy} ${f.x+12*dir} ${hy} L${x-12*dir} ${hy} Q${x} ${hy} ${x} ${hy+(ey>hy?10:-10)} L${x} ${ey}" ${stroke}/>`}
+      cap=`<text x="${p.kind==="detour"?x+30:x+12}" y="${p.kind==="detour"?t.y+38:hy+14}" class="eyebrow-t halo" fill="${aside?"var(--muted)":col}">${esc(laneCaption(p))}${aside?" · set aside":""}</text>`}
+    if(p.kind==="detour"){const r=p.rejoin==="goal"?L.pos["goal:"+p.parent]:L.pos[p.rejoin];if(r){const ry=r.y-(p.rejoin==="goal"?38:20)-14;e+=`<path d="M${x} ${t.y+20} L${x} ${ry-10} Q${x} ${ry} ${x-12} ${ry} L${r.x+12} ${ry} Q${r.x} ${ry} ${r.x} ${ry+8}" ${stroke}/>`}}
+    let ns="";it.forEach((i,k)=>{const d=nw?`style="animation-delay:${.15+k*.07}s"`:"";const pop=fresh.has(i.id)?" pop":"";
+      if(i.kind==="carried"){const cc=p.carried.filter(c=>COURSES[c]).length,ex=p.carried.length-cc;const sel=S.sel?.kind==="carried"&&S.sel.id===p.id;
+        ns+=`<g class="n${sel?" sel":""}${pop}" ${d} data-kind="carried" data-id="${p.id}" tabindex="0" role="button" aria-label="Credits carried into this path: ${cc} courses, ${ex} experiences">
+          <circle class="focus" cx="${x}" cy="${i.y}" r="20"/><circle class="shape" cx="${x}" cy="${i.y}" r="13" fill="var(--gold)"/><path d="M${x-5} ${i.y-4} h7 a3.5 3.5 0 0 1 0 7 h-5 M${x-2} ${i.y+.5} l-3 2.5 l3 2.5" fill="none" stroke="var(--gold-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <text x="${x+26}" y="${i.y-5}" class="eyebrow-t halo" fill="var(--gold)">Credits carried</text><text x="${x+26}" y="${i.y+11}" class="lbl halo">${cc} course${cc===1?"":"s"}${ex?` + ${ex} experience${ex===1?"":"s"}`:""} count here</text></g>`;return}
+      if(i.kind==="goal"){const end=pathEnd(p);const sel=S.sel?.kind==="path"&&S.sel.id===p.id;const gx=x-22,fill=aside?"var(--panel)":p.kind==="minor"?"var(--t-network)":p.kind==="cont"?"var(--t-hands)":"var(--accent)",ink=aside?"var(--ink)":p.kind==="minor"||p.kind==="cont"?"var(--on-tier)":"var(--accent-ink)";
+        const tl=wrap(end.title,21,2);
+        ns+=`<g class="n${sel?" sel":""}${pop}" ${d} data-kind="path" data-id="${p.id}" tabindex="0" role="button" aria-label="${esc(KIND[p.kind])}: ${esc(end.title)} ${esc(end.sub)}. ${aside?"Set aside":"Active"}.">
+          <rect class="focus" x="${gx-6}" y="${i.y-44}" width="222" height="88" rx="20"/>
+          <rect class="shape" x="${gx}" y="${i.y-38}" width="210" height="76" rx="16" fill="${fill}" stroke="${aside?"var(--muted)":fill}" stroke-width="2" ${aside?'stroke-dasharray="6 5"':""}/>
+          <text x="${gx+14}" y="${i.y-19}" class="eyebrow-t" fill="${aside?"var(--muted)":ink}">${p.kind==="minor"?"Minor · ":"Goal · "}${aside?"Set aside":p.kind==="minor"?"Alongside your degree":esc(KIND[p.kind])}</text>
+          ${tl.map((t,j)=>`<text x="${gx+14}" y="${i.y+(tl.length>1?-1:1)+j*17}" font-family="var(--f-display)" font-weight="700" font-size="15" fill="${ink}">${esc(t)}</text>`).join("")}
+          <text x="${gx+14}" y="${i.y+(tl.length>1?30:22)}" font-size="11.5" fill="${ink}" opacity=".85">${esc(wrap(end.sub,30,1)[0])}</text></g>`;return}
+      const n=i.n,st=nodeSt(n),sel=S.sel?.kind==="node"&&S.sel.id===n.id;
+      if(n.type==="side"){const sx=x+38;ns+=`<g class="n${sel?" sel":""}${pop}" ${d} data-kind="node" data-id="${n.id}" tabindex="0" role="button" aria-label="Optional side quest: ${esc(n.title)}. ${STATUS_TXT[st]}.">
+          <circle class="focus" cx="${sx}" cy="${i.y}" r="18"/>${shapeSVG(n,sx,i.y,st)}
+          <text x="${sx+18}" y="${i.y-5}" class="eyebrow-t halo" fill="var(--orb)">Side quest · ${st==="done"?"Done":"Optional"}</text><text x="${sx+18}" y="${i.y+10}" class="lbl halo" font-size="12">${esc(wrap(n.title,26,1)[0])}</text></g>`;return}
+      const eb=n.type==="academic"?`${showCode(n.course)} · ${STATUS_TXT[st]}`:`${TYPES[n.type].label} · ${STATUS_TXT[st]}`;const tl=wrap(nodeTitle(n),27,2);
+      ns+=`<g class="n${sel?" sel":""}${pop}" ${d} data-kind="node" data-id="${n.id}" tabindex="0" role="button" aria-label="${TYPES[n.type].label}${n.type==="academic"?" course "+showCode(n.course):""}: ${esc(nodeTitle(n))}. ${STATUS_TXT[st]}.">
+        <circle class="focus" cx="${x}" cy="${i.y}" r="29"/>${st==="progress"&&!aside?`<circle class="ring" cx="${x}" cy="${i.y}" r="20" style="stroke:var(--t-${n.type})"/>`:""}${shapeSVG(n,x,i.y,st)}
+        <text x="${x+30}" y="${i.y-12}" class="eyebrow-t halo" fill="${st==="below"?"var(--rose)":`var(--t-${n.type})`}">${esc(eb)}</text>
+        ${tl.map((t,j)=>`<text x="${x+30}" y="${i.y+4+j*15}" class="lbl halo">${esc(t)}</text>`).join("")}</g>`});
+    edges+=`<g class="${aside?"aside":""}${nw?" fadein":""}">${e}</g>`;nodes+=`<g class="${aside?"aside":""}">${cap||""}${ns}</g>`}
+  const r=L.root,rs=S.sel?.kind==="root";const pl=wrap(PROGRAMS[S.student.prog]?.name||"My program",26,1);
+  const root=`<g class="n${rs?" sel":""}" data-kind="root" data-id="root" tabindex="0" role="button" aria-label="Where you are now: ${esc(pl[0])}, year ${esc(S.student.year)}">
+    <circle class="focus" cx="${r.x}" cy="${r.y}" r="36"/><circle class="shape" cx="${r.x}" cy="${r.y}" r="30" fill="var(--panel-2)" stroke="var(--accent)" stroke-width="3"/><circle cx="${r.x}" cy="${r.y}" r="36" fill="none" stroke="var(--accent)" stroke-opacity=".3"/>
+    <text x="${r.x}" y="${r.y-1}" text-anchor="middle" font-family="var(--f-display)" font-weight="700" font-size="13" fill="var(--ink)">${esc((S.student.name||"You").slice(0,9))}</text>
+    <text x="${r.x}" y="${r.y+13}" text-anchor="middle" class="eyebrow-t" fill="var(--accent)">LV ${level()}</text>
+    <text x="${r.x+44}" y="${r.y-4}" class="lbl b halo">${esc(pl[0])}</text><text x="${r.x+44}" y="${r.y+13}" class="st halo">Year ${esc(S.student.year)} · You are here</text></g>`;
+  const defs=`<defs>${["academic","network","hands"].map(t=>`<linearGradient id="half-${t}" x1="0" y1="1" x2="0" y2="0"><stop offset=".5" style="stop-color:var(--t-${t})"/><stop offset=".5" style="stop-color:var(--panel)"/></linearGradient>`).join("")}</defs>`;
+  const empty=L.lanes.length?"":`<text x="${X0+44}" y="${TOP+60}" class="lbl">No paths yet. Tell your companion what you're aiming for to grow one.</text>`;
+  return`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="group" aria-label="Pathway tree">${defs}${bands}${edges}${root}${nodes}${empty}</svg>`}
+
+/* ===================== roadblock & branching conversation, hosted by the companion ===================== */
+let RB={step:"write",text:"",msg:"",anchor:"root"};
+const rbReset=()=>RB={step:"write",text:"",msg:"",anchor:"root"};
+const rbSlot=id=>RB.anchor===id?`<div id="rbBox" class="rbin"></div>`:"";
+const routables=()=>S.paths.filter(isRoutable);
+function defaultPath(){const s=S.sel;let p=null;if(s?.kind==="path"||s?.kind==="carried")p=pathById(s.id);else if(s?.kind==="node")p=findNode(s.id)?.p;
+  if(p?.kind==="detour")p=pathById(p.parent);return p&&isRoutable(p)?p.id:routables()[0]?.id||null}
+const majorPathFor=p=>isMajorPath(p)&&p.status==="active"?p:S.paths.find(q=>isMajorPath(q)&&q.status==="active");
+function faceHTML(){const c=comp();return c.svg?`<span class="face">${c.svg}</span>`:`<span class="face"><span class="orbball"></span></span>`}
+const CHOICES={A:["Same goal, new route","Route around it: an alternative course first, then a similar degree, then another major."],
+  B:["New goal or major","Change your end goal and grow a new path toward it. Courses you've passed come with you."],
+  C:["Add a minor","Grow a minor alongside your degree, without leaving it."],
+  D:["Continuing studies","Add a certificate or a new specialty after your degree."]};
+function initPick(type){RB.type=type;const p=pathById(RB.path);
+  if(type==="A")RB.course=p?guessCourse(p,RB.text):null;
+  if(type==="B")RB.goal=guessGoal(RB.text)||Object.keys(GOALS).find(g=>!S.paths.some(q=>q.goal===g))||"soft";
+  if(type==="C")RB.pick=guessProg("minor",RB.text);if(type==="D")RB.pick=guessProg("cert",RB.text);RB.step="options"}
+function optCard(o,attr,label,extra=""){const P=PROGRAMS[o.prog];return`<div class="opt"><b>${esc(P.name)}</b><div class="chips">
+  <span class="chip ${o.carriedN?"ok":""}">${o.carriedN} course${o.carriedN===1?"":"s"} carry over</span><span class="chip">${o.left} course${o.left===1?"":"s"} to go</span>${extra}</div>
+  <div class="row" style="justify-content:space-between"><span class="tiny muted">${P.field?esc(FIELDS[P.field].label):""}</span><button class="btn small ${o.exists?"":"primary"}" ${attr} ${o.exists?"disabled":""}>${o.exists?"Already on your tree":label}</button></div></div>`}
+function drawRoadblock(){const el=$("rbBox");if(!el)return;const c=comp();
+  const head=t=>`<div class="who">${faceHTML()}<div style="min-width:0;display:grid;gap:2px"><span class="eyebrow">Your companion · ${esc(c.name)}</span><h2 id="rbTitle">${t}</h2></div></div>`;
+  if(RB.step==="write"){el.innerHTML=`${head("Hit a roadblock? Tell us what happened.")}<div class="bubble">${esc(voice("intro"))}</div>
+    <textarea id="rbText" maxlength="600" aria-label="What happened" placeholder="e.g. I failed my organic chemistry midterm · I want to switch to business · I'd like a minor in psychology">${esc(RB.text)}</textarea>
+    ${RB.msg?`<p class="note warn small">${esc(RB.msg)}</p>`:""}
+    <div class="row"><button class="btn primary" id="rbGo">Explore options</button><span class="reward"><span class="gem"></span>+25 for each path you grow</span></div>`;
+    $("rbText").oninput=e=>RB.text=e.target.value;$("rbGo").onclick=submitRB;$("rbText").onkeydown=e=>{if(e.key==="Enter"&&(e.ctrlKey||e.metaKey))submitRB()};return}
+  const R=routables();const pathSel=R.length>1?`<label class="small">Which path is this about? <select id="rbPath" style="width:100%;margin-top:4px">${R.map(p=>`<option value="${p.id}" ${p.id===RB.path?"selected":""}>${esc(pathName(p))}</option>`).join("")}</select></label>`:"";
+  if(RB.step==="confirm"){const t=RB.type;el.innerHTML=`${head("What would you like to explore?")}
+    ${RB.text?`<blockquote class="note small" style="margin:0">“${esc(RB.text)}”</blockquote>`:""}<div class="bubble">${esc(voice(t||"unsure"))} Your choice always wins.</div>${pathSel}
+    ${Object.entries(CHOICES).map(([k,[b,s]])=>`<button class="choice ${t===k?"suggested":""}" data-choice="${k}">${t===k?`<span class="tag on">Sounds like this</span>`:""}<b>${k} · ${b}</b><span>${s}</span></button>`).join("")}
+    <div class="row"><button class="btn small ghost" id="rbEdit">Edit what I wrote</button></div>`;
+    const ps=$("rbPath");if(ps)ps.onchange=()=>RB.path=ps.value;
+    el.querySelectorAll("[data-choice]").forEach(b=>b.onclick=()=>{initPick(b.dataset.choice);drawRoadblock()});
+    $("rbEdit").onclick=()=>{RB.step="write";drawRoadblock()};return}
+  /* options */
+  const p=pathById(RB.path);let body="";const back=`<div class="row"><button class="btn small ghost" id="rbBack">Back</button><button class="btn small ghost" id="rbCancel">Cancel</button></div>`;
+  if(RB.type==="A"){const acs=p?p.nodes.filter(n=>n.type==="academic"&&courseSt(n.course)!=="done"):[];
+    if(!acs.length)body=`<p class="note small">There are no unfinished courses on this path to route around. You could try a new goal, a minor, or continuing studies instead.</p>`;
+    else{const n=findNode(RB.course)?.n||acs[0];RB.course=n.id;const L=ladder(p,n);const code=showCode(n.course);
+      body=`<label class="small">Which course is the roadblock? <select id="rbCourse" style="width:100%;margin-top:4px">${acs.map(a=>`<option value="${a.id}" ${a.id===n.id?"selected":""}>${showCode(a.course)} · ${esc(COURSES[a.course].title)}</option>`).join("")}</select></label>
+      <div class="bubble">${esc(voice("routes"))}</div><div class="ladder">
+      <div class="rung"><h3>1 · Alternative course</h3>${L.r1.length?L.r1.map(e=>{const C=COURSES[e];return`<div class="opt"><b>${showCode(e)} · ${esc(C.title)}</b><span class="tiny muted">${C.yr>=5?"Continuing studies":"Year "+C.yr} · ${TERM[C.term]} · counts in place of ${code}</span><div class="row" style="justify-content:flex-end"><button class="btn small primary" data-grow="detour|${e}">Take this route</button></div></div>`}).join(""):`<p class="small muted">No alternative for ${code} in the course database${S.paths.some(q=>q.kind==="detour"&&q.forkAt===n.id)?" that isn't already on your tree":""}.</p>`}</div>
+      ${isMajorPath(p)?`<div class="rung"><h3>2 · Similar degree</h3>${L.r2.length?L.r2.map(o=>optCard(o,`data-grow="similar|${o.prog}"`,"Grow this path",`<span class="chip">${o.needs?`Still includes ${code}`:`No ${code}`}</span>`)).join(""):`<p class="small muted">No similar degree in the database.</p>`}</div>
+      <div class="rung"><h3>3 · Another major</h3>${L.r3.length?L.r3.map(o=>optCard(o,`data-grow="altmajor|${o.prog}"`,"Grow this path",`<span class="chip">${o.needs?`Still includes ${code}`:`No ${code}`}</span>`)).join(""):`<p class="small muted">No other majors in the database lead here.</p>`}</div>`:""}</div>
+      <p class="tiny muted">These are options to look into, not recommendations. Programs and courses are illustrative sample data.</p>`}}
+  else if(RB.type==="B"){const G=GOALS[RB.goal];const fy=p?fromYearAt(forkBefore(p,currentIdx(p))):yrNum(S.student.year);
+    body=`<label class="small">New goal <select id="rbGoal" style="width:100%;margin-top:4px">${Object.entries(GOALS).map(([k,g])=>`<option value="${k}" ${k===RB.goal?"selected":""}>${esc(g.title)}</option>`).join("")}</select></label>
+     <div class="bubble">Here are programs that lead to ${esc(G.title.toLowerCase())}. Courses you've passed come with you. You choose.</div>
+     <div class="ladder">${G.programs.map(pid=>{const o={...preview(RB.goal,pid,fy),exists:S.paths.some(q=>q.goal===RB.goal&&q.prog===pid&&q.status==="active")};return optCard(o,`data-grow="newgoal|${pid}"`,"Grow this path",pid===S.student.prog?`<span class="chip ok">Your program</span>`:"")}).join("")}</div>`}
+  else{const kind=RB.type==="C"?"minor":"cert";const mp=RB.type==="D"?majorPathFor(p):p;const fy=RB.type==="D"?5:p?fromYearAt(forkBefore(p,currentIdx(p))):yrNum(S.student.year);
+    if(RB.type==="D"&&!mp)body=`<p class="note small">Continuing studies branch off after a degree. Grow a degree path first.</p>`;
+    else body=`<div class="bubble">${esc(voice(RB.type))} ${RB.type==="D"?`It branches off after ${esc(pathEnd(mp).title.toLowerCase())}.`:"It grows alongside your degree."}</div><div class="ladder">${Object.entries(PROGRAMS).filter(([,P])=>P.kind===kind).sort(([a],[b])=>(b===RB.pick)-(a===RB.pick)).map(([pid,P])=>{
+      const o={...preview(P.goal||null,pid,fy),exists:S.paths.some(q=>q.prog===pid&&q.status==="active")};return optCard(o,`data-grow="${RB.type==="C"?"minor":"cont"}|${pid}"`,"Grow this branch",`${pid===RB.pick?`<span class="chip ok">Sounds like this</span>`:""}${P.goal?`<span class="chip">Leads to ${esc(GOALS[P.goal].title)}</span>`:""}`)}).join("")}</div>`}
+  el.innerHTML=`${head(CHOICES[RB.type][0])}${pathSel}${body}${back}`;
+  const ps=$("rbPath");if(ps)ps.onchange=()=>{RB.path=ps.value;initPick(RB.type);drawRoadblock()};
+  const cs=$("rbCourse");if(cs)cs.onchange=()=>{RB.course=cs.value;drawRoadblock()};
+  const gs=$("rbGoal");if(gs)gs.onchange=()=>{RB.goal=gs.value;drawRoadblock()};
+  $("rbBack").onclick=()=>{RB.step="confirm";drawRoadblock()};$("rbCancel").onclick=()=>{rbReset();renderAll()};
+  el.querySelectorAll("[data-grow]").forEach(b=>b.onclick=()=>{const[k,a]=b.dataset.grow.split("|");grow(k,a)})}
+function submitRB(){const t=RB.text.trim();if(t.length<8){RB.msg="Tell me a little more, even one sentence helps.";return drawRoadblock()}
+  RB.msg="";RB.type=classify(t);RB.path=defaultPath();RB.step="confirm";drawRoadblock();el0("[data-choice]")?.focus()}
+const el0=s=>document.querySelector(s);
+function startBranch(type,pathId,courseNodeId,text=""){const pid=pathId||defaultPath();RB={step:"options",text,msg:"",path:pid,anchor:courseNodeId||(pid?"path:"+pid:"root")};initPick(type);if(courseNodeId)RB.course=courseNodeId;
+  S.sel=courseNodeId?{kind:"node",id:courseNodeId}:pid?{kind:"path",id:pid}:{kind:"root",id:"root"};scrollTarget=selItemId();renderAll()}
+function grow(kind,arg){const p=pathById(RB.path);const why=RB.text.trim();let q;
+  if(kind==="detour"){const n=findNode(RB.course).n;q=growDetour(p,n,arg,why);log(`Roadblock on ${showCode(n.course)}: added ${showCode(arg)} as an alternative course`)}
+  else if(kind==="similar"||kind==="altmajor"){const n=findNode(RB.course).n;q=growProgram(kind,p,n,arg,p.goal,why);log(`Roadblock on ${showCode(n.course)}: grew a path through ${PROGRAMS[arg].name}`)}
+  else if(kind==="newgoal"){q=growProgram("newgoal",p,null,arg,RB.goal,why);log(`New goal: ${GOALS[RB.goal].title} via ${PROGRAMS[arg].name}`)}
+  else if(kind==="minor"){q=growMinor(p,arg,why);log(`Started a branch: ${PROGRAMS[arg].name}`)}
+  else{q=growCont(majorPathFor(p),arg,why);log(`Continuing studies: ${PROGRAMS[arg].name}`)}
+  award("grow:"+q.id,25);S.sel={kind:"path",id:q.id};scrollTarget="goal:"+q.id;rbReset();save();renderAll();toast(voice("grow"));burst(lastPt,18);
+  if(kind!=="detour")banner(kind==="minor"?"NEW BRANCH":kind==="cont"?"NEW SPECIALTY":"NEW PATH",pathEnd(q).title,"var(--accent)")}
+
+/* ===================== details panel ===================== */
+const typeIcon=t=>{const c=`var(--t-${t})`;return t==="academic"?`<circle cx="10" cy="10" r="7" fill="none" stroke="${c}" stroke-width="2.5"/>`:t==="network"?`<path d="M10 2.5 17.5 10 10 17.5 2.5 10Z" fill="none" stroke="${c}" stroke-width="2.5"/>`:t==="hands"?`<rect x="3" y="3" width="14" height="14" rx="3" fill="none" stroke="${c}" stroke-width="2.5"/>`:`<path d="M10 2 Q11 9 18 10 Q11 11 10 18 Q9 11 2 10 Q9 9 10 2Z" fill="none" stroke="var(--orb)" stroke-width="2"/>`};
+const typeBadge=t=>`<span class="tierbadge"><svg viewBox="0 0 20 20" aria-hidden="true">${typeIcon(t)}</svg>${TYPES[t].label}${t==="side"?" · optional":" · primary"}</span>`;
+const statusChip=st=>`<span class="status ${st==="done"?"done":st==="progress"?"progress":st==="below"?"below":""}">${st==="done"?"✓ ":""}${STATUS_TXT[st]}</span>`;
+function whyBlock(n,p){const f=FIELDS[GOALS[p.goal]?.field||PROGRAMS[p.prog]?.field];
+  if(n.type==="network")return`<div class="why"><b>Why this matters</b><p>Many grads find work through people: 42% of employed grads found their job through people (direct contact 19%, friends 12%, family 5%, networking events 5%), compared with 38% through job ads.</p><p class="src">${SRC}</p></div>`;
+  if(n.type==="hands")return`<div class="why"><b>Why this matters</b><p>Grads who did a work placement were more likely to land a job closely related to their program, in every field.</p>
+    ${f?`<div class="bars"><div class="bar"><div class="bar-top"><span>${esc(f.label)} grads with a placement</span><b>${f.place[0]}%</b></div><div class="track"><div class="fill" style="width:${f.place[0]}%"></div></div></div><div class="bar"><div class="bar-top"><span>Without a placement</span><b>${f.place[1]}%</b></div><div class="track"><div class="fill alt" style="width:${f.place[1]}%"></div></div></div><p class="tiny muted">Share with a job closely related to their program.</p></div>`:""}<p class="src">${SRC}</p></div>`;
+  if(n.type==="side")return`<div class="why"><b>Side quests are optional</b><p>They can help along the way, but you don't need them to reach your goal. Pick the ones that sound fun.</p></div>`;
+  return`<div class="why"><b>Why this matters</b><p>Many programs and professional schools look closely at grades in key courses, so a B or higher keeps more routes open.</p></div>`}
+function yearSel(n,p){if(p.kind==="cont")return"";return`<label class="small row">Planned for <select data-yr aria-label="Planned year">${[1,2,3,4].map(y=>`<option value="${y}" ${Math.min(n.yr,4)===y?"selected":""}>Year ${y}</option>`).join("")}</select></label>`}
+function checklist(n){n=R(n);if(n.type==="academic"){const t=S.tx[n.course]||{};const st=ownSt(n.course);const via=viaEq(n.course);
+    return`${via?`<p class="note small">Counts as done through ${showCode(via)} · ${esc(COURSES[via].title)}.</p>`:""}<ul class="checks"><li><label><input type="checkbox" data-tx="enrolled" ${t.enrolled?"checked":""}>I'm enrolled in (or have taken) this course</label></li>
+    <li><label style="cursor:default"><span style="flex:1">Final grade</span><select data-tx="grade" aria-label="Final grade"><option value="">Not yet</option>${GRADES.map(g=>`<option ${g===t.grade?"selected":""}>${g}</option>`).join("")}</select></label></li></ul>
+    ${st==="below"&&!via?`<div class="note warn small">Below the B target. That's a fork, not a failure. You decide whether it's a roadblock. <button class="btn small" id="routeIt" style="margin-top:8px">Explore routes around it</button></div>`:""}`}
+  if(n.type==="network")return`<ol class="checks">${CHAIN.map((t,i)=>`<li><label><span class="num">${i+1}</span><input type="checkbox" data-step="${i}" ${n.steps[i]?"checked":""}>${t}</label></li>`).join("")}</ol>`;
+  if(n.type==="hands")return`<fieldset style="border:0;margin:0;padding:0;display:grid;gap:8px"><legend class="small muted" style="margin-bottom:6px">Pick one experience</legend><div class="checks">${HANDS.map(h=>`<label><input type="radio" name="hk" value="${esc(h)}" ${n.kind===h?"checked":""}>${h}</label>`).join("")}</div></fieldset>
+    <ul class="checks"><li><label><input type="checkbox" data-f="verified" ${n.verified?"checked":""}>It's completed and I can show it (transcript, letter or offer)</label></li></ul>`;
+  return`<ul class="checks"><li><label><input type="checkbox" data-f="done" ${n.done?"checked":""}>I did this</label></li></ul>`}
+let ADD=null;
+function shareNote(n){const r=R(n);const k=S.paths.filter(q=>q.nodes.some(m=>m===r||m.ref===r.id)).length;return k>1?` This one is shared by ${k} paths, so progress counts on all of them.`:""}
+function drawDetails(){const el=$("details");if(!el)return;const sel=S.sel;
+  if(!sel){return;el.innerHTML=`<div class="eyebrow">Details</div><h2>Tap any node to explore it</h2><p class="small muted">Each column is a path toward a goal. Primary nodes are courses, networking and hands-on experience; side quests are optional extras. Faded paths are set aside and can come back any time.</p>
+    ${S.paths.length?`<ul class="list">${laneOrder().map(p=>`<li><button data-pick="path|${p.id}"><span>${esc(pathName(p))}</span><span class="tag ${p.status==="active"?"on":""}">${p.status==="active"?KIND[p.kind]:"Set aside"}</span></button></li>`).join("")}</ul>`:""}`;return bindDetails()}
+  if(sel.kind==="root"){const P=PROGRAMS[S.student.prog];const done=Object.keys(S.tx).filter(c=>ownSt(c)==="done");
+    el.innerHTML=`<div id="rbBox" class="rbin"></div><div class="eyebrow">Where you are now</div><h3>${esc(P?.name||"My program")} · Year ${esc(S.student.year)}</h3><p class="small">Every path starts here. Change your program or year in the top bar.</p>
+    <p class="small muted">Level ${level()} · ${S.earned} treasure earned · ${done.length} course${done.length===1?"":"s"} passed with B or higher.</p><div class="ctrls"><button class="btn small" id="openDB">Open the course database</button></div>`;bindDetails();drawRoadblock();return}
+  if(sel.kind==="carried"){const p=pathById(sel.id);if(!p){S.sel=null;return drawDetails()}
+    el.innerHTML=`<div class="eyebrow">Credits carried</div><h2>Earlier work that counts on this path</h2><p class="small muted">These came with you from courses and experiences you've already finished. No need to repeat them.</p>
+     <ul class="list">${p.carried.map(x=>COURSES[x]?`<li><button data-db="${x}"><span>${showCode(x)} · ${esc(COURSES[x].title)}</span><span class="tag goldtag">${viaEq(x)&&ownSt(x)!=="done"?"Via "+showCode(viaEq(x)):"Done"}</span></button></li>`:`<li><button disabled><span>${esc(TYPES[x.split(":")[0]].label)}: ${esc(x.split(":").slice(1).join(":"))}</span><span class="tag goldtag">Done</span></button></li>`).join("")}</ul>`;return bindDetails()}
+  if(sel.kind==="node"){const f=findNode(sel.id);if(!f){S.sel=null;return drawDetails()}const{p,n}=f,st=nodeSt(n);
+    if(n.type==="academic"){const C=COURSES[n.course];const others=S.paths.filter(q=>q!==p&&q.nodes.some(m=>m.course===n.course));
+      el.innerHTML=`<div class="row" style="justify-content:space-between">${typeBadge("academic")}${statusChip(st)}</div><h2>${showCode(n.course)} · ${esc(C.title)}</h2>${rbSlot(n.id)}
+       <p class="small muted">${C.yr>=5?"Continuing studies":"Usually Year "+C.yr} · ${TERM[C.term]} · ${credits(n.course)} credits · ${esc(C.subj)} <span class="reward"><span class="gem"></span>+40</span></p><p class="small">${esc(C.desc)}</p>
+       ${C.pre.length?`<div><b class="small">Needs first</b><div class="chips" style="margin-top:6px">${C.pre.map(c=>`<button class="chip ${courseSt(c)==="done"?"ok":""}" data-db="${c}">${courseSt(c)==="done"?"✓ ":""}${showCode(c)}</button>`).join("")}</div></div>`:""}
+       ${C.eq.length?`<div><b class="small">Alternative courses in the database</b><div class="chips" style="margin-top:6px">${C.eq.map(c=>`<button class="chip ${ownSt(c)==="done"?"ok":""}" data-db="${c}">${showCode(c)} · ${esc(COURSES[c].title)}</button>`).join("")}</div></div>`:""}
+       ${yearSel(n,p)}<div><h3>Done when</h3><p class="small muted" style="margin:2px 0 10px">${TYPES.academic.done} Your grade counts on every path that uses this course${others.length?` (also on ${others.length} other path${others.length>1?"s":""})`:""}.</p>${checklist(n)}</div>${whyBlock(n,p)}
+       <p class="tiny muted">On: ${esc(pathName(p))}</p><div class="ctrls"><button class="btn small" data-db="${n.course}">Open in course database</button>${p.kind!=="detour"&&isRoutable(p)&&st!=="done"?`<button class="btn small" id="routeIt2">Hit a roadblock here</button>`:""}<button class="btn small danger" id="rmNode">Remove from this path</button></div>`}
+    else el.innerHTML=`<div class="row" style="justify-content:space-between">${typeBadge(n.type)}${statusChip(st)}</div><h2>${esc(n.title)}</h2>
+      <p class="small muted">On: ${esc(pathName(p))} <span class="reward"><span class="gem"></span>+${TYPES[n.type].gems}${n.type==="network"?" · +5 a step":""}</span></p>${yearSel(n,p)}
+      <div><h3>Done when</h3><p class="small muted" style="margin:2px 0 10px">${TYPES[n.type].done}${shareNote(n)}</p>${checklist(n)}</div>${whyBlock(n,p)}<div class="ctrls"><button class="btn small danger" id="rmNode">Remove from this path</button></div>`;
+    bindDetails({p,n});drawRoadblock();return}
+  const p=pathById(sel.id);if(!p){S.sel=null;return drawDetails()}const end=pathEnd(p),aside=p.status!=="active";const f=FIELDS[GOALS[p.goal]?.field];
+  const acs=p.nodes.filter(n=>n.type==="academic"),ex=p.nodes.filter(n=>n.type==="network"||n.type==="hands"),sq=p.nodes.filter(n=>n.type==="side");const d=a=>a.filter(n=>nodeSt(n)==="done").length;
+  const parent=pathById(p.parent);
+  el.innerHTML=`<div class="row" style="justify-content:space-between"><span class="eyebrow">${esc(KIND[p.kind])}</span><span class="tag ${aside?"":"on"}">${aside?"Set aside":"Active"}</span></div>
+    <h2>${end?esc(end.title):`Route via ${showCode(p.nodes[0]?.course||"")}`}</h2>${rbSlot("path:"+p.id)}${end?`<p class="small">${esc(end.sub)}${parent&&p.kind!=="detour"?` · branches from ${esc(pathName(parent))}`:""}</p>`:`<p class="small">Counts in place of a course on ${esc(parent?pathName(parent):"its path")}, then rejoins it.</p>`}
+    ${p.why?`<p class="small muted">Because you said: “${esc(p.why)}”</p>`:""}
+    <div class="chips"><span class="chip">${d(acs)}/${acs.length} courses</span>${ex.length?`<span class="chip">${d(ex)}/${ex.length} experiences</span>`:""}${sq.length?`<span class="chip">${d(sq)}/${sq.length} side quests</span>`:""}${p.carried.length?`<span class="chip ok">${p.carried.length} carried over</span>`:""}</div>
+    <div class="ctrls">${aside?`<button class="btn small primary" data-pa="activate">Make active</button>`:`<button class="btn small" data-pa="aside">Set aside</button>`}<button class="btn small danger" data-pa="remove">Remove${descendants(p.id).length?" (and its branches)":""}</button></div>
+    ${f?`<div class="card box" style="background:var(--panel-2);padding:14px"><h3>Outcomes snapshot</h3>
+      ${f.out?`<p class="small muted">${esc(f.label)} bachelor's grads, 3 years after graduating:</p><div class="bars">${[["Employed",f.out.employed],["Earning $70k or more",f.out.high],["Job closely related to their program",f.out.related]].map(([l,v])=>`<div class="bar"><div class="bar-top"><span>${l}</span><b>${v}%</b></div><div class="track"><div class="fill" style="width:${v}%"></div></div></div>`).join("")}</div>
+      <p class="tiny muted">These describe past grads in this field, not a promise for any one person.</p>`:`<p class="small muted">Outcomes data isn't available for ${esc(f.label.toLowerCase())} yet.</p>`}<p class="src">${SRC}. Bachelor's graduates, measured 3 years after graduation, weighted.</p></div>`:""}
+    <div><h3>On this path</h3><ul class="list" style="margin-top:8px">${p.nodes.map(n=>`<li><button data-pick="node|${n.id}"><span>${n.type==="academic"?showCode(n.course)+" · ":""}${esc(nodeTitle(n))}${n.type==="side"?" (optional)":""}</span><span class="tag ${nodeSt(n)==="done"?"goldtag":""}">${STATUS_TXT[nodeSt(n)]}</span></button></li>`).join("")}</ul></div>
+    ${p.kind!=="detour"?`<div class="addform"><h3>Grow this path</h3><div class="row"><button class="btn small" data-add="academic">+ Course</button><button class="btn small" data-add="network">+ Networking</button><button class="btn small" data-add="hands">+ Hands-on</button><button class="btn small" data-add="side">+ Side quest</button></div>
+      ${ADD&&ADD.path===p.id?`<label class="small">${TYPES[ADD.type].label} title<input type="text" id="addT" maxlength="80" style="width:100%;margin-top:4px" placeholder="${ADD.type==="network"?"e.g. Alumni panel → coffee chat":ADD.type==="hands"?"e.g. Summer placement":"e.g. Join a club"}"></label><div class="row"><select id="addY" aria-label="Year">${[1,2,3,4].map(y=>`<option value="${y}" ${y===yrNum(S.student.year)?"selected":""}>Year ${y}</option>`).join("")}</select><button class="btn small primary" id="addGo">Add</button></div>`:""}
+      ${isMajorPath(p)&&!aside?`<div class="row"><button class="btn small ghost" data-branch="C">Branch out: add a minor</button><button class="btn small ghost" data-branch="D">Continuing studies</button></div>`:""}</div>`:""}`;
+  bindDetails(null,p);drawRoadblock()}
+function setTx(c,f,v){const before=courseSt(c);S.tx[c]={...(S.tx[c]||{}),[f]:v};if(f==="grade"&&v)S.tx[c].enrolled=true;
+  if(before!=="done"&&courseSt(c)==="done"){award("course:"+c,40);log(`Passed ${showCode(c)} · ${COURSES[c].title}`);toast(voice("done"));burst(lastPt,18)}save();renderAll()}
+function afterNode(n,before){if(before!=="done"&&nodeSt(n)==="done"){award("done:"+n.id,TYPES[n.type].gems);log(`Finished: ${nodeTitle(n)}`);toast(voice("done"));burst(lastPt,18)}save();renderAll()}
+function bindDetails(np,path){const el=$("details");
+  el.querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>{const[k,id]=b.dataset.pick.split("|");S.sel={kind:k,id};scrollTarget=k==="path"?"goal:"+id:id;save();renderAll()});
+  el.querySelectorAll("[data-db]").forEach(b=>b.onclick=()=>openDB(null,b.dataset.db));const od=$("openDB");if(od)od.onclick=()=>openDB();
+  if(np){const{p}=np,n0=np.n,n=n0.type==="academic"?n0:R(n0);
+    el.querySelectorAll("[data-tx]").forEach(i=>i.onchange=()=>setTx(n.course,i.dataset.tx,i.type==="checkbox"?i.checked:i.value));
+    el.querySelectorAll("[data-f]").forEach(i=>i.onchange=()=>{const b=nodeSt(n);n[i.dataset.f]=i.checked;afterNode(n,b)});
+    el.querySelectorAll("[data-step]").forEach(i=>i.onchange=()=>{const b=nodeSt(n);n.steps[+i.dataset.step]=i.checked;if(i.checked)award(`step:${n.id}:${i.dataset.step}`,5);afterNode(n,b)});
+    el.querySelectorAll('input[name="hk"]').forEach(i=>i.onchange=()=>{const b=nodeSt(n);n.kind=i.value;afterNode(n,b)});
+    const ys=el.querySelector("[data-yr]");if(ys)ys.onchange=()=>{n0.yr=+ys.value;sortNodes(p.nodes);save();renderAll()};
+    const route=()=>startBranch("A",p.id,n0.id,`I didn't get a B or higher in ${COURSES[n.course].title}.`);["routeIt","routeIt2"].forEach(id=>{const b=$(id);if(b)b.onclick=route});
+    const rm=$("rmNode");rm.onclick=()=>{if(!rm.dataset.confirm){rm.dataset.confirm=1;rm.textContent="Tap again to remove";return}removeNode(p,n0);log(`Removed ${nodeTitle(n0)} from ${pathName(p)}`);S.sel=pathById(p.id)?{kind:"path",id:p.id}:null;save();renderAll();toast("Removed. Your tree adjusted.")}}
+  if(path){const p=path;
+    el.querySelectorAll("[data-pa]").forEach(b=>b.onclick=()=>{const a=b.dataset.pa;
+      if(a==="activate"){p.status="active";log(`Made ${pathName(p)} active again`);save();renderAll();toast("This path is active again.")}
+      else if(a==="aside"){p.status="aside";log(`Set aside ${pathName(p)}. It stays on the tree.`);save();renderAll();toast("Set aside. It stays on your tree.")}
+      else if(b.dataset.confirm){removePath(p.id);S.sel=null;save();renderAll();toast("Path removed.")}else{b.dataset.confirm=1;b.textContent="Tap again to remove"}});
+    el.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{if(b.dataset.add==="academic"){ADD=null;openDB(p.id)}else{ADD={path:p.id,type:b.dataset.add};drawDetails();$("addT")?.focus()}});
+    const go=$("addGo");if(go)go.onclick=()=>{const t=$("addT").value.trim();if(!t){$("addT").focus();return}const n={id:uid("n"),type:ADD.type,title:t,yr:+$("addY").value};
+      if(n.type==="network")n.steps=[false,false,false,false,false];if(n.type==="hands"){n.kind="";n.verified=false}if(n.type==="side")n.done=false;
+      p.nodes.push(n);sortNodes(p.nodes);fresh.add(n.id);ADD=null;log(`Added ${TYPES[n.type].label.toLowerCase()}: ${t}`);S.sel={kind:"node",id:n.id};scrollTarget=n.id;save();renderAll()};
+    el.querySelectorAll("[data-branch]").forEach(b=>b.onclick=()=>startBranch(b.dataset.branch,p.id))}}
+
+/* ===================== transcript, journey, compass ===================== */
+function usedBy(c){return S.paths.filter(p=>p.status==="active"&&(p.carried.includes(c)||p.nodes.some(n=>n.course===c||(n.type==="academic"&&COURSES[n.course]?.eq.includes(c)))))}
+function drawLower(){const done=Object.keys(S.tx).filter(c=>COURSES[c]&&S.tx[c].grade);const exps=S.paths.flatMap(p=>p.nodes.filter(n=>n.type!=="academic"&&nodeSt(n)==="done"));
+  const chip=c=>{const u=usedBy(c),st=ownSt(c);return`<button class="rootchip ${u.length&&st==="done"?"":"dimchip"}" data-db="${c}" title="${esc(u.length?"Counts on: "+u.map(pathName).join(", "):"Not used by an active path yet. It stays as elective credit in case a later path uses it.")}"><b>${showCode(c)} · ${esc(COURSES[c].title)}</b><small>${esc(S.tx[c].grade)}${st==="below"?" · below B":""} · ${u.length?`counts on ${u.length} path${u.length>1?"s":""}`:"elective credit"}</small></button>`};
+  $("foundation").innerHTML=`<div class="eyebrow">Your foundation</div><h2 id="fTitle">Transcript & roots</h2>
+   ${done.length?`<div class="roots">${done.map(chip).join("")}</div>`:`<p class="small muted">Courses you finish show up here and carry over to every new path where they count.</p>`}
+   ${exps.length?`<div class="roots">${exps.map(n=>`<span class="rootchip"><b>${esc(n.title.length>42?n.title.slice(0,40)+"…":n.title)}</b><small>${TYPES[n.type].label}</small></span>`).join("")}</div>`:""}
+   <p class="small muted">Gold work counts on an active path. Grey courses aren't used yet, but they stay as elective credit in case a later choice connects them.</p><div class="ctrls"><button class="btn small" id="openDB2">Open the course database</button></div>`;
+  $("foundation").querySelectorAll("[data-db]").forEach(b=>b.onclick=()=>openDB(null,b.dataset.db));$("openDB2").onclick=()=>openDB();
+  const L=S.log||[];$("journey").innerHTML=`<div class="eyebrow">Every turn counts</div><h2 id="jTitle">Your journey so far</h2>
+   ${L.length?`<ol class="log">${L.slice(0,5).map(e=>`<li><time>${esc(e.date)}</time><span>${esc(e.text)}</span></li>`).join("")}</ol>`:`<p class="small muted">Roadblocks, new paths and finished nodes show up here. Changing direction is part of the path.</p>`}`}
+let compassI=Math.floor(Math.random()*COMPASS.length);
+function turnCompass(){const p=$("compassText");p.style.opacity=0;setTimeout(()=>{compassI=(compassI+1)%COMPASS.length;p.textContent=COMPASS[compassI];p.style.opacity=1},450)}
+
+/* ===================== overlays ===================== */
+const OV=$("overlay");
+function openOverlay(html,label,focusSel){OV.innerHTML=`<div class="sheet">${html}</div>`;OV.setAttribute("aria-label",label);OV.hidden=false;document.body.style.overflow="hidden";OV.onkeydown=e=>{if(e.key==="Escape"&&!S.setup)closeOverlay()};setTimeout(()=>OV.querySelector(focusSel||"button,input")?.focus(),30)}
+function closeOverlay(){OV.hidden=true;document.body.style.overflow=""}
+/* course database */
+let DB={q:"",subj:"",path:null};
+function openDB(pathId,q){DB={q:q||"",subj:"",path:pathId||null};const p=pathById(DB.path);
+  openOverlay(`<div class="sheet-top"><div><div class="eyebrow">Course database · sample data</div><h2>${p?"Add a course":"Find a course"}</h2>${p?`<p class="small muted">Adding to: ${esc(pathName(p))}</p>`:`<p class="small muted">Record grades for any course. They count on every path that uses the course.</p>`}</div><button class="btn small" id="dbClose">Close</button></div>
+    <div class="row"><input type="text" id="dbQ" value="${esc(DB.q)}" placeholder="Search code, title or topic" aria-label="Search courses" style="flex:1;min-width:160px"><select id="dbS" aria-label="Subject"><option value="">All subjects</option>${SUBJECTS.map(s=>`<option>${esc(s)}</option>`).join("")}</select></div>
+    <div id="dbList" class="dblist"></div><p class="tiny muted">Course codes, titles, terms, prerequisites and alternatives are illustrative sample data.</p>`,"Course database","#dbQ");
+  $("dbClose").onclick=closeOverlay;$("dbQ").oninput=e=>{DB.q=e.target.value;renderDB()};$("dbS").onchange=e=>{DB.subj=e.target.value;renderDB()};renderDB()}
+function renderDB(){const q=DB.q.toLowerCase().replace(/\s+/g," ").trim();const p=pathById(DB.path);
+  const list=Object.values(COURSES).filter(c=>(!DB.subj||c.subj===DB.subj)&&(!q||[c.code,showCode(c.code),c.title,c.desc,c.subj].join(" ").toLowerCase().includes(q)));
+  $("dbList").innerHTML=list.length?list.slice(0,60).map(c=>{const st=courseSt(c.code),t=S.tx[c.code]||{},on=S.paths.filter(x=>x.nodes.some(n=>n.course===c.code));const inP=p&&p.nodes.some(n=>n.course===c.code);
+    return`<div class="course"><div class="row" style="justify-content:space-between"><span class="code">${showCode(c.code)}</span>${statusChip(st)}</div><b style="font-family:var(--f-display)">${esc(c.title)}</b>
+     <span class="tiny muted">${c.yr>=5?"Continuing studies":"Year "+c.yr} · ${TERM[c.term]} · ${credits(c.code)} credits · ${esc(c.subj)}</span><span class="small">${esc(c.desc)}</span>
+     ${c.pre.length?`<span class="tiny">Needs: ${c.pre.map(x=>`${courseSt(x)==="done"?"✓ ":""}${showCode(x)}`).join(", ")}</span>`:""}${c.eq.length?`<span class="tiny">Alternatives: ${c.eq.map(showCode).join(", ")}</span>`:""}
+     ${on.length?`<span class="tiny muted">On your tree: ${on.map(x=>esc(pathName(x))).join(" · ")}</span>`:""}
+     <div class="row" style="justify-content:space-between"><label class="tiny row">Grade <select data-dbg="${c.code}" aria-label="Grade for ${showCode(c.code)}"><option value="">Not yet</option>${GRADES.map(g=>`<option ${g===t.grade?"selected":""}>${g}</option>`).join("")}</select></label>
+     ${p?`<button class="btn small ${inP?"":"primary"}" data-dbadd="${c.code}" ${inP?"disabled":""}>${inP?"On this path":"Add to path"}</button>`:""}</div></div>`}).join("")+(list.length>60?`<p class="tiny muted">Showing 60 of ${list.length}. Search to narrow it down.</p>`:""):`<p class="muted">No courses match.</p>`;
+  $("dbList").querySelectorAll("[data-dbg]").forEach(s=>s.onchange=()=>{setTx(s.dataset.dbg,"grade",s.value);renderDB()});
+  $("dbList").querySelectorAll("[data-dbadd]").forEach(b=>b.onclick=()=>{const c=b.dataset.dbadd,C=COURSES[c];const n={id:uid("n"),type:"academic",course:c,yr:p.kind==="cont"?5:Math.min(Math.max(C.yr,1),4)};
+    p.nodes.push(n);sortNodes(p.nodes);fresh.add(n.id);log(`Added ${showCode(c)} to ${pathName(p)}`);S.sel={kind:"node",id:n.id};scrollTarget=n.id;save();closeOverlay();renderAll();toast(`${showCode(c)} added. Your tree adjusted.`)})}
+/* setup quiz */
+let SU=null;const MAJORS=Object.entries(PROGRAMS).filter(([,P])=>P.kind==="major");
+function openSetup(start=0){SU={step:start,name:"",prog:"hlth",year:"1",goal:"",done:{},comp:S.equip.comp||"orb"};drawSetup()}
+function drawSetup(){const D=SU;let body="";const steps=4;
+  if(D.step===0)body=`<div class="sheet-top"><div><div class="eyebrow">Welcome</div><h2>Your pathway, your choice</h2></div>${faceHTML()}</div>
+    <p>Pathway Lens builds a path to your goal from real program structure: the courses, people and experiences along the way. Hit a roadblock or change your mind, and it grows new routes, using the credits you've already earned. It informs; it never picks for you. It's never too late to change course.</p>
+    <div class="qgrid"><button class="qopt" id="suDemo"><b>Explore Maya's demo</b><span class="muted small">Year 1 Health Sciences, aiming for medical school.</span></button><button class="qopt" id="suOwn"><b>Start my own tree</b><span class="muted small">Four quick steps.</span></button></div>`;
+  else if(D.step===1)body=`<div class="eyebrow">Step 1 of ${steps} · Where you are now</div><h2>This is your root</h2>
+    <label class="small" for="suName">First name or nickname<input type="text" id="suName" value="${esc(D.name)}" maxlength="30" style="width:100%;margin-top:4px"></label>
+    <div class="qgrid"><label class="small" for="suProg">Program<select id="suProg" style="width:100%;margin-top:4px">${MAJORS.map(([k,P])=>`<option value="${k}" ${k===D.prog?"selected":""}>${esc(P.name)}</option>`).join("")}</select></label>
+    <label class="small" for="suYear">Year<select id="suYear" style="width:100%;margin-top:4px">${["1","2","3","4","5+"].map(y=>`<option ${y===D.year?"selected":""}>${y}</option>`).join("")}</select></label></div>`;
+  else if(D.step===2)body=`<div class="eyebrow">Step 2 of ${steps} · Your goal for now</div><h2>Where would you like this to lead?</h2><p class="small muted">You can change goals, add minors or explore other paths any time.</p>
+    <div class="qgrid">${Object.entries(GOALS).map(([k,g])=>`<button class="qopt" data-goal="${k}" aria-pressed="${D.goal===k}"><b>${esc(g.title)}</b><span class="muted tiny">${GOALS[k].programs.includes(D.prog)?"Your program leads here":"Usually via "+esc(PROGRAMS[g.programs[0]].name)}</span></button>`).join("")}</div>`;
+  else if(D.step===3){const cs=reqList(D.prog).filter(r=>r.yr<=Math.min(yrNum(D.year),4));
+    body=`<div class="eyebrow">Step 3 of ${steps} · Courses so far</div><h2>What have you taken already?</h2><p class="small muted">Courses from ${esc(PROGRAMS[D.prog].name)} up to Year ${esc(D.year)}. Skip any you haven't taken. You can add others later from the course database.</p>
+    <div class="checks">${cs.map(({c})=>`<label style="cursor:default"><span style="flex:1"><b>${showCode(c)}</b> · ${esc(COURSES[c].title)}</span><select data-sudone="${c}" aria-label="Status for ${showCode(c)}"><option value="">Not yet</option><option value="prog" ${D.done[c]==="prog"?"selected":""}>In progress</option>${GRADES.map(g=>`<option ${D.done[c]===g?"selected":""}>${g}</option>`).join("")}</select></label>`).join("")}</div>`}
+  else body=`<div class="eyebrow">Step 4 of ${steps} · Your companion</div><h2>Who'll walk with you?</h2><p class="small muted">Your companion hosts the roadblock conversation. Unlock more in the Treasury.</p>
+    <div class="qgrid">${SHOP.filter(i=>i.kind==="comp"&&(i.cost===0||S.owned.includes(i.id))).map(i=>`<button class="qopt" data-comp="${i.val}" aria-pressed="${D.comp===i.val}"><b>${esc(i.name)}</b><span class="muted tiny">${esc(i.desc)}</span></button>`).join("")}</div>`;
+  const nav=D.step===0?"":`<div class="row" style="justify-content:space-between"><button class="btn ghost" id="suBack">Back</button><button class="btn primary" id="suNext">${D.step===4?"Grow my tree":"Next"}</button></div>`;
+  openOverlay(body+nav,"Set up your tree");const on=(s,f)=>OV.querySelectorAll(s).forEach(b=>b.onclick=()=>f(b));
+  if(D.step===0){$("suDemo").onclick=()=>{loadDemo();closeOverlay();renderAll();toast("Meet Maya. Try sharing a roadblock.")};$("suOwn").onclick=()=>{D.step=1;drawSetup()};return}
+  const nm=$("suName");if(nm)nm.oninput=e=>D.name=e.target.value;const pr=$("suProg");if(pr)pr.onchange=e=>{D.prog=e.target.value;D.done={}};const yr=$("suYear");if(yr)yr.onchange=e=>D.year=e.target.value;
+  OV.querySelectorAll("[data-sudone]").forEach(s=>s.onchange=()=>D.done[s.dataset.sudone]=s.value);
+  on("[data-goal]",b=>{D.goal=b.dataset.goal;drawSetup()});on("[data-comp]",b=>{D.comp=b.dataset.comp;drawSetup()});
+  $("suBack").onclick=()=>{if(D.step===1&&!S.paths.length){D.step=0}else D.step--;drawSetup()};
+  $("suNext").onclick=()=>{if(D.step===2&&!D.goal){OV.querySelector("[data-goal]").focus();return}if(D.step<4){D.step++;return drawSetup()}finishSetup()}}
+function keepShop(){return{gems:S.gems,earned:0,owned:S.owned,equip:S.equip,testGrant:S.testGrant,requests:S.requests,awarded:{}}}
+function finishSetup(){const D=SU,keep=keepShop();S=Object.assign(base(),keep,{setup:false,student:{name:D.name.trim()||"You",prog:D.prog,year:D.year}});S.equip.comp=D.comp;
+  Object.entries(D.done).forEach(([c,v])=>{if(v==="prog")S.tx[c]={enrolled:true,grade:""};else if(v)S.tx[c]={enrolled:true,grade:v}});
+  const G=GOALS[D.goal],leads=G.programs.includes(D.prog);log(`Planted a tree: ${PROGRAMS[D.prog].name}, Year ${D.year}`);
+  const m=leads?makePath({kind:"main",goal:D.goal,prog:D.prog,keepDone:true}):makePath({kind:"newgoal",goal:D.goal,prog:G.programs[0],fromYear:yrNum(D.year)});
+  if(!leads)log(`${PROGRAMS[D.prog].name} isn't a usual route to ${G.title.toLowerCase()}, so this path goes through ${PROGRAMS[G.programs[0]].name}. Ask your companion about other routes.`);
+  S.sel={kind:"path",id:m.id};scrollTarget=m.nodes[0]?.id;save();closeOverlay();renderAll();banner("TREE PLANTED",G.title,"var(--accent)")}
+function loadDemo(){const keep=keepShop();seed();Object.assign(S,keep);rbReset();save()}
+/* Treasury */
+function openShop(){const groups=[["comp","Companions"],["skin","Themes"],["gift","Real-life rewards"]];
+  const sw=i=>i.kind==="comp"?`<div class="swatch" style="background:radial-gradient(circle at 50% 70%,color-mix(in oklab,var(--accent) 16%,var(--panel)),var(--panel) 70%)">${COMPANIONS[i.val].svg||`<span style="width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0 10%,var(--orb) 30%,var(--orb-2) 70%,transparent 72%);box-shadow:0 0 18px var(--orb-2);animation:bob 3s ease-in-out infinite"></span>`}</div>`
+   :i.kind==="gift"?`<div class="swatch" style="background:var(--panel);font-family:var(--f-display)">Gift card</div>`:i.anim?`<div class="swatch sw-${i.val}"></div>`:`<div class="swatch" style="background:${i.sw}"></div>`;
+  const btn=i=>{const owned=S.owned.includes(i.id),eq=S.equip[i.kind]===i.val;if(i.kind==="gift")return`<button class="btn small gold" data-buy="${i.id}" ${S.gems<i.cost?"disabled":""}>${S.gems<i.cost?`Need ${i.cost-S.gems}`:"Request"}</button>`;
+    return owned?`<button class="btn small ${eq?"primary":""}" data-equip="${i.id}">${eq?"Equipped":"Equip"}</button>`:`<button class="btn small gold" data-buy="${i.id}" ${S.gems<i.cost?"disabled":""}>${S.gems<i.cost?`Need ${i.cost-S.gems}`:"Buy"}</button>`};
+  openOverlay(`<div class="sheet-top"><div><div class="eyebrow">Treasury</div><h2>Spend your treasure</h2><p class="small muted">You earn treasure for growing paths, passing courses, finishing experiences and side quests.</p></div><button class="btn small" id="shopClose">Close</button></div>
+    <div class="gems" style="font-size:18px"><span class="gem"></span><b>${S.gems}</b>&nbsp;gems</div>
+    ${TEST_MODE?`<div class="testbox"><span class="small"><span class="tag">Testing</span> Prototype test tools</span><div class="row"><button class="btn small gold" data-test="5000">+5,000</button><button class="btn small gold" data-test="20000">+20,000</button><button class="btn small" id="tReset">Reset purchases</button></div></div>`:""}
+    ${groups.map(([k,l])=>`<div style="display:grid;gap:10px"><h3>${l}</h3>${k==="gift"?`<p class="tiny muted">Gift cards are requests a parent, teacher or sponsor approves. This prototype records the request only.</p>`:""}<div class="shop">${SHOP.filter(i=>i.kind===k).map(i=>`<div class="item">${sw(i)}<b style="font-family:var(--f-display)">${esc(i.name)}${i.anim?` <span class="tag goldtag">Animated</span>`:""}</b><span class="tiny muted">${esc(i.desc)}</span><div class="row" style="justify-content:space-between"><span class="price"><span class="gem"></span>${i.cost||"Free"}</span>${btn(i)}</div></div>`).join("")}</div></div>`).join("")}
+    ${S.requests.length?`<div><h3>Reward requests</h3><ul class="log" style="margin-top:8px">${S.requests.map(r=>`<li><time>${esc(r.date)}</time>${esc(r.name)} · waiting for adult approval</li>`).join("")}</ul></div>`:""}`,"Treasury");
+  $("shopClose").onclick=closeOverlay;
+  OV.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>{const i=SHOP.find(x=>x.id===b.dataset.buy);if(b.dataset.confirm!=="1"){b.dataset.confirm="1";b.textContent=`Confirm ${i.cost}?`;return}
+    if(S.gems<i.cost)return;S.gems-=i.cost;const pt=lastPt;if(i.kind==="gift"){S.requests.unshift({name:i.name,date:today()});toast("Request recorded")}else{S.owned.push(i.id);S.equip[i.kind]=i.val;banner(i.kind==="comp"?"NEW COMPANION":"THEME UNLOCKED",i.name,"var(--accent)")}save();renderAll();openShop();burst(pt,22)});
+  OV.querySelectorAll("[data-equip]").forEach(b=>b.onclick=()=>{const i=SHOP.find(x=>x.id===b.dataset.equip);S.equip[i.kind]=i.val;save();renderAll();openShop()});
+  OV.querySelectorAll("[data-test]").forEach(b=>b.onclick=()=>{const n=+b.dataset.test;S.gems+=n;save();flyGems(lastPt,n);renderAll();openShop()});
+  const tr=$("tReset");if(tr)tr.onclick=()=>{S.owned=["skin-classic","comp-orb"];S.equip={skin:"classic",comp:"orb"};S.requests=[];save();renderAll();openShop()}}
+function openStartOver(){openOverlay(`<div class="sheet-top"><div><div class="eyebrow">Start over</div><h2>It's never too late to begin again</h2></div></div>
+  <p class="small">Starting over clears your tree, transcript and journey. Your treasure and Treasury unlocks stay.</p>
+  <div class="qgrid"><button class="qopt" id="soOwn"><b>Start my own tree</b><span class="muted small">Four quick steps.</span></button><button class="qopt" id="soDemo"><b>Reset Maya's demo</b><span class="muted small">Back to the starting demo tree.</span></button></div>
+  <div class="row"><button class="btn ghost" id="soNo">Cancel</button></div>`,"Start over");
+  $("soNo").onclick=closeOverlay;$("soDemo").onclick=()=>{loadDemo();closeOverlay();renderAll();toast("Demo reset to Maya's starting tree.")};
+  $("soOwn").onclick=()=>{rbReset();openSetup(1)}}
+
+/* ===================== demo seed ===================== */
+function seed(){S=base();S.setup=false;S.student={name:"Maya",prog:"hlth",year:"1"};
+  S.tx={BIOL1000:{enrolled:true,grade:"A-"},CHEM1000:{enrolled:true,grade:"B+"},CHEM2020:{enrolled:true,grade:""}};
+  const m=makePath({kind:"main",goal:"med",prog:"hlth",keepDone:true});
+  m.nodes.find(n=>n.type==="network").steps=[true,true,false,false,false];m.nodes.find(n=>n.type==="side").done=true;
+  const orgo=m.nodes.find(n=>n.course==="CHEM2020"),why="I failed my organic chemistry midterm";
+  growDetour(m,orgo,"CHEM2020S",why);growProgram("altmajor",m,orgo,"kine","med",why);
+  const sw=growProgram("newgoal",null,null,"cs","soft","I'm curious about building apps.");sw.status="aside";
+  S.sel={kind:"root",id:"root"};S.gems=S.earned=100;S.awarded={"course:BIOL1000":1,"course:CHEM1000":1};
+  S.log=[{date:today(),text:"Set aside Software developer. It stays on the tree."},{date:today(),text:`Roadblock on CHEM 2020: “${why}”. Grew an alternative course and a Kinesiology path.`},{date:today(),text:"Passed BIOL 1000 and CHEM 1000"}];
+  fresh.clear();return S}
+
+/* ===================== the open node's card, inside the tree ===================== */
+function openNode(kind,id,kb){const same=S.sel&&S.sel.kind===kind&&S.sel.id===id;S.sel=same?null:{kind,id};ADD=null;
+  if(RB.anchor!=="root"&&RB.anchor!==selItemId()&&RB.anchor!=="path:"+S.sel?.id)rbReset();if(!same)scrollTarget=selItemId();save();renderAll();
+  if(kb)requestAnimationFrame(()=>(same?$("treeScroll").querySelector(`[data-kind="${kind}"][data-id="${id}"]`):$("nodeCard"))?.focus())}
+function bindTree(){$("treeScroll").querySelectorAll("svg .n").forEach(n=>{n.onclick=()=>openNode(n.dataset.kind,n.dataset.id);
+  n.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openNode(n.dataset.kind,n.dataset.id,true)}}})}
+let cardRO=null;
+function placeCard(){const sc=$("treeScroll"),L=lastLayout;let card=$("nodeCard");const open=L&&L.open,q=open&&L.pos[open];
+  if(card&&(!q||card.dataset.for!==open)){cardRO?.disconnect();card.remove();card=null}
+  if(!q)return;
+  if(!card){card=document.createElement("div");card.id="nodeCard";card.className="nodecard";card.dataset.for=open;card.tabIndex=-1;card.setAttribute("role","region");sc.append(card);
+    cardRO=new ResizeObserver(()=>{const h=Math.ceil(card.offsetHeight);if(Math.abs(h-CARD.h)>2){CARD.h=h;relayout()}});cardRO.observe(card)}
+  card.style.width=CARD.w+"px";card.style.left=(q.x-18)+"px";card.style.top=(q.y+q.bh/2+(open.startsWith("goal:")?0:open==="root"?-6:2))+"px";
+  card.setAttribute("aria-label","Details");card.innerHTML=`<button class="cardx" id="cardX" aria-label="Close">×</button><div id="details"></div>`;
+  $("cardX").onclick=()=>{const k=S.sel;S.sel=null;rbReset();save();renderAll();$("treeScroll").querySelector(`[data-kind="${k.kind}"][data-id="${k.id}"]`)?.focus()};
+  drawDetails()}
+function relayout(){const sc=$("treeScroll");const old=sc.querySelector("svg");if(!old)return;const x=sc.scrollLeft,y=sc.scrollTop;const tmp=document.createElement("div");tmp.innerHTML=treeSVG();old.replaceWith(tmp.firstChild);bindTree();
+  const L=lastLayout,q=L.open&&L.pos[L.open],card=$("nodeCard");if(q&&card){card.style.left=(q.x-18)+"px";card.style.top=(q.y+q.bh/2+(L.open.startsWith("goal:")?0:L.open==="root"?-6:2))+"px"}sc.scrollLeft=x;sc.scrollTop=y}
+/* ===================== render ===================== */
+function renderAll(){document.body.dataset.skin=S.equip.skin;fx.set(S.equip.skin);
+  const sc=$("treeScroll");const x=sc.scrollLeft,y=sc.scrollTop;CARD.w=Math.min(400,Math.max(260,sc.clientWidth-28));const old=sc.querySelector("svg");const tmp=document.createElement("div");tmp.innerHTML=treeSVG();old?old.replaceWith(tmp.firstChild):sc.prepend(tmp.firstChild);sc.scrollLeft=x;sc.scrollTop=y;fresh.clear();
+  bindTree();placeCard();const card=$("nodeCard");if(scrollTarget&&card&&scrollTarget===lastLayout.open){const st=scrollTarget;scrollTarget=null;requestAnimationFrame(()=>{const c=$("nodeCard");if(!c)return;const l=c.offsetLeft;if(l<sc.scrollLeft+8||l+c.offsetWidth>sc.scrollLeft+sc.clientWidth-8)sc.scrollLeft=Math.max(0,l-12);c.scrollIntoView({block:"start",inline:"nearest",behavior:REDUCE?"auto":"smooth"})})}
+  if(scrollTarget&&lastLayout){const q=lastLayout.pos[scrollTarget];if(q)sc.scrollTo({left:Math.max(0,q.x-70),top:Math.max(0,q.y-90),behavior:REDUCE?"auto":"smooth"});scrollTarget=null}
+  drawLower();
+  $("sName").value=S.student.name;$("sProg").value=S.student.prog;$("sYear").value=S.student.year;
+  $("hudLv").textContent=level();$("hudXp").style.width=(S.earned%150)/150*100+"%";countGems(S.gems)}
+
+/* ===================== effects ===================== */
+const REDUCE=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function toast(t){const el=$("toast");el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,3200)}
+let shown=null,countRaf=0;
+function countGems(v){const el=$("hudGems");if(shown===null||REDUCE){shown=v;el.textContent=v;return}if(v===shown)return;const from=shown,t0=performance.now(),d=Math.min(1100,350+Math.abs(v-from)/4);shown=v;cancelAnimationFrame(countRaf);
+  const step=t=>{const k=Math.min(1,(t-t0)/d);el.textContent=Math.round(from+(v-from)*(1-Math.pow(1-k,3)));if(k<1)countRaf=requestAnimationFrame(step)};countRaf=requestAnimationFrame(step);el.classList.remove("bump");void el.offsetWidth;el.classList.add("bump")}
+function flyGems(from,amount){if(REDUCE||!from)return;const tr=$("hudGems").getBoundingClientRect();const tx=tr.left+tr.width/2,ty=tr.top+tr.height/2;const n=Math.max(3,Math.min(14,Math.round(amount/6)));
+  for(let i=0;i<n;i++){const d=document.createElement("div");d.className="flygem";document.body.append(d);const sx=from.x+(Math.random()-.5)*36,sy=from.y+(Math.random()-.5)*26,mx=sx+(Math.random()-.5)*150,my=sy-60-Math.random()*80;
+    d.animate([{transform:`translate(${sx}px,${sy}px) rotate(45deg) scale(.4)`,opacity:0},{transform:`translate(${mx}px,${my}px) rotate(200deg) scale(1.2)`,opacity:1,offset:.35},{transform:`translate(${tx}px,${ty}px) rotate(405deg) scale(.5)`,opacity:.9}],{duration:720+i*40,easing:"cubic-bezier(.5,0,.75,1)"}).onfinish=()=>d.remove()}}
+function burst(at,n=16){if(REDUCE||!at)return;const cols=["var(--gold)","var(--accent)","var(--orb)","#fff","var(--t-network)"];
+  for(let i=0;i<n;i++){const d=document.createElement("div");d.className="spark";d.style.background=cols[i%cols.length];document.body.append(d);const a=Math.random()*6.283,r=50+Math.random()*90;
+    d.animate([{transform:`translate(${at.x}px,${at.y}px)`,opacity:1},{transform:`translate(${at.x+Math.cos(a)*r}px,${at.y+Math.sin(a)*r+40}px) rotate(${Math.random()*540}deg) scale(.3)`,opacity:0}],{duration:650+Math.random()*450,easing:"cubic-bezier(.2,.7,.4,1)"}).onfinish=()=>d.remove()}}
+let bannerT=0;function banner(t,sub,color){const el=$("banner");el.style.setProperty("--burst",color);el.innerHTML=`<div class="rays"></div><div class="txt"><b>${esc(t)}</b><small>${esc(sub)}</small></div>`;el.hidden=false;clearTimeout(bannerT);bannerT=setTimeout(()=>el.hidden=true,2300)}
+/* animated background: twinkling stars, plus meteors / aurora / embers for animated themes */
+const fx=(()=>{const cv=$("fx"),ctx=cv.getContext("2d");let W,H,stars=[],parts=[],mode="",raf=0;
+  const rgba=(h,a)=>{const n=parseInt(h.slice(1),16);return`rgba(${n>>16&255},${n>>8&255},${n&255},${a})`};
+  function size(){W=cv.width=innerWidth;H=cv.height=innerHeight;stars=Array.from({length:Math.round(W*H/15000)},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.3+.3,p:Math.random()*6.28,s:.4+Math.random()*1.6}))}
+  function drawStars(t){ctx.fillStyle="#fff";for(const s of stars){const a=.2+.4*Math.sin(t*.001*s.s+s.p);if(a>0){ctx.globalAlpha=a;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.283);ctx.fill()}}ctx.globalAlpha=1}
+  function frame(t){ctx.clearRect(0,0,W,H);drawStars(t);
+    if(mode==="starfall"){if(Math.random()<.012&&parts.length<4)parts.push({x:W*(.3+Math.random()*.9),y:-20,vx:-(6+Math.random()*4),vy:3.5+Math.random()*2.5,len:90+Math.random()*90});
+      parts=parts.filter(p=>{p.x+=p.vx;p.y+=p.vy;const sp=Math.hypot(p.vx,p.vy),tx=p.x-p.vx/sp*p.len,ty=p.y-p.vy/sp*p.len;const g=ctx.createLinearGradient(p.x,p.y,tx,ty);g.addColorStop(0,"rgba(255,255,255,.95)");g.addColorStop(1,"rgba(159,196,255,0)");ctx.strokeStyle=g;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(tx,ty);ctx.stroke();return p.y<H+40&&p.x>-200})}
+    else if(mode==="aurora"){["#7dffc4","#6fb8ff","#c08bff"].forEach((c,i)=>{const b=H*(.1+i*.09);ctx.beginPath();ctx.moveTo(0,b);for(let x=0;x<=W+20;x+=20)ctx.lineTo(x,b+Math.sin(x*.0035+t*.00035*(i+1)+i*2)*44+Math.sin(x*.011+t*.0006)*14);ctx.lineTo(W,b+300);ctx.lineTo(0,b+300);ctx.closePath();const g=ctx.createLinearGradient(0,b-50,0,b+300);g.addColorStop(0,rgba(c,0));g.addColorStop(.25,rgba(c,.15));g.addColorStop(1,rgba(c,0));ctx.fillStyle=g;ctx.fill()})}
+    else if(mode==="forge"){if(parts.length<90&&Math.random()<.6)parts.push({x:Math.random()*W,y:H+8,vy:-(.4+Math.random()*1.3),life:0,max:260+Math.random()*320,r:.8+Math.random()*2.2,s:Math.random()*6});
+      parts=parts.filter(p=>{p.life++;p.y+=p.vy;p.x+=Math.sin(p.life*.03+p.s)*.45;const a=Math.max(0,1-p.life/p.max);if(a<=0)return false;ctx.fillStyle=rgba(p.r>2?"#ffcf5a":"#ff7a3d",a*.2);ctx.beginPath();ctx.arc(p.x,p.y,p.r*3.5,0,6.283);ctx.fill();ctx.fillStyle=rgba(p.r>2?"#ffe49a":"#ff9a5c",a);ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.283);ctx.fill();return true})}
+    if(!REDUCE)raf=requestAnimationFrame(frame)}
+  addEventListener("resize",()=>{size();if(REDUCE)frame(0)});document.addEventListener("visibilitychange",()=>{cancelAnimationFrame(raf);if(!document.hidden&&!REDUCE)raf=requestAnimationFrame(frame)});
+  size();return{set(m){if(m===mode)return;mode=m;parts=[];cancelAnimationFrame(raf);REDUCE?frame(0):raf=requestAnimationFrame(frame)}}})();
+
+
+/* ===================== start ===================== */
+(()=>{let st;try{st=JSON.parse(localStorage.getItem(KEY))}catch(e){st=null}
+  if(st&&st.v===2&&Array.isArray(st.paths))S=st;else{seed();S.setup=true}})();
+let testGrant=0;if(TEST_MODE&&!S.testGrant){S.testGrant=1;S.gems+=25000;testGrant=25000}
+$("sProg").innerHTML=MAJORS.map(([k,P])=>`<option value="${k}">${esc(P.name)}</option>`).join("");
+$("sName").oninput=e=>{S.student.name=e.target.value;save();renderAll()};
+$("sProg").onchange=e=>{S.student.prog=e.target.value;log(`Now in ${PROGRAMS[e.target.value].name}`);save();renderAll()};
+$("sYear").onchange=e=>{S.student.year=e.target.value;save();renderAll()};
+$("shopBtn").onclick=openShop;$("overBtn").onclick=openStartOver;$("dbBtn").onclick=()=>openDB();
+$("compassText").textContent=COMPASS[compassI];setInterval(()=>{if(!document.hidden)turnCompass()},9000);
+const fabGo=()=>{if(S.sel?.kind!=="root"){S.sel={kind:"root",id:"root"};if(RB.anchor!=="root")rbReset();save()}scrollTarget="root";renderAll();$("treeScroll").scrollIntoView({behavior:REDUCE?"auto":"smooth",block:"start"});setTimeout(()=>$("rbText")?.focus({preventScroll:true}),350)};
+$("fab").onclick=fabGo;
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&OV.hidden&&S.sel){const k=S.sel;S.sel=null;rbReset();save();renderAll();$("treeScroll").querySelector(`[data-kind="${k.kind}"][data-id="${k.id}"]`)?.focus()}});
+const _ra=renderAll;renderAll=function(){_ra();const c=comp();$("fabFace").innerHTML=c.svg||`<span class="orbball"></span>`;$("fab").setAttribute("aria-label","Talk to "+c.name)};
+renderAll();
+if(S.setup)openSetup();
+if(testGrant)setTimeout(()=>{toast(`Test treasure added: +${testGrant.toLocaleString()} gems`);flyGems({x:innerWidth/2,y:innerHeight/2},testGrant)},800);
+</script>
 </body>
 </html>
