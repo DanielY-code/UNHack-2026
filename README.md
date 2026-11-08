@@ -1,3 +1,7 @@
+# How To Run
+Just run the html file without demo
+
+
 # Pathway Lens · Edventure edition
 
 A clickable prototype that helps senior high school and first-year university students see where their courses and choices lead, and what to do when they hit a roadblock.
