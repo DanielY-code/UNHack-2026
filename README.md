@@ -1,5 +1,5 @@
 # How To Run
-Just run the html file without demo
+Just run the html file with demo student example.
 
 
 # Pathway Lens · Edventure edition
